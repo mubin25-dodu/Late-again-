@@ -38,7 +38,6 @@ void Road() {
     glVertex2f(0.08f, 1.0f);
     glEnd();
     glPopMatrix();
-//t tyrt
     // bottom line
     glPushMatrix();
     glBegin(GL_QUADS);
