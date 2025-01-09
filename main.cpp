@@ -50,6 +50,7 @@ void Road() {
     glVertex2f(0.08f, -4.0f);
     glEnd();
     glPopMatrix();
+    // yuw
 }
 
 
