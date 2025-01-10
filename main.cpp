@@ -3,7 +3,6 @@
 
 // Function to draw the X and Y axes in the top-left section
 void Road() {
-    // test whether
     glPushMatrix();
     // glLineWidth(2);
     glBegin(GL_POLYGON);
@@ -50,7 +49,7 @@ void Road() {
     glVertex2f(0.08f, -4.0f);
     glEnd();
     glPopMatrix();
-    // yuw
+
 }
 
 
@@ -63,7 +62,7 @@ void truck() {
     // front glass frames
     glPushMatrix();
     glBegin(GL_POLYGON);
-    glColor4f(1.0f, 0.52f, 0.52f, 0.5f);  // color  with 50% transparency
+    glColor4f(0.97f, 0.94f, 0.90f, 1.0f);  // color #F6F4F0 in OpenGL
 
     glVertex2f(-1.9f, 3.2f);  // top-left vertex
     glVertex2f(-0.5f, 3.2f);  // top-right vertex
@@ -76,7 +75,7 @@ void truck() {
     //  glass
     glPushMatrix();
     glBegin(GL_POLYGON);
-    glColor4f(0.0f, 0.2f, 0.52f, 0.5f);  // color  with 50% transparency
+    glColor4f(0.86f, 0.91f, 0.98f, 1.0f);  // color #D9EAFD in OpenGL
 
     glVertex2f(-1.85f, 3.17f);  // top-left vertex
     glVertex2f(-0.6f, 3.17f);  // top-right vertex
@@ -88,7 +87,7 @@ void truck() {
     // 1st box top
     glPushMatrix();
     glBegin(GL_POLYGON);
-    glColor4f(1.0f, 0.52f, 0.52f, 0.5f);  // color  with 50% transparency
+    glColor4f(0.97f, 0.94f, 0.90f, 1.0f);  // color #F6F4F0 in OpenGL
 
     glVertex2f(-2.0f, 3.1f);  // top-left vertex
     glVertex2f(-0.4f, 3.1f);  // top-right vertex
@@ -97,25 +96,25 @@ void truck() {
     glEnd();
     glPopMatrix();
 
-      // 2nd box top
+    // 2nd box top (with a different color)
     glPushMatrix();
     glBegin(GL_POLYGON);
-    glColor4f(1.0f, 0.52f, 0.52f, 0.5f);  // color  with 50% transparency
+    glColor4f(0.93f, 0.76f, 0.56f, 1.0f);  // color (Brown) - A warm, earthy color that complements the truck's design
 
     glVertex2f(-2.04f, 2.9f);  // top-left vertex
     glVertex2f(-0.34f, 2.9f);  // top-right vertex
-    glVertex2f(-0.34f, 2.6f); // bottom-right vertex
-    glVertex2f(-2.05f, 2.6f);  // bottom-left vertex
+    glVertex2f(-0.34f, 2.55f); // bottom-right vertex
+    glVertex2f(-2.05f, 2.55f);  // bottom-left vertex
     glEnd();
     glPopMatrix();
-    
+
     // 3rd box top
     glPushMatrix();
     glBegin(GL_POLYGON);
-    glColor4f(1.0f, 0.52f, 1.52f, 0.5f);  // color  with 50% transparency
+    glColor4f(0.97f, 0.94f, 0.90f, 1.0f);  // color #F6F4F0 in OpenGL
 
-    glVertex2f(-2.05f, 2.6f);  // top-left vertex
-    glVertex2f(-0.34f, 2.6f);  // top-right vertex
+    glVertex2f(-2.05f, 2.55f);  // top-left vertex
+    glVertex2f(-0.34f, 2.55f);  // top-right vertex
     glVertex2f(-0.4f, 2.5f); // bottom-right vertex
     glVertex2f(-2.0f, 2.5f);  // bottom-left vertex
     glEnd();
@@ -124,31 +123,31 @@ void truck() {
     // back box 
     glPushMatrix();
     glBegin(GL_POLYGON);
-    glColor4f(1.0f, 0.52f, 1.52f, 0.5f);  // color  with 50% transparency
+    glColor4f(0.97f, 0.94f, 0.90f, 1.0f);  // color #F6F4F0 in OpenGL
 
-    glVertex2f(-2.0f, 2.5f);  // top-left vertex
-    glVertex2f(-0.4f, 2.5f); // top-right vertex
-    glVertex2f(-0.4f, 0.5f); // bottom-right vertex
-    glVertex2f(-2.0f, 0.5f);  // bottom-left vertex
+    glVertex2f(-1.95f, 2.5f);  // top-left vertexF
+    glVertex2f(-0.45f, 2.5f); // top-right vertex
+    glVertex2f(-0.45f, 0.5f); // bottom-right vertex
+    glVertex2f(-1.95f, 0.5f);  // bottom-left vertex
     glEnd();
     glPopMatrix();
 
     //back box inside box
     glPushMatrix();
     glBegin(GL_POLYGON);
-    glColor4f(1.0f, 1.52f, 1.52f, 0.5f);  // color  with 50% transparency
+    glColor4f(0.39f, 0.38f, 0.38f, 1.0f);  // color #636262 in OpenGL
 
-    glVertex2f(-1.95f, 2.45f);  // top-left vertex
-    glVertex2f(-0.45f, 2.45f); // top-right vertex
-    glVertex2f(-0.45f, 0.55f); // bottom-right vertex
-    glVertex2f(-1.95f, 0.55f);  // bottom-left vertex
+    glVertex2f(-1.9f, 2.45f);  // top-left vertex
+    glVertex2f(-0.5f, 2.45f); // top-right vertex
+    glVertex2f(-0.5f, 0.55f); // bottom-right vertex
+    glVertex2f(-1.9f, 0.55f);  // bottom-left vertex
     glEnd();
     glPopMatrix();
 
     //back box inside inside box
     glPushMatrix();
     glBegin(GL_POLYGON);
-    glColor4f(1.0f, 0.52f, 1.52f, 0.5f);  // color  with 50% transparency
+    glColor4f(0.97f, 0.94f, 0.90f, 1.0f);  // color #F6F4F0 in OpenGL
 
     glVertex2f(-1.87f, 2.42f);  // top-left vertex
     glVertex2f(-0.53f, 2.42f); // top-right vertex
@@ -158,9 +157,9 @@ void truck() {
     glPopMatrix();
 
 }
-void display() {//-
+void display() {
 
-glClear(GL_COLOR_BUFFER_BIT);
+    glClear(GL_COLOR_BUFFER_BIT);
     Road();
     truck();
     // Draw each shape in a separate section
