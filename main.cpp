@@ -5,7 +5,7 @@
 void Road() {
     glPushMatrix();
     // glLineWidth(2);
-    glBegin(GL_POLYGON);
+    glBegin(GL_QUADS);
     glColor4f(0.52f, 0.52f, 0.52f, 0.5f);  //  color gray with 50% transparency
 
     glVertex2f(-2.5f, 4.0f);
@@ -29,7 +29,7 @@ void Road() {
 
     // mid line
     glPushMatrix();
-    glBegin(GL_POLYGON);
+    glBegin(GL_QUADS);
     glColor4f(1.0f, 1.0f, 1.0f, 0.5f);  //  color white with 50% transparency
 
     glVertex2f(-0.08f, 1.0f);
@@ -61,7 +61,7 @@ void player() {
 void truck() {
     // front glass frames
     glPushMatrix();
-    glBegin(GL_POLYGON);
+    glBegin(GL_QUADS);
     glColor4f(0.97f, 0.94f, 0.90f, 1.0f);  // color #F6F4F0 in OpenGL
 
     glVertex2f(-1.9f, 3.2f);  // top-left vertex
@@ -74,7 +74,7 @@ void truck() {
 
     //  glass
     glPushMatrix();
-    glBegin(GL_POLYGON);
+    glBegin(GL_QUADS);
     glColor4f(0.86f, 0.91f, 0.98f, 1.0f);  // color #D9EAFD in OpenGL
 
     glVertex2f(-1.85f, 3.17f);  // top-left vertex
@@ -86,7 +86,7 @@ void truck() {
 
     // 1st box top
     glPushMatrix();
-    glBegin(GL_POLYGON);
+    glBegin(GL_QUADS);
     glColor4f(0.97f, 0.94f, 0.90f, 1.0f);  // color #F6F4F0 in OpenGL
 
     glVertex2f(-2.0f, 3.1f);  // top-left vertex
@@ -98,7 +98,7 @@ void truck() {
 
     // 2nd box top (with a different color)
     glPushMatrix();
-    glBegin(GL_POLYGON);
+    glBegin(GL_QUADS);
     glColor4f(0.93f, 0.76f, 0.56f, 1.0f);  // color (Brown) - A warm, earthy color that complements the truck's design
 
     glVertex2f(-2.04f, 2.9f);  // top-left vertex
@@ -110,7 +110,7 @@ void truck() {
 
     // 3rd box top
     glPushMatrix();
-    glBegin(GL_POLYGON);
+    glBegin(GL_QUADS);
     glColor4f(0.97f, 0.94f, 0.90f, 1.0f);  // color #F6F4F0 in OpenGL
 
     glVertex2f(-2.05f, 2.55f);  // top-left vertex
@@ -122,7 +122,7 @@ void truck() {
 
     // back box 
     glPushMatrix();
-    glBegin(GL_POLYGON);
+    glBegin(GL_QUADS);
     glColor4f(0.97f, 0.94f, 0.90f, 1.0f);  // color #F6F4F0 in OpenGL
 
     glVertex2f(-1.95f, 2.5f);  // top-left vertexF
@@ -134,7 +134,7 @@ void truck() {
 
     //back box inside box
     glPushMatrix();
-    glBegin(GL_POLYGON);
+    glBegin(GL_QUADS);
     glColor4f(0.39f, 0.38f, 0.38f, 1.0f);  // color #636262 in OpenGL
 
     glVertex2f(-1.9f, 2.45f);  // top-left vertex
@@ -146,7 +146,7 @@ void truck() {
 
     //back box inside inside box
     glPushMatrix();
-    glBegin(GL_POLYGON);
+    glBegin(GL_QUADS);
     glColor4f(0.97f, 0.94f, 0.90f, 1.0f);  // color #F6F4F0 in OpenGL
 
     glVertex2f(-1.87f, 2.42f);  // top-left vertex
