@@ -1,12 +1,13 @@
 #include <windows.h>  // for MS Windows
 #include <GL/glut.h>  // GLUT, include glu.h and gl.h
+#include <cmath>
 
 // Function to draw the X and Y axes in the top-left section
 void Road() {
     glPushMatrix();
     // glLineWidth(2);
     glBegin(GL_QUADS);
-    glColor4f(0.52f, 0.52f, 0.52f, 0.5f);  //  color gray with 50% transparency
+    glColor4f(0.52f, 0.52f, 0.52f, 0.95f);  //  color gray with 95% transparency
 
     glVertex2f(-2.5f, 4.0f);
     glVertex2f(-2.5f, -4.0f);
@@ -18,7 +19,7 @@ void Road() {
     // top line
     glPushMatrix();
     glBegin(GL_QUADS);
-    glColor4f(1.0f, 1.0f, 1.0f, 0.5f);  //  color white with 50% transparency
+    glColor4f(1.0f, 1.0f, 1.0f, 0.95f);  //  color white with 95% transparency
 
     glVertex2f(-0.08f, 4.0f);
     glVertex2f(-0.08f, 3.0f);
@@ -30,7 +31,7 @@ void Road() {
     // mid line
     glPushMatrix();
     glBegin(GL_QUADS);
-    glColor4f(1.0f, 1.0f, 1.0f, 0.5f);  //  color white with 50% transparency
+    glColor4f(1.0f, 1.0f, 1.0f, 0.95f);  //  color white with 95% transparency
 
     glVertex2f(-0.08f, 1.0f);
     glVertex2f(-0.08f, -1.0f);
@@ -41,7 +42,7 @@ void Road() {
     // bottom line
     glPushMatrix();
     glBegin(GL_QUADS);
-    glColor4f(1.0f, 1.0f, 1.0f, 0.5f);  //  color white with 50% transparency
+    glColor4f(1.0f, 1.0f, 1.0f, 0.95f);  //  color white with 95% transparency
 
     glVertex2f(-0.08f, -4.0f);
     glVertex2f(-0.08f, -3.0f);
@@ -56,12 +57,11 @@ void van() {
     // Back
     glPushMatrix();
     glBegin(GL_QUADS);
-    glColor4f(0.97f, 0.94f, 0.90f, 1.0f);  // color #F6F4F0 in OpenGL
-
-    glVertex2f(1.9f, -0.8f);  // top-left vertex (moved down by 3 points)
-    glVertex2f(0.6f, -0.8f);  // top-right vertex (moved down by 3 points)
-    glVertex2f(0.6f, -1.8f); // bottom-left vertex (moved down by 3 points)
-    glVertex2f(1.9f, -1.8f);  // bottom-right vertex (moved down by 3 points)
+    glColor4f(0.52f, 0.37f, 0.26f ,0.9f);
+    glVertex2f(1.9f, -0.8f);  // top-left vertex
+    glVertex2f(0.6f, -0.8f);  // top-right vertex 
+    glVertex2f(0.6f, -1.8f); // bottom-left vertex 
+    glVertex2f(1.9f, -1.8f);  // bottom-right vertex 
     glEnd();
     glPopMatrix();
 
@@ -108,7 +108,7 @@ void van() {
     //seat
     glPushMatrix();
     glBegin(GL_QUADS);
-    glColor4f(1.0, 1.0f, 1.0f, 0.5f);  // color #black
+    glColor4f(1.0, 1.0f, 1.0f, .95f);  // color #white
     glVertex2f(1.15f, -1.75f);
     glVertex2f(1.15f, -1.85f);
     glVertex2f(1.35f, -1.85f);
@@ -116,6 +116,98 @@ void van() {
 
     glEnd();
     glPopMatrix();
+}
+
+void Rickshaw() {
+    
+    glPushMatrix();
+    glScalef(1.3f, 1.3f, 1.3f);  
+    glTranslatef(0.4f, 0.4f, 0.0f);
+
+    // Top rickshaw
+    glPushMatrix();
+    glBegin(GL_QUADS);
+    glColor4f(1.0, 1.0f, 1.0f, .95f);  // color #white
+    glVertex2f(-2.3f, -1.6f); // top left
+    glVertex2f(-2.3f, -1.85f); // bottom left
+    glVertex2f(-1.05f, -1.85f); // bottom right
+    glVertex2f(-1.05f, -1.6f); // top right   
+    glEnd();
+    glPopMatrix();
+
+    // Leg area
+    glPushMatrix();
+    glBegin(GL_QUADS);
+    glColor4f(1.0, 1.0f, 1.0f, .95f);  // color #white
+    glVertex2f(-2.25f, -1.5f); // top left
+    glVertex2f(-2.25f, -1.6f); // bottom left
+    glVertex2f(-1.1f, -1.6f); // bottom right
+    glVertex2f(-1.1f, -1.5f); // top right   
+    glEnd();
+    glPopMatrix();
+
+    // Mid connector
+    glPushMatrix();
+    glLineWidth(5);
+    glBegin(GL_LINES);
+    glColor4f(1.0, 1.0f, 1.0f, .95f);  // color #white
+    glVertex2f(-1.67f, -1.5f);
+    glVertex2f(-1.67f, -1.3f);
+    glEnd();
+    glPopMatrix();
+
+    // Left connector
+    glPushMatrix();
+    glLineWidth(2);
+    glBegin(GL_LINES);
+    glColor4f(1.0, 1.0f, 1.0f, .95f);  // color #white
+    glVertex2f(-1.87f, -1.5f);
+    glVertex2f(-1.67f, -1.3f);
+    glEnd();
+    glPopMatrix();
+
+    // Right connector
+    glPushMatrix();
+    glLineWidth(2);
+    glBegin(GL_LINES);
+    glColor4f(1.0, 1.0f, 1.0f, .95f);  // color #white
+    glVertex2f(-1.47f, -1.5f);
+    glVertex2f(-1.67f, -1.3f);
+    glEnd();
+    glPopMatrix();
+
+    // Mid connector 
+    glPushMatrix();
+    glLineWidth(5);
+    glBegin(GL_LINES);
+    glColor4f(1.0, 1.0f, 1.0f, .95f);  // color #white
+    glVertex2f(-1.67f, -1.5f);
+    glVertex2f(-1.67f, -0.9f);
+    glEnd();
+    glPopMatrix();
+
+    // Mid connector 
+    glPushMatrix();
+    glLineWidth(3);
+    glBegin(GL_LINES);
+    glColor4f(1.0, 1.0f, 1.0f, .95f);  // color #white
+    glVertex2f(-1.85f, -1.0f);
+    glVertex2f(-1.45f, -1.0f);
+    glEnd();
+    glPopMatrix();
+
+    //seat 
+    glPushMatrix();
+    glBegin(GL_QUADS);
+  glColor4f(0.93f, 0.76f, 0.56f, 1.0f);
+    glVertex2f(-1.77f, -1.25f);
+    glVertex2f(-1.57f, -1.25f);
+    glVertex2f(-1.57f, -1.35f);
+    glVertex2f(-1.77f, -1.35f);
+    glEnd();
+    glPopMatrix();
+    
+    glPopMatrix(); 
 }
 
 
@@ -163,11 +255,10 @@ void truck() {
     glEnd();
     glPopMatrix();
 
-    // 2nd box top (with a different color)
+    // 2nd box top 
     glPushMatrix();
     glBegin(GL_QUADS);
-    glColor4f(0.93f, 0.76f, 0.56f, 1.0f);  // color (Brown) - A warm, earthy color that complements the truck's design
-
+    glColor4f(0.93f, 0.76f, 0.56f, 1.0f);  
     glVertex2f(-2.04f, 2.9f);  // top-left vertex
     glVertex2f(-0.34f, 2.9f);  // top-right vertex
     glVertex2f(-0.34f, 2.55f); // bottom-right vertex
@@ -227,7 +318,9 @@ void truck() {
 void display() {
 
     glClear(GL_COLOR_BUFFER_BIT);
+    
     Road();
+    Rickshaw();
     van();
     truck();
     // Draw each shape in a separate section
@@ -240,6 +333,8 @@ void display() {
 void initGL() {
     glClearColor(1.0f, 1.0f, 1.0f, 1.0f); // Set background color to black
     glOrtho(-4, 4, -4, 4, -4, 4);          // Set up orthogonal projection
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 }
 
 // Main function: GLUT runs as a console application starting at main()
@@ -248,7 +343,7 @@ int main(int argc, char** argv) {
     glutInitDisplayMode(GLUT_SINGLE | GLUT_RGB);  // Set display mode
     glutInitWindowSize(700, 1000);          // Set the window's initial width & height
     glutInitWindowPosition(500, 0);        // Set the window's initial position
-    glutCreateWindow("OpenGL Separate Shapes");  // Create window with the given title
+    glutCreateWindow("Late Again!!");  // Create window with the given title
     glutDisplayFunc(display);              // Register display callback handler for window re-paint
     initGL();                              // Initialize OpenGL settings
     glutMainLoop();                        // Enter the event-processing loop
