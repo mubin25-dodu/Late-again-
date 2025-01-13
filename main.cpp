@@ -1,8 +1,12 @@
 #include <windows.h>  // for MS Windows
 #include <GL/glut.h>  // GLUT, include glu.h and gl.h
 #include <cmath>
+#include <cstdio>
 
-// Function to draw the X and Y axes in the top-left section
+#define PI 3.14159265358979323846
+int timer = 60;
+bool isCountdownFinished = false;
+
 void Road() {
     glPushMatrix();
     // glLineWidth(2);
@@ -51,6 +55,25 @@ void Road() {
     glEnd();
     glPopMatrix();
 
+}
+
+void timerFunc(int value) {
+    if (timer > 0) {
+        timer--;
+        glutPostRedisplay();  // Update display
+        glutTimerFunc(1000, timerFunc, 0);  // Restart the timer
+    } else {
+        isCountdownFinished = true;
+        glutPostRedisplay();  // Ensure "Time Up" message is displayed
+    }
+}
+void renderText(float x, float y, void* font, const char* text) {
+    glColor3f(1.0f, 0.0f, 0.0f);  // Red color
+    glRasterPos2f(x, y);          // Position the text
+    while (*text) {
+        glutBitmapCharacter(font, *text);
+        text++;
+    }
 }
 
 void van() {
@@ -117,7 +140,78 @@ void van() {
     glEnd();
     glPopMatrix();
 }
+void player() {
 
+  GLfloat x = 1.5f;
+    GLfloat y = 2.5f; // Center position of the semicircle
+    GLfloat radius = 0.17f;
+    int i;
+    int lineAmount = 100; //# of triangles used to draw the circle
+    GLfloat twicePi = 2.0f * PI;
+
+    // Draw the lower semicircle
+    glColor3f(0.0f, 0.0f, 0.0f); // Cyan color
+    glBegin(GL_TRIANGLE_FAN);
+    glVertex2f(x, y); // Center of the circle
+    for (i = lineAmount / 2; i <= lineAmount; i++) {
+        glVertex2f(
+            x + (radius * cos(i * twicePi / lineAmount)),
+            y + (radius * sin(i * twicePi / lineAmount))
+        );
+    }
+    glEnd();
+
+    // Draw the Bézier curve (upper side)
+    glColor3f(0.0f, 0.0f, 0.0f); // Red color for the curve
+    GLfloat startX = x - radius;
+    GLfloat startY = y;
+    GLfloat endX = x + radius;
+    GLfloat endY = y;
+
+    // Two control points for the cubic Bézier curve
+    GLfloat controlPoint1X = x - radius / 1.5;
+    GLfloat controlPoint1Y = y + radius / .85;
+    GLfloat controlPoint2X = x + radius / 1.5;
+    GLfloat controlPoint2Y = y + radius / .85;
+
+    glBegin(GL_TRIANGLE_FAN);
+    glVertex2f(x, y); // Starting point for the triangle fan
+    for (float t = 0.0; t <= 1.0; t += 0.01) {
+        GLfloat bezX = pow(1 - t, 3) * startX +
+                       3 * pow(1 - t, 2) * t * controlPoint1X +
+                       3 * (1 - t) * pow(t, 2) * controlPoint2X +
+                       pow(t, 3) * endX;
+
+        GLfloat bezY = pow(1 - t, 3) * startY +
+                       3 * pow(1 - t, 2) * t * controlPoint1Y +
+                       3 * (1 - t) * pow(t, 2) * controlPoint2Y +
+                       pow(t, 3) * endY;
+
+        glVertex2f(bezX, bezY);
+    }
+    
+    glEnd();
+
+    
+    // Draw triangles at the ends of the lines
+   glBegin(GL_TRIANGLES);
+    glColor3f(0.0f, 0.0f, 0.0f);
+
+    // Left triangle (based on semicircle and Bézier control points)
+    glVertex2f(x - radius + 0.2, y);   // Left base of the semicircle
+    glVertex2f(controlPoint1X - 0.1, controlPoint1Y - 0.15); // Left control point of Bézier
+    glVertex2f(x - (radius+.2) / 2, y - 0.06);  // Top of the left triangle
+
+    // Right triangle (based on semicircle and Bézier control points)
+    glVertex2f(x + radius - .15, y);    // Right base of the semicircle
+    glVertex2f(controlPoint2X + 0.1, controlPoint2Y-0.16); // Right control point of Bézier
+    glVertex2f(x + (radius+.2) / 2, y-0.06);   // Top of the right triangle
+    glEnd();
+    glPopMatrix();
+
+    glFlush(); // Render now 
+
+}
 void Rickshaw() {
     
     glPushMatrix();
@@ -208,13 +302,6 @@ void Rickshaw() {
     glPopMatrix();
     
     glPopMatrix(); 
-}
-
-
-
-
-void player() {
-
 }
 
 void truck() {
@@ -316,17 +403,28 @@ void truck() {
 
 }
 void display() {
-
     glClear(GL_COLOR_BUFFER_BIT);
-    
-    Road();
-    Rickshaw();
-    van();
-    truck();
-    // Draw each shape in a separate section
+
+    if (isCountdownFinished) {
+        // Display "Time Up" message
+        renderText(-0.2f, 0.0f, GLUT_BITMAP_HELVETICA_18, "Time Up");
+    } 
+        Road();
+        Rickshaw();
+        van();
+        player();
+        truck();
+         if (!isCountdownFinished) {
+        char timerText[10];
+        sprintf(timerText, "Time: %d", timer);  // Convert timer value to string
+        renderText(-2.4f, 3.7f, GLUT_BITMAP_HELVETICA_18, timerText);  // Adjust position and font
+    } else {
+        renderText(-0.5f, 3.5f, GLUT_BITMAP_HELVETICA_18, "Time Up!");  // Message after countdown ends
+    }
 
     glFlush();  // Render now
 }
+
 
 
 // Initialization function
@@ -335,6 +433,7 @@ void initGL() {
     glOrtho(-4, 4, -4, 4, -4, 4);          // Set up orthogonal projection
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    glutTimerFunc(1000, timerFunc, 0);
 }
 
 // Main function: GLUT runs as a console application starting at main()
