@@ -52,6 +52,73 @@ void Road() {
 
 }
 
+void van() {
+    // Back
+    glPushMatrix();
+    glBegin(GL_QUADS);
+    glColor4f(0.97f, 0.94f, 0.90f, 1.0f);  // color #F6F4F0 in OpenGL
+
+    glVertex2f(1.9f, -0.8f);  // top-left vertex (moved down by 3 points)
+    glVertex2f(0.6f, -0.8f);  // top-right vertex (moved down by 3 points)
+    glVertex2f(0.6f, -1.8f); // bottom-left vertex (moved down by 3 points)
+    glVertex2f(1.9f, -1.8f);  // bottom-right vertex (moved down by 3 points)
+    glEnd();
+    glPopMatrix();
+
+    // right connector
+    glPushMatrix();
+    glLineWidth(4);
+    glBegin(GL_LINES);
+    glColor4f(0.0, 0.0f, 0.0f, 0.5f);  // color #black
+    glVertex2f(1.9f, -1.8f);  
+    glVertex2f(1.25f, -2.0f);
+    glEnd();
+    glPopMatrix();
+
+    // left connector
+    glPushMatrix();
+    glLineWidth(4);
+    glBegin(GL_LINES);
+     glColor4f(0.0, 0.0f, 0.0f, 0.5f);  // color #black
+    glVertex2f(0.6f, -1.8f);
+    glVertex2f(1.25f, -2.0f);
+    glEnd();
+    glPopMatrix();
+
+    // front 
+    glPushMatrix();
+    glLineWidth(3);
+    glBegin(GL_LINES);
+    glColor4f(0.0, 0.0f, 0.0f, 0.5f);  // color #black
+    glVertex2f(1.25f, -1.8f);
+    glVertex2f(1.25f, -2.35f);
+    glEnd();
+    glPopMatrix();
+
+    // handle 
+    glPushMatrix();
+    glLineWidth(2);
+    glBegin(GL_LINES);
+    glColor4f(0.0, 0.0f, 0.0f, 0.5f);  // color #black
+    glVertex2f(1.0f, -2.25f);
+    glVertex2f(1.5f, -2.25f);
+    glEnd();
+    glPopMatrix();
+
+    //seat
+    glPushMatrix();
+    glBegin(GL_QUADS);
+    glColor4f(1.0, 1.0f, 1.0f, 0.5f);  // color #black
+    glVertex2f(1.15f, -1.75f);
+    glVertex2f(1.15f, -1.85f);
+    glVertex2f(1.35f, -1.85f);
+    glVertex2f(1.35f, -1.75f);
+
+    glEnd();
+    glPopMatrix();
+}
+
+
 
 
 void player() {
@@ -161,6 +228,7 @@ void display() {
 
     glClear(GL_COLOR_BUFFER_BIT);
     Road();
+    van();
     truck();
     // Draw each shape in a separate section
 
