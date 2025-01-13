@@ -7,6 +7,29 @@
 int timer = 60;
 bool isCountdownFinished = false;
 
+GLfloat playerX = 1.5f;
+GLfloat playerY = 2.5f;
+GLfloat playerSpeed = 0.1f;
+
+void keyboard(unsigned char key, int x, int y) {
+    switch (key) {
+        case 'w':  // Move up
+            playerY += playerSpeed;
+            break;
+        case 's':  // Move down
+            playerY -= playerSpeed;
+            break;
+        case 'a':  // Move left
+            playerX -= playerSpeed;
+            break;
+        case 'd':  // Move right
+            playerX += playerSpeed;
+            break;
+    }
+    glutPostRedisplay();  // Update display
+}
+
+
 void Road() {
     glPushMatrix();
     // glLineWidth(2);
@@ -141,9 +164,8 @@ void van() {
     glPopMatrix();
 }
 void player() {
-
-  GLfloat x = 1.5f;
-    GLfloat y = 2.5f; // Center position of the semicircle
+    GLfloat x = playerX;
+    GLfloat y = playerY; // Center position of the semicircle
     GLfloat radius = 0.17f;
     int i;
     int lineAmount = 100; //# of triangles used to draw the circle
@@ -209,7 +231,7 @@ void player() {
     glEnd();
     glPopMatrix();
 
-    glFlush(); // Render now 
+    glFlush(); // Render now 
 
 }
 void Rickshaw() {
@@ -444,6 +466,7 @@ int main(int argc, char** argv) {
     glutInitWindowPosition(500, 0);        // Set the window's initial position
     glutCreateWindow("Late Again!!");  // Create window with the given title
     glutDisplayFunc(display);              // Register display callback handler for window re-paint
+    glutKeyboardFunc(keyboard);            // Register keyboard callback
     initGL();                              // Initialize OpenGL settings
     glutMainLoop();                        // Enter the event-processing loop
     return 0;
