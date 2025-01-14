@@ -7,24 +7,25 @@
 int timer = 60;
 bool isCountdownFinished = false;
 
-GLfloat playerX = 1.5f;
-GLfloat playerY = 2.5f;
+GLfloat playerX = 0.0f;
+GLfloat playerY = -1.5f;
+GLfloat move = 0.0f;
 GLfloat playerSpeed = 0.1f;
 
 void keyboard(unsigned char key, int x, int y) {
     switch (key) {
-        case 'w':  // Move up
-            playerY += playerSpeed;
-            break;
-        case 's':  // Move down
-            playerY -= playerSpeed;
-            break;
-        case 'a':  // Move left
-            playerX -= playerSpeed;
-            break;
-        case 'd':  // Move right
-            playerX += playerSpeed;
-            break;
+    case 'w':  // Move up
+        move -= playerSpeed;
+        break;
+    case 's':  // Move down
+        move += playerSpeed;
+        break;
+    case 'a':  // Move leftw
+        playerX -= playerSpeed;
+        break;
+    case 'd':  // Move right
+        playerX += playerSpeed;
+        break;
     }
     glutPostRedisplay();  // Update display
 }
@@ -85,7 +86,8 @@ void timerFunc(int value) {
         timer--;
         glutPostRedisplay();  // Update display
         glutTimerFunc(1000, timerFunc, 0);  // Restart the timer
-    } else {
+    }
+    else {
         isCountdownFinished = true;
         glutPostRedisplay();  // Ensure "Time Up" message is displayed
     }
@@ -103,7 +105,7 @@ void van() {
     // Back
     glPushMatrix();
     glBegin(GL_QUADS);
-    glColor4f(0.52f, 0.37f, 0.26f ,0.9f);
+    glColor4f(0.52f, 0.37f, 0.26f, 0.9f);
     glVertex2f(1.9f, -0.8f);  // top-left vertex
     glVertex2f(0.6f, -0.8f);  // top-right vertex 
     glVertex2f(0.6f, -1.8f); // bottom-left vertex 
@@ -116,7 +118,7 @@ void van() {
     glLineWidth(4);
     glBegin(GL_LINES);
     glColor4f(0.0, 0.0f, 0.0f, 0.5f);  // color #black
-    glVertex2f(1.9f, -1.8f);  
+    glVertex2f(1.9f, -1.8f);
     glVertex2f(1.25f, -2.0f);
     glEnd();
     glPopMatrix();
@@ -125,7 +127,7 @@ void van() {
     glPushMatrix();
     glLineWidth(4);
     glBegin(GL_LINES);
-     glColor4f(0.0, 0.0f, 0.0f, 0.5f);  // color #black
+    glColor4f(0.0, 0.0f, 0.0f, 0.5f);  // color #black
     glVertex2f(0.6f, -1.8f);
     glVertex2f(1.25f, -2.0f);
     glEnd();
@@ -165,7 +167,7 @@ void van() {
 }
 void player() {
     GLfloat x = playerX;
-    GLfloat y = playerY; // Center position of the semicircle
+    GLfloat y = -1.5f; // Center position of the semicircle
     GLfloat radius = 0.17f;
     int i;
     int lineAmount = 100; //# of triangles used to draw the circle
@@ -200,34 +202,34 @@ void player() {
     glVertex2f(x, y); // Starting point for the triangle fan
     for (float t = 0.0; t <= 1.0; t += 0.01) {
         GLfloat bezX = pow(1 - t, 3) * startX +
-                       3 * pow(1 - t, 2) * t * controlPoint1X +
-                       3 * (1 - t) * pow(t, 2) * controlPoint2X +
-                       pow(t, 3) * endX;
+            3 * pow(1 - t, 2) * t * controlPoint1X +
+            3 * (1 - t) * pow(t, 2) * controlPoint2X +
+            pow(t, 3) * endX;
 
         GLfloat bezY = pow(1 - t, 3) * startY +
-                       3 * pow(1 - t, 2) * t * controlPoint1Y +
-                       3 * (1 - t) * pow(t, 2) * controlPoint2Y +
-                       pow(t, 3) * endY;
+            3 * pow(1 - t, 2) * t * controlPoint1Y +
+            3 * (1 - t) * pow(t, 2) * controlPoint2Y +
+            pow(t, 3) * endY;
 
         glVertex2f(bezX, bezY);
     }
-    
+
     glEnd();
 
-    
+
     // Draw triangles at the ends of the lines
-   glBegin(GL_TRIANGLES);
+    glBegin(GL_TRIANGLES);
     glColor3f(0.0f, 0.0f, 0.0f);
 
     // Left triangle (based on semicircle and Bézier control points)
     glVertex2f(x - radius + 0.2, y);   // Left base of the semicircle
     glVertex2f(controlPoint1X - 0.1, controlPoint1Y - 0.15); // Left control point of Bézier
-    glVertex2f(x - (radius+.2) / 2, y - 0.06);  // Top of the left triangle
+    glVertex2f(x - (radius + .2) / 2, y - 0.06);  // Top of the left triangle
 
     // Right triangle (based on semicircle and Bézier control points)
     glVertex2f(x + radius - .15, y);    // Right base of the semicircle
-    glVertex2f(controlPoint2X + 0.1, controlPoint2Y-0.16); // Right control point of Bézier
-    glVertex2f(x + (radius+.2) / 2, y-0.06);   // Top of the right triangle
+    glVertex2f(controlPoint2X + 0.1, controlPoint2Y - 0.16); // Right control point of Bézier
+    glVertex2f(x + (radius + .2) / 2, y - 0.06);   // Top of the right triangle
     glEnd();
     glPopMatrix();
 
@@ -235,9 +237,9 @@ void player() {
 
 }
 void Rickshaw() {
-    
+
     glPushMatrix();
-    glScalef(1.3f, 1.3f, 1.3f);  
+    glScalef(1.3f, 1.3f, 1.3f);
     glTranslatef(0.4f, 0.4f, 0.0f);
 
     // Top rickshaw
@@ -315,15 +317,15 @@ void Rickshaw() {
     //seat 
     glPushMatrix();
     glBegin(GL_QUADS);
-  glColor4f(0.93f, 0.76f, 0.56f, 1.0f);
+    glColor4f(0.93f, 0.76f, 0.56f, 1.0f);
     glVertex2f(-1.77f, -1.25f);
     glVertex2f(-1.57f, -1.25f);
     glVertex2f(-1.57f, -1.35f);
     glVertex2f(-1.77f, -1.35f);
     glEnd();
     glPopMatrix();
-    
-    glPopMatrix(); 
+
+    glPopMatrix();
 }
 
 void truck() {
@@ -367,7 +369,7 @@ void truck() {
     // 2nd box top 
     glPushMatrix();
     glBegin(GL_QUADS);
-    glColor4f(0.93f, 0.76f, 0.56f, 1.0f);  
+    glColor4f(0.93f, 0.76f, 0.56f, 1.0f);
     glVertex2f(-2.04f, 2.9f);  // top-left vertex
     glVertex2f(-0.34f, 2.9f);  // top-right vertex
     glVertex2f(-0.34f, 2.55f); // bottom-right vertex
@@ -427,20 +429,32 @@ void truck() {
 void display() {
     glClear(GL_COLOR_BUFFER_BIT);
 
-    if (isCountdownFinished) {
-        // Display "Time Up" message
-        renderText(-0.2f, 0.0f, GLUT_BITMAP_HELVETICA_18, "Time Up");
-    } 
-        Road();
-        Rickshaw();
-        van();
-        player();
-        truck();
-         if (!isCountdownFinished) {
+
+    glPushMatrix();
+    glTranslatef(0.0f, move + -4.0f, 0.0f);
+    Road();
+    truck();
+    Rickshaw();
+    van();
+    glPopMatrix();
+  
+
+    glPushMatrix();
+    glTranslatef(0.0f, move + 4.0f, 0.0f);
+    Road();
+    truck();
+    Rickshaw();
+    van();
+    glPopMatrix();
+    
+    player();
+
+    if (!isCountdownFinished) {
         char timerText[10];
         sprintf(timerText, "Time: %d", timer);  // Convert timer value to string
         renderText(-2.4f, 3.7f, GLUT_BITMAP_HELVETICA_18, timerText);  // Adjust position and font
-    } else {
+    }
+    else {
         renderText(-0.5f, 3.5f, GLUT_BITMAP_HELVETICA_18, "Time Up!");  // Message after countdown ends
     }
 
