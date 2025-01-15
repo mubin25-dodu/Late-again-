@@ -166,6 +166,9 @@ void van() {
     glPopMatrix();
 }
 void player() {
+    
+    glPushMatrix();
+    glScalef(0.8f, 0.8f, 1.0f);
     GLfloat x = playerX;
     GLfloat y = -1.5f; // Center position of the semicircle
     GLfloat radius = 0.17f;
@@ -232,7 +235,7 @@ void player() {
     glVertex2f(x + (radius + .2) / 2, y - 0.06);   // Top of the right triangle
     glEnd();
     glPopMatrix();
-
+    glPopMatrix();
     glFlush(); // Render now 
 
 }
@@ -426,29 +429,50 @@ void truck() {
     glPopMatrix();
 
 }
-void display() {
-    glClear(GL_COLOR_BUFFER_BIT);
 
-
+void level1() {
+    // frame 1
+    if (move < 0.0f) {
     glPushMatrix();
-    glTranslatef(0.0f, move + -4.0f, 0.0f);
+    glTranslatef(0.0f, move + 0.0f, 0.0f);
+    Road();
+     glScalef(01.0f, 01.0f, 1.0f);
+    truck();
+    Rickshaw();
+    van();
+    glPopMatrix();
+    glPopMatrix();
+    }
+    // frame 2
+    if (move < 0.0f) {
+        glPushMatrix();
+        glTranslatef(0.0f, move + 8.0f, 0.0f);
+        Road();
+        truck();
+        Rickshaw();
+        van();
+        glPopMatrix();
+    }
+        if (move < 0.0f) {
+        glPushMatrix();
+        glTranslatef(0.0f, move + 16.0f, 0.0f);
+        Road();
+        truck();
+        Rickshaw();
+        van();
+        glPopMatrix();
+    }
+    else {
+         glPushMatrix();
+    glTranslatef(0.0f, move + 0.0f, 0.0f);
     Road();
     truck();
     Rickshaw();
     van();
     glPopMatrix();
-  
-
-    glPushMatrix();
-    glTranslatef(0.0f, move + 4.0f, 0.0f);
-    Road();
-    truck();
-    Rickshaw();
-    van();
-    glPopMatrix();
-    
+    }
     player();
-
+// timer
     if (!isCountdownFinished) {
         char timerText[10];
         sprintf(timerText, "Time: %d", timer);  // Convert timer value to string
@@ -458,7 +482,12 @@ void display() {
         renderText(-0.5f, 3.5f, GLUT_BITMAP_HELVETICA_18, "Time Up!");  // Message after countdown ends
     }
 
-    glFlush();  // Render now
+   // Render now
+}
+void display() {
+       glClear(GL_COLOR_BUFFER_BIT);
+       level1();
+          glFlush();
 }
 
 
