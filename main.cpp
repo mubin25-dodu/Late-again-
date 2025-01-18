@@ -4,8 +4,11 @@
 #include <cstdio>
 
 #define PI 3.14159265358979323846
-int timer = 60;
+int timer = 1;
 bool isCountdownFinished = false;
+float x1, x2, x3, x4, y1_pos, y2_pos, y3_pos, y4_pos, colup;
+int currentScreen = 0;
+
 
 GLfloat playerX = 0.0f;
 GLfloat playerY = -1.5f;
@@ -26,12 +29,407 @@ void keyboard(unsigned char key, int x, int y) {
     case 'd':  // Move right
         playerX += playerSpeed;
         break;
+    case '1':
+        currentScreen = 1;
+        break;
+    case '2':
+        currentScreen = 2;
+        break;
+    case '3':
+        currentScreen = 3;
+        break;
+
     }
     glutPostRedisplay();  // Update display
 }
+void renderBitmapString(float x, float y, float z, void* font, const char* string) {
+    const char* c;
+    glRasterPos3f(x, y, z);  // Position the text
+    for (c = string; *c != '\0'; c++) {
+        glutBitmapCharacter(font, *c);  // Render each character
+    }
+}
 
+// Display callback function
+// void home(unsigned char key) {
+//     glClearColor(0.9f, 0.9f, 0.9f, 1.0f); // Light gray background
+//     glClear(GL_COLOR_BUFFER_BIT);  // Clear the buffer
+
+//     glColor3f(0.8f, 0.8f, 0.8f);  // Light gray for the placeholder
+//     glBegin(GL_QUADS);
+//     glVertex2f(-3.0f, -3.5f);
+//     glVertex2f(3.0, -3.5f);
+//     glVertex2f(3.0f, 3.5f);
+//     glVertex2f(-3.0f, 3.5f);
+//     glEnd();
+
+//     glColor3f(0.0f, 0.8f, 0.8f);// Light gray for the placeholder
+//     glBegin(GL_QUADS);
+//     glVertex2f(2.0f, -1.0f);
+//     glVertex2f(-2.0f, -1.0f);
+//     glVertex2f(-2.0f, -2.0f);
+//     glVertex2f(2.0, -2.0f);
+
+//     glEnd();
+
+//     glColor3f(0.1f, 0.4f, 0.8f); // Blue color for title bar
+//     glBegin(GL_QUADS);
+//     glVertex2f(-2.5f, 2.2f); // Top-left corner
+//     glVertex2f(2.5f, 2.2f);  // Top-right corner
+//     glVertex2f(2.5f, 3.0f);  // Bottom-right corner
+//     glVertex2f(-2.5f, 3.0f); // Bottom-left corner
+//     glEnd();
+
+//     glColor3f(0.1f, 0.4f, 0.8f); // Blue color for title bar
+//     glBegin(GL_QUADS);
+//     glVertex2f(-2.0f, 0.35f); // Top-left corner
+//     glVertex2f(-1.0f, 0.35f);  // Top-right corner
+//     glVertex2f(-1.0f, -0.2f);  // Bottom-right corner
+//     glVertex2f(-2.0f, -0.2f); // Bottom-left corner
+//     glEnd();
+
+//     glColor3f(0.1f, 0.4f, 0.8f); // Blue color for title bar
+//     glBegin(GL_QUADS);
+//     glVertex2f(-0.5f, 0.35f); // Top-left corner
+//     glVertex2f(0.5f, 0.35f);  // Top-right corner
+//     glVertex2f(0.5f, -0.2f);  // Bottom-right corner
+//     glVertex2f(-0.5f, -0.2f); // Bottom-left corner
+//     glEnd();
+
+//     glColor3f(0.1f, 0.4f, 0.8f); // Blue color for title bar
+//     glBegin(GL_QUADS);
+//     glVertex2f(1.0f, 0.35f); // Top-left corner
+//     glVertex2f(2.0f, 0.35f);  // Top-right corner
+//     glVertex2f(2.0f, -0.2f);  // Bottom-right corner
+//     glVertex2f(1.0f, -0.2f); // Bottom-left corner
+//     glEnd();
+
+//     // Render title text
+//     glColor3f(1.0f, 1.0f, 1.0f); // Black color for text
+//     renderBitmapString(-0.7f, 2.5f, 0.0f, GLUT_BITMAP_HELVETICA_18, "LATE AGAIN!!");
+
+//     glColor3f(0.0f, 0.0f, 0.0f); // Black color for text
+//     renderBitmapString(-0.4f, 1.2f, 0.0f, GLUT_BITMAP_HELVETICA_18, "LEVELS");
+
+//     // Render level texts
+//     glColor3f(1.0f, 1.0f, 1.0f);
+//     renderBitmapString(-1.78f, 0.0f, 0.0f, GLUT_BITMAP_HELVETICA_18, " ONE");
+//     renderBitmapString(-0.3f, 0.0f, 0.0f, GLUT_BITMAP_HELVETICA_18, " TWO");
+//     renderBitmapString(1.17f, 0.0f, 0.0f, GLUT_BITMAP_HELVETICA_18, "THREE");
+
+
+//      glFlush();  // Render the objects now
+
+// }
 
 void Road() {
+
+    //right side of the road
+    //bottom tin shade
+    glPushMatrix();
+    glBegin(GL_QUADS);
+    glColor4f(0.5f, 0.0f, 0.0f, 1.0f);  // color #F6F4F0 in OpenGL
+
+    glVertex2f(2.5f, -1.5f);  // top-left vertex
+    glVertex2f(3.3f, -2.3f);  // top-right vertex
+    glVertex2f(4.2f, -2.3f); // bottom-right vertex
+    glVertex2f(5.0f, -1.5f);  // bottom-left vertex
+    glEnd();
+    glPopMatrix();       //left
+
+    glPushMatrix();
+    glBegin(GL_QUADS);
+    glColor4f(0.6f, 0.2f, 0.2f, 1.0f);  // color #F6F4F0 in OpenGL
+
+    glVertex2f(2.5f, -1.5f);  // top-left vertex
+    glVertex2f(3.3f, -2.3f);  // top-right vertex
+    glVertex2f(3.3f, -3.2f); // bottom-right vertex
+    glVertex2f(2.5f, -4.0f);  // bottom-left vertex
+    glEnd();
+    glPopMatrix();
+
+    glPushMatrix();
+    glBegin(GL_QUADS);
+    glColor4f(0.5f, 0.0f, 0.0f, 1.0f);  // color #F6F4F0 in OpenGL
+
+    glVertex2f(2.5f, -4.0f);  // top-left vertex
+    glVertex2f(3.3f, -3.2f);  // top-right vertex
+    glVertex2f(4.2f, -3.2f); // bottom-right vertex
+    glVertex2f(5.0f, -4.0f);  // bottom-left vertex
+    glEnd();
+    glPopMatrix();
+
+
+    glPushMatrix();
+    glBegin(GL_QUADS);
+    glColor4f(0.4f, 0.0f, 0.0f, 1.0f);  // color #F6F4F0 in OpenGL
+
+    glVertex2f(3.3f, -2.3f);  // top-left vertex
+    glVertex2f(3.3f, -3.2f);  // top-right vertex
+    glVertex2f(4.2f, -3.2f); // bottom-right vertex
+    glVertex2f(4.2f, -2.3f);  // bottom-left vertex
+    glEnd();
+    glPopMatrix();
+
+
+    //TOP TIN SHADE
+    glPushMatrix();
+    glBegin(GL_QUADS);
+    glColor4f(0.0f, 0.75f, 0.0f, 1.0f);  // color #F6F4F0 in OpenGL
+
+    glVertex2f(2.5f, 4.0f);  // top-left vertex
+    glVertex2f(3.5f, 3.4f);  // top-right vertex
+    glVertex2f(3.5f, 2.1f); // bottom-right vertex
+    glVertex2f(2.5f, 1.5f);  // bottom-left vertex
+    glEnd();
+    glPopMatrix();//LEFT
+
+    glPushMatrix();
+    glBegin(GL_QUADS);
+    glColor4f(0.0f, 0.5f, 0.0f, 1.0f);  // color #F6F4F0 in OpenGL
+
+    glVertex2f(4.5f, 4.0f);  // top-left vertex
+    glVertex2f(3.5f, 3.4f);  // top-right vertex
+    glVertex2f(3.5f, 2.1f); // bottom-right vertex
+    glVertex2f(4.5f, 1.5f);  // bottom-left vertex
+    glEnd();
+    glPopMatrix();//RIGHT
+
+    glPushMatrix();
+    glBegin(GL_TRIANGLES);
+    glColor4f(0.13f, 0.55f, 0.13f, 1.0f);  // color #F6F4F0 in OpenGL
+
+    glVertex2f(2.5f, 4.0f);  // top-left vertex
+    glVertex2f(3.5f, 3.4f);  // top-right vertex
+    glVertex2f(4.5f, 4.0f); // bottom-right vertex
+    glEnd();
+    glPopMatrix();//TOP
+
+    glPushMatrix();
+    glBegin(GL_TRIANGLES);
+    glColor4f(0.13f, 0.55f, 0.13f, 1.0f);  // color #F6F4F0 in OpenGL
+
+    glVertex2f(3.5f, 2.1f);  // top-left vertex
+    glVertex2f(2.5f, 1.5f);  // top-right vertex
+    glVertex2f(4.5f, 1.5f); // bottom-right vertex
+    glEnd();
+    glPopMatrix();//BOTTOM
+
+
+    //BUILDING
+    glPushMatrix();
+    glBegin(GL_QUADS);
+    glColor4f(0.8f, 0.6f, 0.4f, 1.0f);  // color #F6F4F0 in OpenGL
+
+    glVertex2f(2.5f, -1.5f);  // top-left vertex
+    glVertex2f(5.0f, -1.5f);  // top-right vertex
+    glVertex2f(5.0f, 1.5f); // bottom-right vertex
+    glVertex2f(2.5f, 1.5f);  // bottom-left vertex
+    glEnd();
+    glPopMatrix();//OUTER BORDER
+
+    glPushMatrix();
+    glBegin(GL_QUADS);
+    glColor4f(0.8f, 0.8f, 0.8f, 1.0f);  // color #F6F4F0 in OpenGL
+
+    glVertex2f(2.6f, 1.4f);  // top-left vertex
+    glVertex2f(2.6f, -1.4f);  // top-right vertex
+    glVertex2f(4.9f, -1.4f); // bottom-right vertex
+    glVertex2f(4.9f, 1.4f);  // bottom-left vertex
+    glEnd();
+    glPopMatrix();//INNER BORDER
+
+    glPushMatrix();
+    glBegin(GL_QUADS);
+    glColor4f(0.55f, 0.27f, 0.07f, 1.0f);  // color #F6F4F0 in OpenGL
+
+    glVertex2f(3.7f, 1.0f);  // top-left vertex
+    glVertex2f(4.5f, 1.0f);  // top-right vertex
+    glVertex2f(4.5f, -0.2f); // bottom-right vertex
+    glVertex2f(3.7f, -0.2f);  // bottom-left vertex
+    glEnd();
+    glPopMatrix();//RIGHT BOX OUTER BORDER
+
+
+    glPushMatrix();
+    glBegin(GL_QUADS);
+    glColor4f(0.82f, 0.71f, 0.55f, 1.0f);  // color #F6F4F0 in OpenGL
+
+    glVertex2f(3.8f, 0.9f);  // top-left vertex
+    glVertex2f(4.4f, 0.9f);  // top-right vertex
+    glVertex2f(4.4f, -0.1f); // bottom-right vertex
+    glVertex2f(3.8f, -0.1f);  // bottom-left vertex
+    glEnd();
+    glPopMatrix();//RIGHT BOX INNER BORDER
+
+    glPushMatrix();
+    glBegin(GL_QUADS);
+    glColor4f(0.55f, 0.27f, 0.07f, 1.0f);  // color #F6F4F0 in OpenGL
+
+    glVertex2f(3.0f, 1.0f);  // top-left vertex
+    glVertex2f(3.5f, 1.0f);  // top-right vertex
+    glVertex2f(3.5f, 0.5f); // bottom-right vertex
+    glVertex2f(3.0f, 0.5f);  // bottom-left vertex
+    glEnd();
+    glPopMatrix();//TOP LEFT BOX
+
+    glPushMatrix();
+    glBegin(GL_QUADS);
+    glColor4f(0.55f, 0.27f, 0.07f, 1.0f);  // color #F6F4F0 in OpenGL
+
+    glVertex2f(3.0f, -0.5f);  // top-left vertex
+    glVertex2f(3.5f, -0.5f);  // top-right vertex
+    glVertex2f(3.5f, -1.0f); // bottom-right vertex
+    glVertex2f(3.0f, -1.0f);  // bottom-left vertex
+    glEnd();
+    glPopMatrix();//BOTTOM LEFT BOX
+
+
+    //left side of the road
+    //top tin shade
+    glPushMatrix();
+    glBegin(GL_TRIANGLES);
+    glColor4f(0.6f, 0.0f, 0.0f, 1.0f);  // color #F6F4F0 in OpenGL
+
+    glVertex2f(-2.5f, 4.0f);  // top-left vertex
+    glVertex2f(-5.0f, 4.0f);  // top-right vertex
+    glVertex2f(-3.2f, 3.0f);  // bottom-left vertex
+    glEnd();
+    glPopMatrix();//top rectangle
+
+    glPushMatrix();
+    glBegin(GL_TRIANGLES);
+    glColor4f(0.6f, 0.0f, 0.0f, 1.0f);  // color #F6F4F0 in OpenGL
+
+    glVertex2f(-3.2f, 3.0f);  // top-left vertex
+    glVertex2f(-5.0f, 2.0f); // bottom-right vertex
+    glVertex2f(-2.5f, 2.0f);  // bottom-left vertex
+    glEnd();
+    glPopMatrix();//bottom rectangle
+
+
+    glPushMatrix();
+    glBegin(GL_TRIANGLES);
+    glColor4f(0.7f, 0.2f, 0.2f, 1.0f);  // color #F6F4F0 in OpenGL
+
+    glVertex2f(-4.0f, 4.0f);  // top-left vertex
+    glVertex2f(-4.0f, 2.0f);  // top-right vertex
+    glVertex2f(-3.2f, 3.0f); // bottom-right vertex
+    glEnd();
+    glPopMatrix();//Left
+
+    glPushMatrix();
+    glBegin(GL_TRIANGLES);
+    glColor4f(0.5f, 0.0f, 0.0f, 1.0f);  // color #F6F4F0 in OpenGL
+
+    glVertex2f(-2.5f, 4.0f);  // top-left vertex
+    glVertex2f(-2.5f, 2.0f);  // top-right vertex
+    glVertex2f(-3.2f, 3.0f); // bottom-right vertex
+    glEnd();
+    glPopMatrix();  //Right
+
+
+    //Bottom Building
+
+    glPushMatrix();
+    glBegin(GL_QUADS);
+    glColor4f(0.3f, 0.3f, 0.3f, 1.0f);  // color #F6F4F0 in OpenGL
+
+    glVertex2f(-5.0f, -2.0f);  // top-left vertex
+    glVertex2f(-2.5f, -2.0f);  // top-right vertex
+    glVertex2f(-2.5f, -4.0f); // bottom-right vertex
+    glVertex2f(-5.0f, -4.0f);  // bottom-left vertex
+    glEnd();
+    glPopMatrix();//Outer border
+
+
+    glPushMatrix();
+    glBegin(GL_QUADS);
+    glColor4f(0.8f, 0.8f, 0.8f, 1.0f);  // color #F6F4F0 in OpenGL
+
+    glVertex2f(-4.9f, -2.1f);  // top-left vertex
+    glVertex2f(-2.6f, -2.1f);  // top-right vertex
+    glVertex2f(-2.6f, -3.9f); // bottom-right vertex
+    glVertex2f(-4.9f, -3.9f);  // bottom-left vertex
+    glEnd();
+    glPopMatrix();//Inner border
+
+
+
+    glPushMatrix();
+    glBegin(GL_QUADS);
+    glColor4f(0.4f, 0.4f, 0.4f, 1.0f);  // color #F6F4F0 in OpenGL
+
+    glVertex2f(-3.5f, -2.5f);  // top-left vertex
+    glVertex2f(-3.0f, -2.5f);  // top-right vertex
+    glVertex2f(-3.0f, -3.0f); // bottom-right vertex
+    glVertex2f(-3.5f, -3.0f);  // bottom-left vertex
+    glEnd();
+    glPopMatrix();//right box
+
+
+    //Middle Building
+
+    glPushMatrix();
+    glBegin(GL_QUADS);
+    glColor4f(0.27f, 0.51f, 0.71f, 1.0f);  // color #F6F4F0 in OpenGL
+
+    glVertex2f(-2.5f, 2.0f);  // top-left vertex
+    glVertex2f(-6.0f, 2.0f);  // top-right vertex
+    glVertex2f(-6.0f, -2.0f); // bottom-right vertex
+    glVertex2f(-2.5f, -2.0f);  // bottom-left vertex
+    glEnd();
+    glPopMatrix();//outer border
+
+
+    glPushMatrix();
+    glBegin(GL_QUADS);
+    glColor4f(0.74f, 0.85f, 0.91f, 1.0f);  // color #F6F4F0 in OpenGL
+
+    glVertex2f(-2.6f, 1.9f);  // top-left vertex
+    glVertex2f(-5.9f, 1.9f);  // top-right vertex
+    glVertex2f(-5.9f, -1.9f); // bottom-right vertex
+    glVertex2f(-2.6f, -1.9f);  // bottom-left vertex
+    glEnd();
+    glPopMatrix();//Inner border
+
+
+    glPushMatrix();
+    glBegin(GL_QUADS);
+    glColor4f(0.27f, 0.51f, 0.71f, 1.0f);  // color #F6F4F0 in OpenGL
+
+    glVertex2f(-3.9f, 1.5f);  // top-left vertex
+    glVertex2f(-3.0f, 1.5f);  // top-right vertex
+    glVertex2f(-3.0f, 0.2f); // bottom-right vertex
+    glVertex2f(-3.9f, 0.2f);  // bottom-left vertex
+    glEnd();
+    glPopMatrix();//Top box outer border
+
+
+    glPushMatrix();
+    glBegin(GL_QUADS);
+    glColor4f(0.7f, 0.86f, 0.96f, 1.0f);  // color #F6F4F0 in OpenGL
+
+    glVertex2f(-3.8f, 1.4f);  // top-left vertex
+    glVertex2f(-3.1f, 1.4f);  // top-right vertex
+    glVertex2f(-3.1f, 0.3f); // bottom-right vertex
+    glVertex2f(-3.8f, 0.3f);  // bottom-left vertex
+    glEnd();
+    glPopMatrix();//top box Inner border
+
+
+    glPushMatrix();
+    glBegin(GL_QUADS);
+    glColor4f(0.27f, 0.51f, 0.71f, 1.0f);  // color #F6F4F0 in OpenGL
+
+    glVertex2f(-3.9f, -0.6f);  // top-left vertex
+    glVertex2f(-3.0f, -0.6f);  // top-right vertex
+    glVertex2f(-3.0f, -1.5f); // bottom-right vertex
+    glVertex2f(-3.9f, -1.5f);  // bottom-left vertex
+    glEnd();
+    glPopMatrix();//bottom box
+
+
     glPushMatrix();
     // glLineWidth(2);
     glBegin(GL_QUADS);
@@ -81,6 +479,72 @@ void Road() {
 
 }
 
+void home(unsigned char key) {
+    glClearColor(0.9f, 0.9f, 0.9f, 1.0f); // Light gray background
+    glClear(GL_COLOR_BUFFER_BIT);  // Clear the buffer
+    
+    glColor3f(0.8f, 0.8f, 0.8f);  // Light gray for the placeholder
+    glBegin(GL_QUADS);
+    glVertex2f(-3.0f, -3.5f);
+    glVertex2f(3.0, -3.5f);
+    glVertex2f(3.0f, 3.5f);
+    glVertex2f(-3.0f, 3.5f);
+    glEnd();
+
+    glPushMatrix();
+    glTranslatef(0.0f, 0.0f, 0.0f);
+    glColor3f(0.1f, 0.4f, 0.8f); // Blue color for title bar
+    glBegin(GL_QUADS);
+    glVertex2f(-2.5f, 2.2f); // Top-left corner
+    glVertex2f(2.5f, 2.2f);  // Top-right corner
+    glVertex2f(2.5f, 3.0f);  // Bottom-right corner
+    glVertex2f(-2.5f, 3.0f); // Bottom-left corner
+    glEnd();
+    // Render title text
+    glColor3f(1.0f, 1.0f, 1.0f); // Black color for text
+    renderBitmapString(-1.0f, 2.5f, 0.0f, GLUT_BITMAP_HELVETICA_18, "YOU ARE LATE AGAIN!!");
+    glPopMatrix();
+    glPopMatrix();
+    
+    glColor3f(0.1f, 0.4f, 0.8f); // Blue color for title bar
+    glBegin(GL_QUADS);
+    glVertex2f(-2.0f, 0.35f); // Top-left corner
+    glVertex2f(-1.0f, 0.35f);  // Top-right corner
+    glVertex2f(-1.0f, -0.2f);  // Bottom-right corner
+    glVertex2f(-2.0f, -0.2f); // Bottom-left corner
+    glEnd();
+
+    glColor3f(0.1f, 0.4f, 0.8f); // Blue color for title bar
+    glBegin(GL_QUADS);
+    glVertex2f(-0.5f, 0.35f); // Top-left corner
+    glVertex2f(0.5f, 0.35f);  // Top-right corner
+    glVertex2f(0.5f, -0.2f);  // Bottom-right corner
+    glVertex2f(-0.5f, -0.2f); // Bottom-left corner
+    glEnd();
+
+    glColor3f(0.1f, 0.4f, 0.8f); // Blue color for title bar
+    glBegin(GL_QUADS);
+    glVertex2f(1.0f, 0.35f); // Top-left corner
+    glVertex2f(2.0f, 0.35f);  // Top-right corner
+    glVertex2f(2.0f, -0.2f);  // Bottom-right corner
+    glVertex2f(1.0f, -0.2f); // Bottom-left corner
+    glEnd();
+
+
+
+    glColor3f(1.0f, 0.0f, 0.0f); // Black color for text
+    renderBitmapString(-0.4f, 1.2f, 0.0f, GLUT_BITMAP_HELVETICA_18, "TIME UP");
+
+    // Render level texts
+    glColor3f(1.0f, 1.0f, 1.0f);
+    renderBitmapString(-1.78f, 0.0f, 0.0f, GLUT_BITMAP_HELVETICA_18, " RETRY-R");
+    renderBitmapString(-0.3f, 0.0f, 0.0f, GLUT_BITMAP_HELVETICA_18, " HOME-H");
+    renderBitmapString(1.17f, 0.0f, 0.0f, GLUT_BITMAP_HELVETICA_18, "QUIT-Q");
+
+
+    glFlush();  // Render the objects now
+
+}
 void timerFunc(int value) {
     if (timer > 0) {
         timer--;
@@ -100,16 +564,49 @@ void renderText(float x, float y, void* font, const char* text) {
         text++;
     }
 }
+bool isCollision(float obj1Left, float obj1Right, float obj1Top, float obj1Bottom,
+    float obj2Left, float obj2Right, float obj2Top, float obj2Bottom) {
+    // Check if the rectangles overlap
+    return !(obj1Left > obj2Right || obj1Right < obj2Left ||
+        obj1Top < obj2Bottom || obj1Bottom > obj2Top);
+}
+void checkCollisions() {
+    // Player bounding box
+    float playerLeft = playerX - 0.17f;
+    float playerRight = playerX + 0.17f;
+    float playerTop = playerY + 0.17f;
+    float playerBottom = playerY - 0.17f;
+
+    // Van bounding box
+    float vanLeft = 0.6f;    // x1 from the van
+    float vanRight = 1.9f;   // x2 from the van
+    float vanTop = -1.15f + move;    // y1 from the van
+    float vanBottom = -2.0f + move; // y2 from the van
+
+    // Van bounding box
+
+
+    if (isCollision(playerLeft, playerRight, playerTop, playerBottom,
+        vanLeft, vanRight, vanTop, vanBottom)) {
+        // Handle collision (e.g., reset player position)
+        playerX = 0.0f;
+        playerY = -1.5f;
+        move += 0.0f;
+        colup += 0.5f;
+        printf("Collision with van detected!\n");
+    }
+}
+
 
 void van() {
     // Back
     glPushMatrix();
     glBegin(GL_QUADS);
-    glColor4f(0.52f, 0.37f, 0.26f, 0.9f);
-    glVertex2f(1.9f, -0.8f);  // top-left vertex
-    glVertex2f(0.6f, -0.8f);  // top-right vertex 
-    glVertex2f(0.6f, -1.8f); // bottom-left vertex 
-    glVertex2f(1.9f, -1.8f);  // bottom-right vertex 
+    glColor3f(0.8f, 0.1f, 0.1f);
+    glVertex2f(x1 = 1.9f, y1_pos = -0.8f);  // top-left vertex
+    glVertex2f(x2 = 0.6f, y2_pos = -0.8f);  // top-right vertex
+    glVertex2f(x3 = 0.6f, y3_pos = -1.8f);  // bottom-right vertex
+    glVertex2f(x4 = 1.9f, y4_pos = -1.8f);  // bottom-left vertex
     glEnd();
     glPopMatrix();
 
@@ -166,7 +663,7 @@ void van() {
     glPopMatrix();
 }
 void player() {
-    
+
     glPushMatrix();
     glScalef(0.8f, 0.8f, 1.0f);
     GLfloat x = playerX;
@@ -432,47 +929,39 @@ void truck() {
 
 void level1() {
     // frame 1
-    if (move < 0.0f) {
     glPushMatrix();
     glTranslatef(0.0f, move + 0.0f, 0.0f);
     Road();
-     glScalef(01.0f, 01.0f, 1.0f);
+    glScalef(01.0f, 01.0f, 1.0f);
     truck();
     Rickshaw();
     van();
     glPopMatrix();
     glPopMatrix();
-    }
-    // frame 2
-    if (move < 0.0f) {
-        glPushMatrix();
-        glTranslatef(0.0f, move + 8.0f, 0.0f);
-        Road();
-        truck();
-        Rickshaw();
-        van();
-        glPopMatrix();
-    }
-        if (move < 0.0f) {
-        glPushMatrix();
-        glTranslatef(0.0f, move + 16.0f, 0.0f);
-        Road();
-        truck();
-        Rickshaw();
-        van();
-        glPopMatrix();
-    }
-    else {
-         glPushMatrix();
-    glTranslatef(0.0f, move + 0.0f, 0.0f);
+
+
+    glPushMatrix();
+    glTranslatef(0.0f, move + 8.0f, 0.0f);
     Road();
     truck();
     Rickshaw();
     van();
     glPopMatrix();
-    }
+    glPopMatrix();
+
+    glPushMatrix();
+    glTranslatef(0.0f, move + 16.0f, 0.0f);
+    Road();
+    truck();
+    Rickshaw();
+    van();
+    glPopMatrix();
+    glPopMatrix();
+
+
     player();
-// timer
+    checkCollisions();
+    // timer
     if (!isCountdownFinished) {
         char timerText[10];
         sprintf(timerText, "Time: %d", timer);  // Convert timer value to string
@@ -482,15 +971,118 @@ void level1() {
         renderText(-0.5f, 3.5f, GLUT_BITMAP_HELVETICA_18, "Time Up!");  // Message after countdown ends
     }
 
-   // Render now
+    // Render now
+}
+void level2() {
+    // frame 1
+    glPushMatrix();
+    glTranslatef(0.0f, colup = move + 0.0f, 0.0f);
+    Road();
+    glScalef(01.0f, 01.0f, 1.0f);
+    truck();
+    Rickshaw();
+    van();
+    glPopMatrix();
+    glPopMatrix();
+
+
+    glPushMatrix();
+    glTranslatef(0.0f, colup = move + 8.0f, 0.0f);
+    Road();
+    truck();
+    Rickshaw();
+    van();
+    glPopMatrix();
+    glPopMatrix();
+
+    glPushMatrix();
+    glTranslatef(0.0f, colup = move + 16.0f, 0.0f);
+    Road();
+    truck();
+    Rickshaw();
+    van();
+    glPopMatrix();
+    glPopMatrix();
+
+
+    player(); checkCollisions();
+    // timer
+    if (!isCountdownFinished) {
+        char timerText[10];
+        sprintf(timerText, "Time: %d", timer);  // Convert timer value to string
+        renderText(-2.4f, 3.7f, GLUT_BITMAP_HELVETICA_18, timerText);  // Adjust position and font
+    }
+    else {
+        renderText(-0.5f, 3.5f, GLUT_BITMAP_HELVETICA_18, "Time Up!");  // Message after countdown ends
+    }
+
+    // Render now
+}
+
+void level3() {
+    // frame 1
+    glPushMatrix();
+    glTranslatef(0.0f, colup = move + 0.0f, 0.0f);
+    Road();
+    glScalef(01.0f, 01.0f, 1.0f);
+    truck();
+    Rickshaw();
+    van();
+    glPopMatrix();
+    glPopMatrix();
+
+
+    glPushMatrix();
+    glTranslatef(0.0f, colup = move + 8.0f, 0.0f);
+    Road();
+    truck();
+    Rickshaw();
+    van();
+    glPopMatrix();
+    glPopMatrix();
+
+    glPushMatrix();
+    glTranslatef(0.0f, colup = move + 16.0f, 0.0f);
+    Road();
+    truck();
+    Rickshaw();
+    van();
+    glPopMatrix();
+    glPopMatrix();
+
+
+    player(); checkCollisions();
+    // timer
+    if (!isCountdownFinished) {
+        char timerText[10];
+        sprintf(timerText, "Time: %d", timer);  // Convert timer value to string
+        renderText(-2.4f, 3.7f, GLUT_BITMAP_HELVETICA_18, timerText);  // Adjust position and font
+    }
+    else {
+        renderText(-0.5f, 3.5f, GLUT_BITMAP_HELVETICA_18, "Time Up!");  // Message after countdown ends
+    }
+
+    // Render now
 }
 void display() {
-       glClear(GL_COLOR_BUFFER_BIT);
-       level1();
-          glFlush();
+    glClear(GL_COLOR_BUFFER_BIT);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    if (currentScreen == 0) {
+        home('0'); // Render home 
+    }
+    else if (currentScreen == 1) {
+        level1();
+    }
+    else if (currentScreen == 2) {
+        level2();
+    }
+    else if (currentScreen == 3) {
+        level3();
+    }
+    glutSwapBuffers(); // Double buffering
+
+    glFlush();
 }
-
-
 
 // Initialization function
 void initGL() {
