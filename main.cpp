@@ -4,44 +4,17 @@
 #include <cstdio>
 
 #define PI 3.14159265358979323846
-int timer = 1;
-bool isCountdownFinished = false;
+int a = 200;
+int timer = a;
 float x1, x2, x3, x4, y1_pos, y2_pos, y3_pos, y4_pos, colup;
 int currentScreen = 0;
-
-
 GLfloat playerX = 0.0f;
 GLfloat playerY = -1.5f;
 GLfloat move = 0.0f;
+int curentscreen = 0;
 GLfloat playerSpeed = 0.1f;
+bool isCountdownFinished = false;
 
-void keyboard(unsigned char key, int x, int y) {
-    switch (key) {
-    case 'w':  // Move up
-        move -= playerSpeed;
-        break;
-    case 's':  // Move down
-        move += playerSpeed;
-        break;
-    case 'a':  // Move leftw
-        playerX -= playerSpeed;
-        break;
-    case 'd':  // Move right
-        playerX += playerSpeed;
-        break;
-    case '1':
-        currentScreen = 1;
-        break;
-    case '2':
-        currentScreen = 2;
-        break;
-    case '3':
-        currentScreen = 3;
-        break;
-
-    }
-    glutPostRedisplay();  // Update display
-}
 void renderBitmapString(float x, float y, float z, void* font, const char* string) {
     const char* c;
     glRasterPos3f(x, y, z);  // Position the text
@@ -49,82 +22,131 @@ void renderBitmapString(float x, float y, float z, void* font, const char* strin
         glutBitmapCharacter(font, *c);  // Render each character
     }
 }
+void timeup() {
+    glClearColor(0.9f, 0.9f, 0.9f, 1.0f); // Light gray background
+    glClear(GL_COLOR_BUFFER_BIT);  // Clear the buffer
 
-// Display callback function
-// void home(unsigned char key) {
-//     glClearColor(0.9f, 0.9f, 0.9f, 1.0f); // Light gray background
-//     glClear(GL_COLOR_BUFFER_BIT);  // Clear the buffer
+    glColor3f(0.8f, 0.8f, 0.8f);  // Light gray for the placeholder
+    glBegin(GL_QUADS);
+    glVertex2f(-3.0f, -3.5f);
+    glVertex2f(3.0, -3.5f);
+    glVertex2f(3.0f, 3.5f);
+    glVertex2f(-3.0f, 3.5f);
+    glEnd();
 
-//     glColor3f(0.8f, 0.8f, 0.8f);  // Light gray for the placeholder
-//     glBegin(GL_QUADS);
-//     glVertex2f(-3.0f, -3.5f);
-//     glVertex2f(3.0, -3.5f);
-//     glVertex2f(3.0f, 3.5f);
-//     glVertex2f(-3.0f, 3.5f);
-//     glEnd();
+    glPushMatrix();
+    glTranslatef(0.0f, 0.0f, 0.0f);
+    glColor3f(0.1f, 0.4f, 0.8f); // Blue color for title bar
+    glBegin(GL_QUADS);
+    glVertex2f(-2.5f, 2.2f); // Top-left corner
+    glVertex2f(2.5f, 2.2f);  // Top-right corner
+    glVertex2f(2.5f, 3.0f);  // Bottom-right corner
+    glVertex2f(-2.5f, 3.0f); // Bottom-left corner
+    glEnd();
+    // Render title text
+    glColor3f(1.0f, 1.0f, 1.0f); // Black color for text
+    renderBitmapString(-1.0f, 2.5f, 0.0f, GLUT_BITMAP_HELVETICA_18, "YOU ARE LATE AGAIN!!");
+    glPopMatrix();
+    glPopMatrix();
 
-//     glColor3f(0.0f, 0.8f, 0.8f);// Light gray for the placeholder
-//     glBegin(GL_QUADS);
-//     glVertex2f(2.0f, -1.0f);
-//     glVertex2f(-2.0f, -1.0f);
-//     glVertex2f(-2.0f, -2.0f);
-//     glVertex2f(2.0, -2.0f);
+    glColor3f(1.0f, 0.0f, 0.0f); // Black color for text
+    renderBitmapString(-0.4f, 1.2f, 0.0f, GLUT_BITMAP_HELVETICA_18, "TIME UP");
 
-//     glEnd();
-
-//     glColor3f(0.1f, 0.4f, 0.8f); // Blue color for title bar
-//     glBegin(GL_QUADS);
-//     glVertex2f(-2.5f, 2.2f); // Top-left corner
-//     glVertex2f(2.5f, 2.2f);  // Top-right corner
-//     glVertex2f(2.5f, 3.0f);  // Bottom-right corner
-//     glVertex2f(-2.5f, 3.0f); // Bottom-left corner
-//     glEnd();
-
-//     glColor3f(0.1f, 0.4f, 0.8f); // Blue color for title bar
-//     glBegin(GL_QUADS);
-//     glVertex2f(-2.0f, 0.35f); // Top-left corner
-//     glVertex2f(-1.0f, 0.35f);  // Top-right corner
-//     glVertex2f(-1.0f, -0.2f);  // Bottom-right corner
-//     glVertex2f(-2.0f, -0.2f); // Bottom-left corner
-//     glEnd();
-
-//     glColor3f(0.1f, 0.4f, 0.8f); // Blue color for title bar
-//     glBegin(GL_QUADS);
-//     glVertex2f(-0.5f, 0.35f); // Top-left corner
-//     glVertex2f(0.5f, 0.35f);  // Top-right corner
-//     glVertex2f(0.5f, -0.2f);  // Bottom-right corner
-//     glVertex2f(-0.5f, -0.2f); // Bottom-left corner
-//     glEnd();
-
-//     glColor3f(0.1f, 0.4f, 0.8f); // Blue color for title bar
-//     glBegin(GL_QUADS);
-//     glVertex2f(1.0f, 0.35f); // Top-left corner
-//     glVertex2f(2.0f, 0.35f);  // Top-right corner
-//     glVertex2f(2.0f, -0.2f);  // Bottom-right corner
-//     glVertex2f(1.0f, -0.2f); // Bottom-left corner
-//     glEnd();
-
-//     // Render title text
-//     glColor3f(1.0f, 1.0f, 1.0f); // Black color for text
-//     renderBitmapString(-0.7f, 2.5f, 0.0f, GLUT_BITMAP_HELVETICA_18, "LATE AGAIN!!");
-
-//     glColor3f(0.0f, 0.0f, 0.0f); // Black color for text
-//     renderBitmapString(-0.4f, 1.2f, 0.0f, GLUT_BITMAP_HELVETICA_18, "LEVELS");
-
-//     // Render level texts
-//     glColor3f(1.0f, 1.0f, 1.0f);
-//     renderBitmapString(-1.78f, 0.0f, 0.0f, GLUT_BITMAP_HELVETICA_18, " ONE");
-//     renderBitmapString(-0.3f, 0.0f, 0.0f, GLUT_BITMAP_HELVETICA_18, " TWO");
-//     renderBitmapString(1.17f, 0.0f, 0.0f, GLUT_BITMAP_HELVETICA_18, "THREE");
+    // Render level texts
+    glColor3f(0.0f, 0.0f, 0.0f);
+    renderBitmapString(-0.8f, 0.0f, 0.0f, GLUT_BITMAP_HELVETICA_18, " RETRY-PRESS R");
+    renderBitmapString(-0.8f, -0.5f, 0.0f, GLUT_BITMAP_HELVETICA_18, " HOME-PRESS H");
 
 
-//      glFlush();  // Render the objects now
 
-// }
+    glFlush();  // Render the objects now
+
+}
+void timerFunc(int value) {
+    if (currentScreen == 1 || currentScreen == 2 || currentScreen == 3) {
+        if (timer > 0) {
+            timer--;
+            glutPostRedisplay();  // Update display
+            glutTimerFunc(1000, timerFunc, 0);  // Restart the timer
+        }
+        if (timer <= 0) {
+            timeup();  // Call timeUp function when time reaches zero
+        }
+    }
+    }
+
+void home() {
+    glClearColor(0.9f, 0.9f, 0.9f, 1.0f); // Light gray background
+    glClear(GL_COLOR_BUFFER_BIT);  // Clear the buffer
+
+    glColor3f(0.8f, 0.8f, 0.8f);  // Light gray for the placeholder
+    glBegin(GL_QUADS);
+    glVertex2f(-3.0f, -3.5f);
+    glVertex2f(3.0, -3.5f);
+    glVertex2f(3.0f, 3.5f);
+    glVertex2f(-3.0f, 3.5f);
+    glEnd();
+
+    glColor3f(0.0f, 0.8f, 0.8f);// Light gray for the placeholder
+    glBegin(GL_QUADS);
+    glVertex2f(2.0f, -1.0f);
+    glVertex2f(-2.0f, -1.0f);
+    glVertex2f(-2.0f, -2.0f);
+    glVertex2f(2.0, -2.0f);
+
+    glEnd();
+
+    glColor3f(0.1f, 0.4f, 0.8f); // Blue color for title bar
+    glBegin(GL_QUADS);
+    glVertex2f(-2.5f, 2.2f); // Top-left corner
+    glVertex2f(2.5f, 2.2f);  // Top-right corner
+    glVertex2f(2.5f, 3.0f);  // Bottom-right corner
+    glVertex2f(-2.5f, 3.0f); // Bottom-left corner
+    glEnd();
+
+    glColor3f(0.1f, 0.4f, 0.8f); // Blue color for title bar
+    glBegin(GL_QUADS);
+    glVertex2f(-2.0f, 0.35f); // Top-left corner
+    glVertex2f(-1.0f, 0.35f);  // Top-right corner
+    glVertex2f(-1.0f, -0.2f);  // Bottom-right corner
+    glVertex2f(-2.0f, -0.2f); // Bottom-left corner
+    glEnd();
+
+    glColor3f(0.1f, 0.4f, 0.8f); // Blue color for title bar
+    glBegin(GL_QUADS);
+    glVertex2f(-0.5f, 0.35f); // Top-left corner
+    glVertex2f(0.5f, 0.35f);  // Top-right corner
+    glVertex2f(0.5f, -0.2f);  // Bottom-right corner
+    glVertex2f(-0.5f, -0.2f); // Bottom-left corner
+    glEnd();
+
+    glColor3f(0.1f, 0.4f, 0.8f); // Blue color for title bar
+    glBegin(GL_QUADS);
+    glVertex2f(1.0f, 0.35f); // Top-left corner
+    glVertex2f(2.0f, 0.35f);  // Top-right corner
+    glVertex2f(2.0f, -0.2f);  // Bottom-right corner
+    glVertex2f(1.0f, -0.2f); // Bottom-left corner
+    glEnd();
+
+    // Render title text
+    glColor3f(1.0f, 1.0f, 1.0f); // Black color for text
+    renderBitmapString(-0.7f, 2.5f, 0.0f, GLUT_BITMAP_HELVETICA_18, "LATE AGAIN!!");
+
+    glColor3f(0.0f, 0.0f, 0.0f); // Black color for text
+    renderBitmapString(-0.4f, 1.2f, 0.0f, GLUT_BITMAP_HELVETICA_18, "LEVELS");
+
+    // Render level texts
+    glColor3f(1.0f, 1.0f, 1.0f);
+    renderBitmapString(-1.78f, 0.0f, 0.0f, GLUT_BITMAP_HELVETICA_18, " ONE");
+    renderBitmapString(-0.3f, 0.0f, 0.0f, GLUT_BITMAP_HELVETICA_18, " TWO");
+    renderBitmapString(1.17f, 0.0f, 0.0f, GLUT_BITMAP_HELVETICA_18, "THREE");
+
+
+    glFlush();  // Render the objects now
+
+}
 
 void Road() {
-
-    //right side of the road
     //bottom tin shade
     glPushMatrix();
     glBegin(GL_QUADS);
@@ -477,87 +499,22 @@ void Road() {
     glEnd();
     glPopMatrix();
 
-}
-
-void home(unsigned char key) {
-    glClearColor(0.9f, 0.9f, 0.9f, 1.0f); // Light gray background
-    glClear(GL_COLOR_BUFFER_BIT);  // Clear the buffer
-    
-    glColor3f(0.8f, 0.8f, 0.8f);  // Light gray for the placeholder
-    glBegin(GL_QUADS);
-    glVertex2f(-3.0f, -3.5f);
-    glVertex2f(3.0, -3.5f);
-    glVertex2f(3.0f, 3.5f);
-    glVertex2f(-3.0f, 3.5f);
-    glEnd();
+    // road side
 
     glPushMatrix();
-    glTranslatef(0.0f, 0.0f, 0.0f);
-    glColor3f(0.1f, 0.4f, 0.8f); // Blue color for title bar
     glBegin(GL_QUADS);
-    glVertex2f(-2.5f, 2.2f); // Top-left corner
-    glVertex2f(2.5f, 2.2f);  // Top-right corner
-    glVertex2f(2.5f, 3.0f);  // Bottom-right corner
-    glVertex2f(-2.5f, 3.0f); // Bottom-left corner
+    glColor3f(0.0f, 0.0f, 0.0f);  // color #F6F4F0 in OpenGL
+    glVertex2f(-2.4f, 4.0f);  // top-left vertex
+    glVertex2f(-2.5f, 4.0f);  // top-right vertex
+    glVertex2f(-2.5f, -4.0f); // bottom-right vertex
+    glVertex2f(-2.4f, -4.0f);  // bottom-left vertex
     glEnd();
-    // Render title text
-    glColor3f(1.0f, 1.0f, 1.0f); // Black color for text
-    renderBitmapString(-1.0f, 2.5f, 0.0f, GLUT_BITMAP_HELVETICA_18, "YOU ARE LATE AGAIN!!");
     glPopMatrix();
-    glPopMatrix();
-    
-    glColor3f(0.1f, 0.4f, 0.8f); // Blue color for title bar
-    glBegin(GL_QUADS);
-    glVertex2f(-2.0f, 0.35f); // Top-left corner
-    glVertex2f(-1.0f, 0.35f);  // Top-right corner
-    glVertex2f(-1.0f, -0.2f);  // Bottom-right corner
-    glVertex2f(-2.0f, -0.2f); // Bottom-left corner
-    glEnd();
-
-    glColor3f(0.1f, 0.4f, 0.8f); // Blue color for title bar
-    glBegin(GL_QUADS);
-    glVertex2f(-0.5f, 0.35f); // Top-left corner
-    glVertex2f(0.5f, 0.35f);  // Top-right corner
-    glVertex2f(0.5f, -0.2f);  // Bottom-right corner
-    glVertex2f(-0.5f, -0.2f); // Bottom-left corner
-    glEnd();
-
-    glColor3f(0.1f, 0.4f, 0.8f); // Blue color for title bar
-    glBegin(GL_QUADS);
-    glVertex2f(1.0f, 0.35f); // Top-left corner
-    glVertex2f(2.0f, 0.35f);  // Top-right corner
-    glVertex2f(2.0f, -0.2f);  // Bottom-right corner
-    glVertex2f(1.0f, -0.2f); // Bottom-left corner
-    glEnd();
-
-
-
-    glColor3f(1.0f, 0.0f, 0.0f); // Black color for text
-    renderBitmapString(-0.4f, 1.2f, 0.0f, GLUT_BITMAP_HELVETICA_18, "TIME UP");
-
-    // Render level texts
-    glColor3f(1.0f, 1.0f, 1.0f);
-    renderBitmapString(-1.78f, 0.0f, 0.0f, GLUT_BITMAP_HELVETICA_18, " RETRY-R");
-    renderBitmapString(-0.3f, 0.0f, 0.0f, GLUT_BITMAP_HELVETICA_18, " HOME-H");
-    renderBitmapString(1.17f, 0.0f, 0.0f, GLUT_BITMAP_HELVETICA_18, "QUIT-Q");
-
-
-    glFlush();  // Render the objects now
 
 }
-void timerFunc(int value) {
-    if (timer > 0) {
-        timer--;
-        glutPostRedisplay();  // Update display
-        glutTimerFunc(1000, timerFunc, 0);  // Restart the timer
-    }
-    else {
-        isCountdownFinished = true;
-        glutPostRedisplay();  // Ensure "Time Up" message is displayed
-    }
-}
+
 void renderText(float x, float y, void* font, const char* text) {
-    glColor3f(1.0f, 0.0f, 0.0f);  // Red color
+    glColor3f(1.0f, 1.0f, 1.0f);  //  color
     glRasterPos2f(x, y);          // Position the text
     while (*text) {
         glutBitmapCharacter(font, *text);
@@ -572,10 +529,10 @@ bool isCollision(float obj1Left, float obj1Right, float obj1Top, float obj1Botto
 }
 void checkCollisions() {
     // Player bounding box
-    float playerLeft = playerX - 0.17f;
-    float playerRight = playerX + 0.17f;
-    float playerTop = playerY + 0.17f;
-    float playerBottom = playerY - 0.17f;
+    float playerLeft = playerX ;
+    float playerRight = playerX;
+    float playerTop = playerY;
+    float playerBottom = playerY;
 
     // Van bounding box
     float vanLeft = 0.6f;    // x1 from the van
@@ -583,20 +540,32 @@ void checkCollisions() {
     float vanTop = -1.15f + move;    // y1 from the van
     float vanBottom = -2.0f + move; // y2 from the van
 
-    // Van bounding box
+//   road left
+    float roadLeft = -4.0f;        // x1 
+    float roadRight = -2.7f;     // x2 
+    float roadTop = 4.0f;       // y1 
+    float roadBottom = -4.0f ; // y2 
 
 
     if (isCollision(playerLeft, playerRight, playerTop, playerBottom,
         vanLeft, vanRight, vanTop, vanBottom)) {
         // Handle collision (e.g., reset player position)
-        playerX = 0.0f;
-        playerY = -1.5f;
+        playerX -= 0.1f;
         move += 0.0f;
-        colup += 0.5f;
-        printf("Collision with van detected!\n");
+        glColor3f(1.0f, 0.0f, 0.0f);
+        renderBitmapString(-0.5f, 03.5f, 0.0f, GLUT_BITMAP_HELVETICA_18, " Collition Detected");
+    }
+
+        if (isCollision(playerLeft, playerRight, playerTop, playerBottom,
+        roadLeft, roadRight, roadTop, roadBottom)) {
+        // Handle collision (e.g., reset player position)
+        playerX +=0.1;
+        move += 0.0f;
+        glColor3f(1.0f, 0.0f, 0.0f);
+        renderBitmapString(-0.5f, 03.5f, 0.0f, GLUT_BITMAP_HELVETICA_18, " Collition Detected");
+
     }
 }
-
 
 void van() {
     // Back
@@ -926,17 +895,38 @@ void truck() {
     glPopMatrix();
 
 }
+void levelinfobox() {
+    // timer
+    glPushMatrix();
+    glBegin(GL_QUADS);
+    glColor4f(0.0f, 0.0f, 0.0f,0.7f);  // color #F6F4F0 in OpenGL
+    glVertex2f(-4.0f, 4.0f);  // top-left vertex
+    glVertex2f(4.0f, 4.0f);  // top-right vertex
+    glVertex2f(4.0f, 3.75f); // bottom-right vertex
+    glVertex2f(-4.0f, 3.75f);  // bottom-left vertex
+    glEnd();
+    glPopMatrix();
 
+    // Render level texts
+    glColor3f(1.0f, 1.0f, 1.0f);
+    renderBitmapString(-1.51f, 3.82f, 0.0f, GLUT_BITMAP_HELVETICA_18, " Press R to restart");
+    renderBitmapString(1.31f, 3.82f, 0.0f, GLUT_BITMAP_HELVETICA_18, " Press H to quit to menu");
+
+    if (isCountdownFinished == 0) {
+        char timerText[10];
+        sprintf(timerText, "Time: %d", timer);  // Convert timer value to string
+        renderText(-3.0f, 3.82f, GLUT_BITMAP_HELVETICA_18, timerText);  // Adjust position and font
+    }
+
+}
 void level1() {
     // frame 1
     glPushMatrix();
     glTranslatef(0.0f, move + 0.0f, 0.0f);
     Road();
-    glScalef(01.0f, 01.0f, 1.0f);
     truck();
     Rickshaw();
     van();
-    glPopMatrix();
     glPopMatrix();
 
 
@@ -958,19 +948,11 @@ void level1() {
     glPopMatrix();
     glPopMatrix();
 
-
+    levelinfobox();
     player();
     checkCollisions();
-    // timer
-    if (!isCountdownFinished) {
-        char timerText[10];
-        sprintf(timerText, "Time: %d", timer);  // Convert timer value to string
-        renderText(-2.4f, 3.7f, GLUT_BITMAP_HELVETICA_18, timerText);  // Adjust position and font
-    }
-    else {
-        renderText(-0.5f, 3.5f, GLUT_BITMAP_HELVETICA_18, "Time Up!");  // Message after countdown ends
-    }
-
+   
+   
     // Render now
 }
 void level2() {
@@ -1010,10 +992,8 @@ void level2() {
     if (!isCountdownFinished) {
         char timerText[10];
         sprintf(timerText, "Time: %d", timer);  // Convert timer value to string
+        glColor3f(0.0f, 0.0f, 0.0f);  // Set timer color to red
         renderText(-2.4f, 3.7f, GLUT_BITMAP_HELVETICA_18, timerText);  // Adjust position and font
-    }
-    else {
-        renderText(-0.5f, 3.5f, GLUT_BITMAP_HELVETICA_18, "Time Up!");  // Message after countdown ends
     }
 
     // Render now
@@ -1064,11 +1044,63 @@ void level3() {
 
     // Render now
 }
+
+void keyboard(unsigned char key, int x, int y) {
+    if (timer > 0) {
+        switch (key) {
+            case 'w':  // Move up
+                move -= playerSpeed;
+                break;
+            case 's':  // Move down
+                move += playerSpeed;
+                break;
+            case 'a':  // Move left
+                playerX -= playerSpeed;
+                break;
+            case 'd':  // Move right
+                playerX += playerSpeed;
+                break;
+            case '1':
+            case '2':
+            case '3':
+                currentScreen++;
+                glutTimerFunc(1000, timerFunc, 0);  // Restart the timer
+                break;
+        }
+    }
+
+    switch (key) {
+        
+      case 'h':
+        home();
+        currentScreen = 0;
+        timer = a;
+        break;
+
+        case 'r':
+            timer = a;  // Reset the timer
+            isCountdownFinished = false;
+            playerX = 0.0f;  // Reset player position
+            playerY = -1.5f;
+            move = 0.0f;
+            glutTimerFunc(1000, timerFunc, 0);  // Restart the timer
+            if (currentScreen == 1) {
+                level1();
+            } else if (currentScreen == 2) {
+                level2();
+            } else if (currentScreen == 3) {
+                level3();
+            }
+            break;
+    }
+
+    glutPostRedisplay();  // Update display
+}
 void display() {
     glClear(GL_COLOR_BUFFER_BIT);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     if (currentScreen == 0) {
-        home('0'); // Render home 
+        home(); // Render home 
     }
     else if (currentScreen == 1) {
         level1();
@@ -1079,11 +1111,13 @@ void display() {
     else if (currentScreen == 3) {
         level3();
     }
+    
+
+
     glutSwapBuffers(); // Double buffering
 
     glFlush();
 }
-
 // Initialization function
 void initGL() {
     glClearColor(1.0f, 1.0f, 1.0f, 1.0f); // Set background color to black
