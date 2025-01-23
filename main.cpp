@@ -71,7 +71,6 @@ void timerFunc(int value) {
             glutTimerFunc(1000, timerFunc, 0);  // Restart the timer
         } 
         else if(timer <=0) {
-            
            currentScreen = 3;
             glutPostRedisplay();  // Update display to show timeup screen
         }
@@ -607,7 +606,6 @@ void checkCollisions() {
         // Handle collision (e.g., reset player position)
         playerX = 0.0;
         move = 0.0f;
-        currentScreen = 3;
         glColor3f(1.0f, 0.0f, 0.0f);
         renderBitmapString(-0.5f, 3.5f, 0.0f, GLUT_BITMAP_HELVETICA_18, "Collision Detected");
     }
