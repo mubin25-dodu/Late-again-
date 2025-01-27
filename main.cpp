@@ -17,7 +17,15 @@ int l1 = 10;
 int curentscreen = 0;
 GLfloat playerSpeed = pspeed;
 bool isCountdownFinished = false;
+void reset() {
 
+            timer = a;  // Reset the timer
+            isCountdownFinished = false;
+            playerX = 0.0f;  // Reset player position
+            playerY = -1.5f;
+            playerSpeed = pspeed;
+            move = 0.0f;
+}
 void renderBitmapString(float x, float y, float z, void* font, const char* string) {
     const char* c;
     glRasterPos3f(x, y, z);  // Position the text
@@ -1140,28 +1148,20 @@ void keyboard(unsigned char key, int x, int y) {
     case 's':
         if (currentScreen == 0) {
             currentScreen = 1;
-            timer = a;
+ reset();
         }
         break;
 
     case 'h':
         home();
-        // Reset the timer
-        playerX = 0.0f;  // Reset player position
-        playerY = -1.5f;
-        move = 0.0f;
         currentScreen = 0;
+        reset();
         break;
 
     case 'r':
         if (currentScreen != 0) {
             currentScreen = 1;
-            timer = a;  // Reset the timer
-            isCountdownFinished = false;
-            playerX = 0.0f;  // Reset player position
-            playerY = -1.5f;
-            playerSpeed = pspeed;
-            move = 0.0f;
+            reset();
         }
         break;
         }
@@ -1169,7 +1169,8 @@ void keyboard(unsigned char key, int x, int y) {
         glutPostRedisplay();  // Update display
     }
 }
-        void display() {
+
+void display() {
     glClear(GL_COLOR_BUFFER_BIT);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     if (currentScreen == 0) {
@@ -1208,7 +1209,7 @@ void movement(int value) {
         glutPostRedisplay();  // Update display
         glutTimerFunc(16, movement, 0);  // Restart the timer with shorter interval
     }
-    checkCollisions();  // Check collisions after movement
+ 
 }
 
 // Initialization function
