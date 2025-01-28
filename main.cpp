@@ -2,29 +2,33 @@
 #include <GL/glut.h>  // GLUT, include glu.h and gl.h
 #include <cmath>
 #include <cstdio>
+#include <cstdlib>  // For rand() and srand()
+#include <ctime>    // For time()
 
 #define PI 3.14159265358979323846
-int a = 20;
+int a = 120;
 int timer = a;
-GLfloat pspeed = 1.35; // playerx shift speed
+GLfloat pspeed = 2.75; // playerx shift speed
 float x1, x2, x3, x4, y1_pos, y2_pos, y3_pos, y4_pos;
 int currentScreen = 0;
 GLfloat playerX = 0.0f;
 GLfloat playerY = -1.5f;
-GLfloat move = -15.0f;
-GLfloat screenmovement = 0;
-int l1 = 10;
+GLfloat move = 0.0f;
+int level = 1;
+
+GLfloat screenmovement = 2;
+int l1 = 20;
 int curentscreen = 0;
 GLfloat playerSpeed = pspeed;
 bool isCountdownFinished = false;
 void reset() {
 
-            timer = a;  // Reset the timer
-            isCountdownFinished = false;
-            playerX = 0.0f;  // Reset player position
-            playerY = -1.5f;
-            playerSpeed = pspeed;
-            move = 0.0f;
+    timer = a;  // Reset the timer
+    isCountdownFinished = false;
+    playerX = 0.0f;  // Reset player position
+    playerY = -1.5f;
+    playerSpeed = pspeed;
+    move = 0.0f;
 }
 void renderBitmapString(float x, float y, float z, void* font, const char* string) {
     const char* c;
@@ -55,21 +59,19 @@ void timeup() {
     glVertex2f(-2.5f, 3.0f); // Bottom-left corner
     glEnd();
     // Render title text
-    glColor3f(1.0f, 1.0f, 1.0f); // Black color for text
+    glColor3f(1.0f, 1.0f, 1.0f); // White color for text
     renderBitmapString(-1.0f, 2.5f, 0.0f, GLUT_BITMAP_HELVETICA_18, "YOU ARE LATE AGAIN!!");
     glPopMatrix();
-    glPopMatrix();
 
-    glColor3f(1.0f, 0.0f, 0.0f); // Black color for text
+    glColor3f(1.0f, 0.0f, 0.0f); // Red color for text
     renderBitmapString(-0.4f, 1.2f, 0.0f, GLUT_BITMAP_HELVETICA_18, "TIME UP");
 
     // Render level texts
     glColor3f(0.0f, 0.0f, 0.0f);
-    renderBitmapString(-0.8f, 0.0f, 0.0f, GLUT_BITMAP_HELVETICA_18, " RETRY-PRESS R");
-    renderBitmapString(-0.8f, -0.5f, 0.0f, GLUT_BITMAP_HELVETICA_18, " HOME-PRESS H");
+    renderBitmapString(-0.8f, 0.0f, 0.0f, GLUT_BITMAP_HELVETICA_18, "RETRY - PRESS R");
+    renderBitmapString(-0.8f, -0.5f, 0.0f, GLUT_BITMAP_HELVETICA_18, "HOME - PRESS H");
 
     glFlush();  // Render the objects now
-
 }
 void colpage() {
     glClearColor(0.9f, 0.9f, 0.9f, 1.0f); // Light gray background
@@ -92,21 +94,20 @@ void colpage() {
     glVertex2f(2.5f, 3.0f);  // Bottom-right corner
     glVertex2f(-2.5f, 3.0f); // Bottom-left corner
     glEnd();
-
-    
+    // Render title text
+    glColor3f(1.0f, 1.0f, 1.0f); // White color for text
+    renderBitmapString(-1.0f, 2.5f, 0.0f, GLUT_BITMAP_HELVETICA_18, "COLLISION DETECTED");
     glPopMatrix();
-    glPopMatrix();
 
-    glColor3f(1.0f, 0.0f, 0.0f); // Black color for text
-    renderBitmapString(-0.4f, 1.2f, 0.0f, GLUT_BITMAP_HELVETICA_18, "COLLITION DETECTED");
+    glColor3f(1.0f, 0.0f, 0.0f); // Red color for text
+    renderBitmapString(-0.4f, 1.2f, 0.0f, GLUT_BITMAP_HELVETICA_18, "GAME OVER");
 
     // Render level texts
     glColor3f(0.0f, 0.0f, 0.0f);
-    renderBitmapString(-0.8f, 0.0f, 0.0f, GLUT_BITMAP_HELVETICA_18, " RETRY-PRESS R");
-    renderBitmapString(-0.8f, -0.5f, 0.0f, GLUT_BITMAP_HELVETICA_18, " HOME-PRESS H");
+    renderBitmapString(-0.8f, 0.0f, 0.0f, GLUT_BITMAP_HELVETICA_18, "RETRY - PRESS R");
+    renderBitmapString(-0.8f, -0.5f, 0.0f, GLUT_BITMAP_HELVETICA_18, "HOME - PRESS H");
 
     glFlush();  // Render the objects now
-
 }
 void timerFunc(int value) {
     if (timer > 0) {
@@ -118,11 +119,10 @@ void timerFunc(int value) {
         currentScreen = 3;
         glutPostRedisplay();  // Ensure "Time Up" message is displayed
     }
-   
+
 }
 
 void home() {
-
     glClearColor(0.9f, 0.9f, 0.9f, 1.0f); // Light gray background
     glClear(GL_COLOR_BUFFER_BIT);  // Clear the buffer
 
@@ -134,13 +134,12 @@ void home() {
     glVertex2f(-3.0f, 3.5f);
     glEnd();
 
-    glColor3f(0.0f, 0.8f, 0.8f);// Light gray for the placeholder
+    glColor3f(0.0f, 0.8f, 0.8f); // Light gray for the placeholder
     glBegin(GL_QUADS);
     glVertex2f(2.0f, -1.0f);
     glVertex2f(-2.0f, -1.0f);
     glVertex2f(-2.0f, -2.0f);
     glVertex2f(2.0, -2.0f);
-
     glEnd();
 
     glColor3f(0.1f, 0.4f, 0.8f); // Blue color for title bar
@@ -176,18 +175,14 @@ void home() {
     glEnd();
 
     // Render title text
-    glColor3f(1.0f, 1.0f, 1.0f); // Black color for text
+    glColor3f(1.0f, 1.0f, 1.0f); // White color for text
     renderBitmapString(-0.7f, 2.5f, 0.0f, GLUT_BITMAP_HELVETICA_18, "LATE AGAIN!!");
-
-    // glColor3f(0.0f, 0.0f, 0.0f); // Black color for text
-    // renderBitmapString(-0.4f, 1.2f, 0.0f, GLUT_BITMAP_HELVETICA_18, "LEVELS");
 
     // Render level texts
     glColor3f(1.0f, 1.0f, 1.0f);
     renderBitmapString(-1.78f, 0.0f, 0.0f, GLUT_BITMAP_HELVETICA_18, "PRESS S TO START THE GAME");
 
     glFlush();  // Render the objects now
-
 }
 
 void Road() {
@@ -629,28 +624,29 @@ void checkCollisions() {
     float truckTop = 3.2f + move;
     float truckBottom = 0.5f + move;
 
-    if (isCollision(playerLeft, playerRight, playerTop, playerBottom,
-        vanLeft, vanRight, vanTop, vanBottom) ||
-        isCollision(playerLeft, playerRight, playerTop, playerBottom,
-            roadLeft, roadRight, roadTop, roadBottom) ||
-        isCollision(playerLeft, playerRight, playerTop, playerBottom,
-            roadLeft2, roadRight2, roadTop2, roadBottom2) ||
-        isCollision(playerLeft, playerRight, playerTop, playerBottom,
-            carLeft, carRight, carTop, carBottom) ||
-        isCollision(playerLeft, playerRight, playerTop, playerBottom,
-            car2Left, car2Right, car2Top, car2Bottom) ||
-        isCollision(playerLeft, playerRight, playerTop, playerBottom,
-            rickshawLeft, rickshawRight, rickshawTop, rickshawBottom) ||
-        isCollision(playerLeft, playerRight, playerTop, playerBottom,
-            truckLeft, truckRight, truckTop, truckBottom)) {
-    
-        currentScreen = 4;
-    }
+    // if (isCollision(playerLeft, playerRight, playerTop, playerBottom,
+    //     vanLeft, vanRight, vanTop, vanBottom) ||
+    //     isCollision(playerLeft, playerRight, playerTop, playerBottom,
+    //         roadLeft, roadRight, roadTop, roadBottom) ||
+    //     isCollision(playerLeft, playerRight, playerTop, playerBottom,
+    //         roadLeft2, roadRight2, roadTop2, roadBottom2) ||
+    //     isCollision(playerLeft, playerRight, playerTop, playerBottom,
+    //         carLeft, carRight, carTop, carBottom) ||
+    //     isCollision(playerLeft, playerRight, playerTop, playerBottom,
+    //         car2Left, car2Right, car2Top, car2Bottom) ||
+    //     isCollision(playerLeft, playerRight, playerTop, playerBottom,
+    //         rickshawLeft, rickshawRight, rickshawTop, rickshawBottom) ||
+    //     isCollision(playerLeft, playerRight, playerTop, playerBottom,
+    //         truckLeft, truckRight, truckTop, truckBottom)) {
+
+    //     currentScreen = 4;
+    // }
 }
 
 void car() {
     glPushMatrix();
     glTranslated(0.5, 0.5, 0.0f);  // Translate to the position
+    glRotated(180.0, 0.0, 0.0, 1.0);
     glScalef(0.45f, 0.35f, 1.0f);  // Scale down the car
 
     // Car body (main part)
@@ -1095,8 +1091,10 @@ void levelinfobox() {
     }
 
 }
-void gamescreen() {
+
+void level1() {
     // frame 1
+    
     glPushMatrix();
     glTranslatef(0.0f, move, 0.0f);  // Apply move variable
     Road();
@@ -1115,42 +1113,96 @@ void gamescreen() {
     truck();
     glTranslatef(-0.3f, 5.0f, 0.0f);
     van();
+    glTranslatef(-0.6f, 1.5f, 0.0f);
+    car();
     glPopMatrix();
 
     // frame 3
     glPushMatrix();
     glTranslatef(0.0f, move + 16.0f, 0.0f);  // Apply move variable
-    glRotatef(180, 0.0, 0.0, 0.0);
     Road();
-    
+    glTranslatef(0.6f, -3.0f, 0.0f);
+    truck();
+    glTranslatef(-0.3f, 5.0f, 0.0f);
     van();
+    glTranslatef(-0.6f, 1.5f, 0.0f);
+    car();
+    glPopMatrix();
+
+    
+}
+
+void level2() {
+   
+    // frame 1
+    level=2;
+    glPushMatrix();
+    glTranslatef(0.0f, move+24.0f, 0.0f);  // Apply move variable
+    Road();
+    truck();
+    Rickshaw();
+    car();
+    van();
+    glPopMatrix();
+
+    // frame 2
+    glPushMatrix();
+    glTranslatef(0.0f, move + 32.0f, 0.0f);  // Apply move variable
+    Road();
+    car2();
+    glTranslatef(0.2f, -3.0f, 0.0f);
+    truck();
+    glTranslatef(-0.3f, 5.0f, 0.0f);
+    van();
+    glTranslatef(-0.6f, 1.5f, 0.0f);
+    car();
+    glPopMatrix();
+
+    // frame 3
+    glPushMatrix();
+    glTranslatef(0.0f, move + 40.0f, 0.0f);  // Apply move variable
+    Road();
     car2();
     glTranslatef(0.6f, -3.0f, 0.0f);
     truck();
-    glRotatef(180, 1.0, 1.0, 1.0);
+    glTranslatef(-0.3f, 5.0f, 0.0f);
+    van();
+    glTranslatef(-0.6f, 1.5f, 0.0f);
     car();
     glPopMatrix();
+
+   
+}
+void gamescreen() {
+    if (move < 0 && move >= -24) {
+        level1();
+    }  if (move < -15 ) {
+        level2();
+    }
+    glColor3f(1.0f, 0.0f, 0.0f);
+    char levelText[10];
+    sprintf(levelText, "Level %d", level);  
+    renderBitmapString(0.0f, 2.82f, 0.0f, GLUT_BITMAP_HELVETICA_18, levelText);
 
     levelinfobox();
     player();
     checkCollisions();
-    // Render now
 }
+
 void keyboard(unsigned char key, int x, int y) {
     switch (key) {
 
     case 'a':  // Move left
-        playerX -= playerSpeed ;  // Smaller increment for smoother transition
+        playerX -= playerSpeed;  // Smaller increment for smoother transition
         break;
     case 'd':  // Move right
         playerX += playerSpeed;  // Smaller increment for smoother transition
         break;
-        if (currentScreen = 0)
-        {
+    
     case 's':
         if (currentScreen == 0) {
             currentScreen = 1;
- reset();
+            reset();
         }
         break;
 
@@ -1170,26 +1222,25 @@ void keyboard(unsigned char key, int x, int y) {
 
         glutPostRedisplay();  // Update display
     }
-}
+
 
 void display() {
     glClear(GL_COLOR_BUFFER_BIT);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    // if (currentScreen == 0) {
-    //     home(); // Render home 
-    //     timer = 100000;
-    // }
-    // else if (currentScreen == 1) {
-    //     gamescreen();
-      
-    // }
-    // else if (currentScreen == 3 ) {
-    //     timeup();  // Display time up screen if countdown is finished
-    // }
-    // else if (currentScreen == 4) {
-    // colpage();  // Display time up screen if countdown is finished
-    // }
-     gamescreen();
+    if (currentScreen == 0) {
+        home(); // Render home 
+        timer = 100000;
+    }
+    else if (currentScreen == 1) {
+        gamescreen();
+
+    }
+    else if (currentScreen == 3) {
+        timeup();  // Display time up screen if countdown is finished
+    }
+    else if (currentScreen == 4) {
+        colpage();  // Display time up screen if countdown is finished
+    }
 
     glutSwapBuffers(); // Double buffering
 
@@ -1202,17 +1253,17 @@ void movement(int value) {
         glutPostRedisplay();  // Update display
         glutTimerFunc(16, movement, 0);  // Restart the timer with shorter interval
     }
-    if (move < -l1 && move > -l1*2) {
+    if (move < -l1 && move > -l1 * 2) {
         move -= screenmovement * 0.02f;  // Smaller increment for smoother transition
         glutPostRedisplay();  // Update display
         glutTimerFunc(16, movement, 0);  // Restart the timer with shorter interval
     }
-    if (move < -l1*2 && move > -l1*4) {
+    if (move < -l1 * 2 && move > -l1 * 4) {
         move -= screenmovement * 0.02f;  // Smaller increment for smoother transition
         glutPostRedisplay();  // Update display
         glutTimerFunc(16, movement, 0);  // Restart the timer with shorter interval
     }
- 
+
 }
 
 // Initialization function
@@ -1228,7 +1279,6 @@ void initGL() {
 // Main function: GLUT runs as a console application starting at main()
 int main(int argc, char** argv) {
     glutInit(&argc, argv);
-    glutInitDisplayMode(GLUT_SINGLE | GLUT_RGB);  // Set display mode
     glutInitWindowSize(700, 1000);          // Set the window's initial width & height
     glutInitWindowPosition(500, 0);        // Set the window's initial position
     glutCreateWindow("Late Again!!");  // Create window with the given title
