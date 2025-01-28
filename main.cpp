@@ -13,12 +13,10 @@ float x1, x2, x3, x4, y1_pos, y2_pos, y3_pos, y4_pos;
 int currentScreen = 0;
 GLfloat playerX = 0.0f;
 GLfloat playerY = -1.5f;
-GLfloat move = 0.0f;
+GLfloat move = -0.0f;
 int level = 1;
-
-GLfloat screenmovement = 2;
+GLfloat screenmovement = 1;
 int l1 = 20;
-int curentscreen = 0;
 GLfloat playerSpeed = pspeed;
 bool isCountdownFinished = false;
 void reset() {
@@ -974,7 +972,6 @@ void truck() {
     glPushMatrix();
     glBegin(GL_QUADS);
     glColor4f(0.97f, 0.94f, 0.90f, 1.0f);  // color #F6F4F0 in OpenGL
-
     glVertex2f(-1.9f, 3.2f);  // top-left vertex
     glVertex2f(-0.5f, 3.2f);  // top-right vertex
     glVertex2f(-0.4f, 3.1f); // bottom-right vertex
@@ -1092,9 +1089,52 @@ void levelinfobox() {
 
 }
 
+
+void manhole() {
+    glPushMatrix();
+
+    glColor3f(0.3f, 0.3f, 0.3f);  // Dark gray color
+
+    // Draw the outer circle
+    GLfloat x = 0.0f;
+    GLfloat y = 0.0f;
+    GLfloat radius = 0.2f;
+    int numSegments = 100;
+    glBegin(GL_TRIANGLE_FAN);
+    glVertex2f(x, y);  // Center of the circle
+    for (int i = 0; i <= numSegments; i++) {
+        GLfloat angle = 2.0f * PI * i / numSegments;
+        glVertex2f(x + (radius * cos(angle)), y + (radius * sin(angle)));
+    }
+    glEnd();
+
+    // Draw the inner circle (manhole cover)
+    glColor3f(0.4f, 0.4f, 0.4f);  // Lighter gray color
+    radius = 0.45f;
+    glBegin(GL_TRIANGLE_FAN);
+    glVertex2f(x, y);  // Center of the circle
+    for (int i = 0; i <= numSegments; i++) {
+        GLfloat angle = 2.0f * PI * i / numSegments;
+        glVertex2f(x + (radius * cos(angle)), y + (radius * sin(angle)));
+    }
+    glEnd();
+
+    // Draw the lines on the manhole cover
+    glColor3f(0.2f, 0.2f, 0.2f);  // Darker gray color
+    glLineWidth(2.0f);
+    glBegin(GL_LINES);
+    for (int i = 0; i < numSegments; i += 10) {
+        GLfloat angle = 2.0f * PI * i / numSegments;
+        glVertex2f(x + (radius * cos(angle)), y + (radius * sin(angle)));
+        glVertex2f(x - (radius * cos(angle)), y - (radius * sin(angle)));
+    }
+    glEnd();
+
+    glPopMatrix();
+}
 void level1() {
     // frame 1
-    
+
     glPushMatrix();
     glTranslatef(0.0f, move, 0.0f);  // Apply move variable
     Road();
@@ -1129,27 +1169,29 @@ void level1() {
     car();
     glPopMatrix();
 
-    
+
 }
 
 void level2() {
-   
+
+    // frame 4
+    level = 2;
     // frame 1
-    level=2;
+
     glPushMatrix();
-    glTranslatef(0.0f, move+24.0f, 0.0f);  // Apply move variable
+    glTranslatef(0.0f, move + 40, 0.0f);  // Apply move variable
     Road();
     truck();
     Rickshaw();
-    car();
+    car2();
     van();
     glPopMatrix();
 
     // frame 2
     glPushMatrix();
     glTranslatef(0.0f, move + 32.0f, 0.0f);  // Apply move variable
+    glScalef(-1.0f, -1.0f, 0.0f);
     Road();
-    car2();
     glTranslatef(0.2f, -3.0f, 0.0f);
     truck();
     glTranslatef(-0.3f, 5.0f, 0.0f);
@@ -1160,9 +1202,8 @@ void level2() {
 
     // frame 3
     glPushMatrix();
-    glTranslatef(0.0f, move + 40.0f, 0.0f);  // Apply move variable
+    glTranslatef(0.0f, move + 24.0f, 0.0f);  // Apply move variable
     Road();
-    car2();
     glTranslatef(0.6f, -3.0f, 0.0f);
     truck();
     glTranslatef(-0.3f, 5.0f, 0.0f);
@@ -1171,17 +1212,61 @@ void level2() {
     car();
     glPopMatrix();
 
-   
 }
+void level3() {
+
+    level = 3;
+    glPushMatrix();
+
+    glPushMatrix();
+    glTranslatef(0.0f, move + 48, 0.0f);  // Apply move variable
+    Road();
+    manhole();
+    truck();
+    Rickshaw();
+    car2();
+    van();
+    glPopMatrix();
+
+    // frame 2
+    glPushMatrix();
+    glTranslatef(0.0f, move + 64.0f, 0.0f);  // Apply move variable
+    glScalef(-1.0f, -1.0f, 0.0f);
+    Road();
+    manhole();
+    glTranslatef(0.2f, -3.0f, 0.0f);
+    truck();
+    glTranslatef(-0.3f, 5.0f, 0.0f);
+    van();
+    glTranslatef(-0.6f, 1.5f, 0.0f);
+    car();
+    glPopMatrix();
+
+    // frame 3
+    glPushMatrix();
+    glTranslatef(0.0f, move + 56.0f, 0.0f);  // Apply move variable
+    Road();
+    manhole();
+    glTranslatef(0.6f, -3.0f, 0.0f);
+    truck();
+    glTranslatef(-0.3f, 5.0f, 0.0f);
+    van();
+    glTranslatef(-0.6f, 1.5f, 0.0f);
+    car();
+    glPopMatrix();
+}
+
 void gamescreen() {
     if (move < 0 && move >= -24) {
         level1();
-    }  if (move < -15 ) {
+    }  if (move < -15 && move >= -60) {
         level2();
+    } if (move < -38) {
+        level3();
     }
     glColor3f(1.0f, 0.0f, 0.0f);
     char levelText[10];
-    sprintf(levelText, "Level %d", level);  
+    sprintf(levelText, "Level %d", level);
     renderBitmapString(0.0f, 2.82f, 0.0f, GLUT_BITMAP_HELVETICA_18, levelText);
 
     levelinfobox();
@@ -1198,7 +1283,7 @@ void keyboard(unsigned char key, int x, int y) {
     case 'd':  // Move right
         playerX += playerSpeed;  // Smaller increment for smoother transition
         break;
-    
+
     case 's':
         if (currentScreen == 0) {
             currentScreen = 1;
@@ -1218,10 +1303,10 @@ void keyboard(unsigned char key, int x, int y) {
             reset();
         }
         break;
-        }
-
-        glutPostRedisplay();  // Update display
     }
+
+    glutPostRedisplay();  // Update display
+}
 
 
 void display() {
