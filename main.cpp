@@ -6,13 +6,13 @@
 #define PI 3.14159265358979323846
 int a = 20;
 int timer = a;
-GLfloat pspeed = 0.4;
-float x1, x2, x3, x4, y1_pos, y2_pos, y3_pos, y4_pos, colup;
+GLfloat pspeed = 1.35; // playerx shift speed
+float x1, x2, x3, x4, y1_pos, y2_pos, y3_pos, y4_pos;
 int currentScreen = 0;
 GLfloat playerX = 0.0f;
 GLfloat playerY = -1.5f;
-GLfloat move = 0.0f;
-GLfloat screenmovement = 0.5f;
+GLfloat move = -15.0f;
+GLfloat screenmovement = 0;
 int l1 = 10;
 int curentscreen = 0;
 GLfloat playerSpeed = pspeed;
@@ -1102,7 +1102,6 @@ void gamescreen() {
     Road();
     truck();
     Rickshaw();
-    car();
     car2();
     van();
     glPopMatrix();
@@ -1111,10 +1110,11 @@ void gamescreen() {
     glPushMatrix();
     glTranslatef(0.0f, move + 8.0f, 0.0f);  // Apply move variable
     Road();
+    car2();
+    glTranslatef(0.2f, -3.0f, 0.0f);
     truck();
+    glTranslatef(-0.3f, 5.0f, 0.0f);
     van();
-    glTranslatef(0.6f, -3.0f, 0.0f);
-    truck();
     glPopMatrix();
 
     // frame 3
@@ -1122,11 +1122,13 @@ void gamescreen() {
     glTranslatef(0.0f, move + 16.0f, 0.0f);  // Apply move variable
     glRotatef(180, 0.0, 0.0, 0.0);
     Road();
-    car();
+    
     van();
     car2();
     glTranslatef(0.6f, -3.0f, 0.0f);
     truck();
+    glRotatef(180, 1.0, 1.0, 1.0);
+    car();
     glPopMatrix();
 
     levelinfobox();
@@ -1138,10 +1140,10 @@ void keyboard(unsigned char key, int x, int y) {
     switch (key) {
 
     case 'a':  // Move left
-        playerX -= playerSpeed * 0.3f;  // Smaller increment for smoother transition
+        playerX -= playerSpeed ;  // Smaller increment for smoother transition
         break;
     case 'd':  // Move right
-        playerX += playerSpeed * 0.3f;  // Smaller increment for smoother transition
+        playerX += playerSpeed;  // Smaller increment for smoother transition
         break;
         if (currentScreen = 0)
         {
@@ -1173,20 +1175,21 @@ void keyboard(unsigned char key, int x, int y) {
 void display() {
     glClear(GL_COLOR_BUFFER_BIT);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    if (currentScreen == 0) {
-        home(); // Render home 
-        timer = 100000;
-    }
-    else if (currentScreen == 1) {
-        gamescreen();
+    // if (currentScreen == 0) {
+    //     home(); // Render home 
+    //     timer = 100000;
+    // }
+    // else if (currentScreen == 1) {
+    //     gamescreen();
       
-    }
-    else if (currentScreen == 3 ) {
-        timeup();  // Display time up screen if countdown is finished
-    }
-    else if (currentScreen == 4) {
-    colpage();  // Display time up screen if countdown is finished
-    }
+    // }
+    // else if (currentScreen == 3 ) {
+    //     timeup();  // Display time up screen if countdown is finished
+    // }
+    // else if (currentScreen == 4) {
+    // colpage();  // Display time up screen if countdown is finished
+    // }
+     gamescreen();
 
     glutSwapBuffers(); // Double buffering
 
