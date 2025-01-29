@@ -15,8 +15,8 @@ GLfloat playerX = 0.0f;
 GLfloat playerY = -1.5f;
 GLfloat move = -0.0f;
 int level = 1;
-GLfloat screenmovement = 1;
-int l1 = 20;
+GLfloat screenmovement = .7;
+float lmove;
 GLfloat playerSpeed = pspeed;
 bool isCountdownFinished = false;
 void reset() {
@@ -643,7 +643,7 @@ void checkCollisions() {
 
 void car() {
     glPushMatrix();
-    glTranslated(0.5, 0.5, 0.0f);  // Translate to the position
+    glTranslated(-1.0, 2.5, 0.0f);  // Translate to the position
     glRotated(180.0, 0.0, 0.0, 1.0);
     glScalef(0.45f, 0.35f, 1.0f);  // Scale down the car
 
@@ -1080,8 +1080,11 @@ void levelinfobox() {
     glColor3f(1.0f, 1.0f, 1.0f);
     renderBitmapString(-1.51f, 3.82f, 0.0f, GLUT_BITMAP_HELVETICA_18, " Press R to restart");
     renderBitmapString(1.31f, 3.82f, 0.0f, GLUT_BITMAP_HELVETICA_18, " Press H to quit to menu");
+    char levelText[10];
+    sprintf(levelText, "Level %d", level);
+    renderBitmapString(0.0f, 3.82f, 0.0f, GLUT_BITMAP_HELVETICA_18, levelText);
 
-    if (isCountdownFinished == 0) {
+    if (!isCountdownFinished) {
         char timerText[10];
         sprintf(timerText, "Time: %d", timer);  // Convert timer value to string
         renderText(-3.0f, 3.82f, GLUT_BITMAP_HELVETICA_18, timerText);  // Adjust position and font
@@ -1092,13 +1095,12 @@ void levelinfobox() {
 
 void manhole() {
     glPushMatrix();
-
     glColor3f(0.3f, 0.3f, 0.3f);  // Dark gray color
 
     // Draw the outer circle
     GLfloat x = 0.0f;
     GLfloat y = 0.0f;
-    GLfloat radius = 0.2f;
+    GLfloat radius = 0.05f;
     int numSegments = 100;
     glBegin(GL_TRIANGLE_FAN);
     glVertex2f(x, y);  // Center of the circle
@@ -1110,7 +1112,7 @@ void manhole() {
 
     // Draw the inner circle (manhole cover)
     glColor3f(0.4f, 0.4f, 0.4f);  // Lighter gray color
-    radius = 0.45f;
+    radius = 0.25f;
     glBegin(GL_TRIANGLE_FAN);
     glVertex2f(x, y);  // Center of the circle
     for (int i = 0; i <= numSegments; i++) {
@@ -1132,148 +1134,163 @@ void manhole() {
 
     glPopMatrix();
 }
-void level1() {
+   void level1() {
     // frame 1
-
     glPushMatrix();
-    glTranslatef(0.0f, move, 0.0f);  // Apply move variable
+    glTranslatef(0.0f, move, 0.0f);
     Road();
-    truck();
-    Rickshaw();
     car2();
     van();
     glPopMatrix();
 
     // frame 2
     glPushMatrix();
-    glTranslatef(0.0f, move + 8.0f, 0.0f);  // Apply move variable
+    glTranslatef(0.0f, move + 8.0f, 0.0f);
     Road();
     car2();
-    glTranslatef(0.2f, -3.0f, 0.0f);
-    truck();
     glTranslatef(-0.3f, 5.0f, 0.0f);
     van();
-    glTranslatef(-0.6f, 1.5f, 0.0f);
-    car();
     glPopMatrix();
 
     // frame 3
     glPushMatrix();
-    glTranslatef(0.0f, move + 16.0f, 0.0f);  // Apply move variable
+    glTranslatef(0.0f, move + 16.0f, 0.0f);
+    glScalef(-1.0f, -1.0f, 0.0f);
     Road();
-    glTranslatef(0.6f, -3.0f, 0.0f);
-    truck();
-    glTranslatef(-0.3f, 5.0f, 0.0f);
-    van();
-    glTranslatef(-0.6f, 1.5f, 0.0f);
+    Rickshaw();
     car();
     glPopMatrix();
 
-
+    // frame 4
+    glPushMatrix();
+    glTranslatef(0.0f, move + 24.0f, 0.0f);
+    Road();
+    glScalef(-1.0f, -1.0f, 0.0f);
+    Road();
+    Rickshaw();
+    car();
+    glPopMatrix();
 }
 
 void level2() {
 
-    // frame 4
-    level = 2;
     // frame 1
-
     glPushMatrix();
-    glTranslatef(0.0f, move + 40, 0.0f);  // Apply move variable
+    glTranslatef(0.0f, move + 32.0f, 0.0f);
+    glScalef(-1.0f, -1.0f, 0.0f);
     Road();
     truck();
-    Rickshaw();
-    car2();
-    van();
     glPopMatrix();
 
     // frame 2
     glPushMatrix();
-    glTranslatef(0.0f, move + 32.0f, 0.0f);  // Apply move variable
+    glTranslatef(0.0f, move + 40.0f, 0.0f);
     glScalef(-1.0f, -1.0f, 0.0f);
     Road();
-    glTranslatef(0.2f, -3.0f, 0.0f);
     truck();
-    glTranslatef(-0.3f, 5.0f, 0.0f);
-    van();
-    glTranslatef(-0.6f, 1.5f, 0.0f);
-    car();
+    Rickshaw();
     glPopMatrix();
 
     // frame 3
     glPushMatrix();
-    glTranslatef(0.0f, move + 24.0f, 0.0f);  // Apply move variable
+    glTranslatef(0.0f, move + 48, 0.0f);
     Road();
-    glTranslatef(0.6f, -3.0f, 0.0f);
-    truck();
-    glTranslatef(-0.3f, 5.0f, 0.0f);
+    car2();
     van();
-    glTranslatef(-0.6f, 1.5f, 0.0f);
-    car();
     glPopMatrix();
 
+    //  frame 4 
+    glPushMatrix();
+    glTranslatef(0.0f, move + 56.0f, 0.0f);
+    Road();
+    truck();
+    glPopMatrix();
+
+    // New frame 5
+    glPushMatrix();
+    glTranslatef(0.0f, move + 64.0f, 0.0f);
+    Road();
+    glScalef(-1.0f, -1.0f, 0.0f);
+    car2();
+    Rickshaw();
+    glPopMatrix();
 }
+
 void level3() {
-
-    level = 3;
+    // frame 1
     glPushMatrix();
-
-    glPushMatrix();
-    glTranslatef(0.0f, move + 48, 0.0f);  // Apply move variable
+    glTranslatef(0.0f, move + 72, 0.0f);  // Apply move variable
     Road();
     manhole();
-    truck();
-    Rickshaw();
-    car2();
     van();
-    glPopMatrix();
-
-    // frame 2
-    glPushMatrix();
-    glTranslatef(0.0f, move + 64.0f, 0.0f);  // Apply move variable
     glScalef(-1.0f, -1.0f, 0.0f);
-    Road();
-    manhole();
-    glTranslatef(0.2f, -3.0f, 0.0f);
     truck();
-    glTranslatef(-0.3f, 5.0f, 0.0f);
-    van();
-    glTranslatef(-0.6f, 1.5f, 0.0f);
-    car();
     glPopMatrix();
 
     // frame 3
     glPushMatrix();
-    glTranslatef(0.0f, move + 56.0f, 0.0f);  // Apply move variable
+    glTranslatef(0.0f, move + 80.0f, 0.0f);
+    car2(); // Apply move variable
+    glScalef(-1.0f, -1.0f, 0.0f);
     Road();
     manhole();
-    glTranslatef(0.6f, -3.0f, 0.0f);
+    glTranslatef(0.6f, -0.0f, 0.0f);
     truck();
-    glTranslatef(-0.3f, 5.0f, 0.0f);
-    van();
-    glTranslatef(-0.6f, 1.5f, 0.0f);
-    car();
     glPopMatrix();
+
+    // frame 2
+    glPushMatrix();
+    glTranslatef(0.0f, move + 88.0f, 0.0f);  // Apply move variable
+    glScalef(-1.0f, -1.0f, 0.0f);
+    Road();
+    manhole();
+    truck();
+    Rickshaw();
+    glPopMatrix();
+
+   
 }
+
 
 void gamescreen() {
-    if (move < 0 && move >= -24) {
+    if (move <= -32.0f&&move >= -72.0f) {
+        level = 2;
+    } else if (move <= -72.0f) {
+        level = 3;
+    } else {
+        level = 1;
+    }
+
+    if (level == 1) {
         level1();
-    }  if (move < -15 && move >= -60) {
         level2();
-    } if (move < -38) {
+    }
+    else if (level == 2) {
+        level2();
         level3();
     }
-    glColor3f(1.0f, 0.0f, 0.0f);
-    char levelText[10];
-    sprintf(levelText, "Level %d", level);
-    renderBitmapString(0.0f, 2.82f, 0.0f, GLUT_BITMAP_HELVETICA_18, levelText);
+    else if (level == 3) {
+        level3();
+    }
 
-    levelinfobox();
     player();
     checkCollisions();
 }
 
+void leftmovement() {
+    glPushMatrix();
+    glTranslatef(0.0f, -move * 0.10 + 0.0f, 0.0f);  // Apply move variable
+    truck();
+    glTranslatef(0.6f, -2.7f, 0.0f);
+    car();
+    glTranslatef(-1.0f, -7.0f, 0.0f);
+    truck();
+    glScalef(-1.0f, -1.0f, 0.0f);
+    glTranslatef(-1.0f, -4.5f, 0.0f);
+    van();
+   
+    glPopMatrix();
+}
 void keyboard(unsigned char key, int x, int y) {
     switch (key) {
 
@@ -1310,41 +1327,40 @@ void keyboard(unsigned char key, int x, int y) {
 
 
 void display() {
-    glClear(GL_COLOR_BUFFER_BIT);
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // Clear the color and depth buffers
     if (currentScreen == 0) {
         home(); // Render home 
         timer = 100000;
     }
     else if (currentScreen == 1) {
         gamescreen();
-
+        leftmovement();
+        levelinfobox();
     }
     else if (currentScreen == 3) {
         timeup();  // Display time up screen if countdown is finished
     }
     else if (currentScreen == 4) {
-        colpage();  // Display time up screen if countdown is finished
+        colpage();  // Display time up screen if collision is detected
     }
 
     glutSwapBuffers(); // Double buffering
-
-    glFlush();
 }
 
 void movement(int value) {
-    if (move < 1 && move > -l1) {
+    lmove += screenmovement / 0.02f;
+    if (level==1) {
         move -= screenmovement * 0.02f;  // Smaller increment for smoother transition
         glutPostRedisplay();  // Update display
         glutTimerFunc(16, movement, 0);  // Restart the timer with shorter interval
     }
-    if (move < -l1 && move > -l1 * 2) {
-        move -= screenmovement * 0.02f;  // Smaller increment for smoother transition
+    if (level==2) {
+        move -= screenmovement * 0.04f;  // Smaller increment for smoother transition
         glutPostRedisplay();  // Update display
         glutTimerFunc(16, movement, 0);  // Restart the timer with shorter interval
     }
-    if (move < -l1 * 2 && move > -l1 * 4) {
-        move -= screenmovement * 0.02f;  // Smaller increment for smoother transition
+    if (level==3) {
+        move -= screenmovement * 0.04f;  // Smaller increment for smoother transition
         glutPostRedisplay();  // Update display
         glutTimerFunc(16, movement, 0);  // Restart the timer with shorter interval
     }
