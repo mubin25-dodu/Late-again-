@@ -9,22 +9,20 @@
 int a = 120;
 int timer = a;
 GLfloat pspeed = 2.75; // playerx shift speed
-float x1, x2, x3, x4, y1_pos, y2_pos, y3_pos, y4_pos;
-int currentScreen = 0;
+int currentScreen = 1;
 GLfloat playerX = 0.0f;
 GLfloat playerY = -1.5f;
 GLfloat move = -0.0f;
 int level = 1;
-GLfloat screenmovement = .7;
+GLfloat screenmovement = 1;
 float lmove;
 GLfloat playerSpeed = pspeed;
+float truckLeft, truckRight, truckTop, truckBottom;
 bool isCountdownFinished = false;
 void reset() {
 
     timer = a;  // Reset the timer
     isCountdownFinished = false;
-    playerX = 0.0f;  // Reset player position
-    playerY = -1.5f;
     playerSpeed = pspeed;
     move = 0.0f;
 }
@@ -575,70 +573,20 @@ bool isCollision(float obj1Left, float obj1Right, float obj1Top, float obj1Botto
     return !(obj1Left > obj2Right || obj1Right < obj2Left ||
         obj1Top < obj2Bottom || obj1Bottom > obj2Top);
 }
-void checkCollisions() {
+void checkCollisions(float x, float y, float x1, float y1) {
     // Player bounding box
-    float playerLeft = playerX - 0.1f;
-    float playerRight = playerX + 0.1f;
-    float playerTop = playerY + 0.1f;
-    float playerBottom = playerY - 0.1f;
+    float playerLeft = playerX ;
+    float playerRight = playerX;
+    float playerTop = playerY;
+    float playerBottom = playerY;
+    
 
-    // Van bounding box
-    float vanLeft = x1;
-    float vanRight = x2;
-    float vanTop = y1_pos + move;
-    float vanBottom = y3_pos + move;
-
-    // Road bounding boxes
-    float roadLeft = -4.0f;
-    float roadRight = -2.7f;
-    float roadTop = 4.0f;
-    float roadBottom = -4.0f;
-
-    float roadLeft2 = 2.7f;
-    float roadRight2 = 4.0f;
-    float roadTop2 = 4.0f;
-    float roadBottom2 = -4.0f;
-
-    // Car bounding boxes
-    float carLeft = 0.5f;
-    float carRight = 3.0f;
-    float carTop = 5.0f + move;
-    float carBottom = 2.0f + move;
-
-    float car2Left = -0.0f;
-    float car2Right = 3.0f;
-    float car2Top = -3.5f + move;
-    float car2Bottom = -6.5f + move;
-
-    // Rickshaw bounding box
-    float rickshawLeft = -2.3f;
-    float rickshawRight = -1.05f;
-    float rickshawTop = -1.6f + move;
-    float rickshawBottom = -1.85f + move;
-
-    // Truck bounding box
-    float truckLeft = -2.0f;
-    float truckRight = -0.4f;
-    float truckTop = 3.2f + move;
-    float truckBottom = 0.5f + move;
-
-    // if (isCollision(playerLeft, playerRight, playerTop, playerBottom,
-    //     vanLeft, vanRight, vanTop, vanBottom) ||
-    //     isCollision(playerLeft, playerRight, playerTop, playerBottom,
-    //         roadLeft, roadRight, roadTop, roadBottom) ||
-    //     isCollision(playerLeft, playerRight, playerTop, playerBottom,
-    //         roadLeft2, roadRight2, roadTop2, roadBottom2) ||
-    //     isCollision(playerLeft, playerRight, playerTop, playerBottom,
-    //         carLeft, carRight, carTop, carBottom) ||
-    //     isCollision(playerLeft, playerRight, playerTop, playerBottom,
-    //         car2Left, car2Right, car2Top, car2Bottom) ||
-    //     isCollision(playerLeft, playerRight, playerTop, playerBottom,
-    //         rickshawLeft, rickshawRight, rickshawTop, rickshawBottom) ||
-    //     isCollision(playerLeft, playerRight, playerTop, playerBottom,
-    //         truckLeft, truckRight, truckTop, truckBottom)) {
-
-    //     currentScreen = 4;
-    // }
+    if ( playerX > 2.75 ) {
+        playerX = 2.75;
+    }
+        if ( playerX < - 2.75 ) {
+            playerX = -2.75;  
+        }
 }
 
 void car() {
@@ -742,10 +690,10 @@ void van() {
     glPushMatrix();
     glBegin(GL_QUADS);
     glColor3f(0.8f, 0.1f, 0.1f);
-    glVertex2f(x2 = 1.9f, y1_pos = -0.8f);  // top-left vertex
-    glVertex2f(x1 = 0.6f, y2_pos = -0.8f);  // top-right vertex
-    glVertex2f(x3 = 0.6f, y3_pos = -1.8f);  // bottom-right vertex
-    glVertex2f(x4 = 1.9f, y4_pos = -1.8f);  // bottom-left vertex
+    glVertex2f(1.9f, -0.8f);  // top-left vertex
+    glVertex2f(0.6f, -0.8f);  // top-right vertex
+    glVertex2f(0.6f, -1.8f);  // bottom-right vertex
+    glVertex2f( 1.9f, -1.8f);  // bottom-left vertex
     glEnd();
     glPopMatrix();
 
@@ -968,6 +916,10 @@ void Rickshaw() {
 }
 
 void truck() {
+    truckLeft = -1.95f;   // Adjusted based on truck's leftmost point
+    truckRight = -0.34f;  // Adjusted based on truck's rightmost point
+    truckTop = 3.2f;      // Highest point of the truck
+    truckBottom = 0.5f;   // Lowest point of the truck
     // front glass frames
     glPushMatrix();
     glBegin(GL_QUADS);
@@ -1078,16 +1030,16 @@ void levelinfobox() {
 
     // Render level texts
     glColor3f(1.0f, 1.0f, 1.0f);
-    renderBitmapString(-1.51f, 3.82f, 0.0f, GLUT_BITMAP_HELVETICA_18, " Press R to restart");
+    renderBitmapString(-1.01f, 3.82f, 0.0f, GLUT_BITMAP_HELVETICA_18, " Press R to restart");
     renderBitmapString(1.31f, 3.82f, 0.0f, GLUT_BITMAP_HELVETICA_18, " Press H to quit to menu");
     char levelText[10];
     sprintf(levelText, "Level %d", level);
-    renderBitmapString(0.0f, 3.82f, 0.0f, GLUT_BITMAP_HELVETICA_18, levelText);
+    renderBitmapString(-3.50f, 3.82f, 0.0f, GLUT_BITMAP_HELVETICA_18, levelText);
 
     if (!isCountdownFinished) {
         char timerText[10];
         sprintf(timerText, "Time: %d", timer);  // Convert timer value to string
-        renderText(-3.0f, 3.82f, GLUT_BITMAP_HELVETICA_18, timerText);  // Adjust position and font
+        renderText(-2.5f, 3.82f, GLUT_BITMAP_HELVETICA_18, timerText);  // Adjust position and font
     }
 
 }
@@ -1134,7 +1086,7 @@ void manhole() {
 
     glPopMatrix();
 }
-   void level1() {
+void level1() {
     // frame 1
     glPushMatrix();
     glTranslatef(0.0f, move, 0.0f);
@@ -1202,6 +1154,7 @@ void level2() {
     //  frame 4 
     glPushMatrix();
     glTranslatef(0.0f, move + 56.0f, 0.0f);
+    glScalef(-1.0f, -1.0f, 0.0f);
     Road();
     truck();
     glPopMatrix();
@@ -1210,7 +1163,7 @@ void level2() {
     glPushMatrix();
     glTranslatef(0.0f, move + 64.0f, 0.0f);
     Road();
-    glScalef(-1.0f, -1.0f, 0.0f);
+  
     car2();
     Rickshaw();
     glPopMatrix();
@@ -1251,9 +1204,8 @@ void level3() {
    
 }
 
-
 void gamescreen() {
-    if (move <= -32.0f&&move >= -72.0f) {
+    if (move <= -32.0f && move >= -72.0f) {
         level = 2;
     } else if (move <= -72.0f) {
         level = 3;
@@ -1263,6 +1215,7 @@ void gamescreen() {
 
     if (level == 1) {
         level1();
+        
         level2();
     }
     else if (level == 2) {
@@ -1274,13 +1227,15 @@ void gamescreen() {
     }
 
     player();
-    checkCollisions();
+    
 }
 
 void leftmovement() {
+    float m, f;
     glPushMatrix();
-    glTranslatef(0.0f, -move * 0.10 + 0.0f, 0.0f);  // Apply move variable
+    glTranslatef(0.0f, m = -move * 0.20, 0.0f);  // Apply move variable
     truck();
+    checkCollisions(truckLeft, truckRight , truckTop, truckBottom);
     glTranslatef(0.6f, -2.7f, 0.0f);
     car();
     glTranslatef(-1.0f, -7.0f, 0.0f);
@@ -1288,7 +1243,17 @@ void leftmovement() {
     glScalef(-1.0f, -1.0f, 0.0f);
     glTranslatef(-1.0f, -4.5f, 0.0f);
     van();
-   
+    glPopMatrix();
+
+    glPushMatrix();
+    if (m >= 4) {
+        glTranslatef(0.6f, -move * 0.20 - 13, 0.0f);
+        truck();
+        glTranslatef(-0.6f, -2.7f, 0.0f);
+        car();
+        glTranslatef(1.0f, -7.0f, 0.0f);
+        car();
+    }
     glPopMatrix();
 }
 void keyboard(unsigned char key, int x, int y) {
