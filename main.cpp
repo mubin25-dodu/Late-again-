@@ -573,21 +573,42 @@ bool isCollision(float obj1Left, float obj1Right, float obj1Top, float obj1Botto
     return !(obj1Left > obj2Right || obj1Right < obj2Left ||
         obj1Top < obj2Bottom || obj1Bottom > obj2Top);
 }
-void checkCollisions(float x, float y, float x1, float y1) {
+
+void drawBoundingBox(float left, float right, float top, float bottom, float r, float g, float b) {
+    glColor3f(r, g, b);
+    glBegin(GL_LINE_LOOP);
+    glVertex2f(left, top);
+    glVertex2f(right, top);
+    glVertex2f(right, bottom);
+    glVertex2f(left, bottom);
+    glEnd();
+}
+
+void checkCollisions(float objLeft, float objRight, float objTop, float objBottom) {
     // Player bounding box
-    float playerLeft = playerX ;
-    float playerRight = playerX;
-    float playerTop = playerY;
-    float playerBottom = playerY;
+    float playerLeft = playerX - 0.1f;
+    float playerRight = playerX + 0.1f;
+    float playerTop = playerY + 0.1f;
+    float playerBottom = playerY - 0.1f;
     
 
-    if ( playerX > 2.75 ) {
+    // Draw bounding boxes for debugging
+    drawBoundingBox(playerLeft, playerRight, playerTop, playerBottom, 1.0f, 0.0f, 0.0f); // Red for player
+    drawBoundingBox(objLeft, objRight, objTop, objBottom, 0.0f, 1.0f, 0.0f); // Green for object
+
+    if (playerX > 2.75) {
         playerX = 2.75;
     }
-        if ( playerX < - 2.75 ) {
-            playerX = -2.75;  
-        }
+    if (playerX < -2.75) {
+        playerX = -2.75;
+    }
+
+    if (isCollision(playerLeft, playerRight, playerTop, playerBottom, objLeft, objRight, objTop, objBottom)) {
+        currentScreen = 4;
+    }
 }
+
+
 
 void car() {
     glPushMatrix();
@@ -1230,32 +1251,6 @@ void gamescreen() {
     
 }
 
-void leftmovement() {
-    float m, f;
-    glPushMatrix();
-    glTranslatef(0.0f, m = -move * 0.20, 0.0f);  // Apply move variable
-    truck();
-    checkCollisions(truckLeft, truckRight , truckTop, truckBottom);
-    glTranslatef(0.6f, -2.7f, 0.0f);
-    car();
-    glTranslatef(-1.0f, -7.0f, 0.0f);
-    truck();
-    glScalef(-1.0f, -1.0f, 0.0f);
-    glTranslatef(-1.0f, -4.5f, 0.0f);
-    van();
-    glPopMatrix();
-
-    glPushMatrix();
-    if (m >= 4) {
-        glTranslatef(0.6f, -move * 0.20 - 13, 0.0f);
-        truck();
-        glTranslatef(-0.6f, -2.7f, 0.0f);
-        car();
-        glTranslatef(1.0f, -7.0f, 0.0f);
-        car();
-    }
-    glPopMatrix();
-}
 void keyboard(unsigned char key, int x, int y) {
     switch (key) {
 
@@ -1289,7 +1284,39 @@ void keyboard(unsigned char key, int x, int y) {
 
     glutPostRedisplay();  // Update display
 }
+void leftmovement() {
+    float m;
+    glPushMatrix();
+    glTranslatef(0.0f, m = -move * 1.20, 0.0f);  // Apply move variable
+    truck();
+    glTranslatef(0.6f, -2.7f, 0.0f);
+    car();
+    glTranslatef(-1.0f, -7.0f, 0.0f);
+    truck();
+    glScalef(-1.0f, -1.0f, 0.0f);
+    glTranslatef(-1.0f, -4.5f, 0.0f);
+    van();
+    float playerLeft = 0.75f;
+    float playerRight = 0.45f;
+    float playerTop = -3.85f + m;
+    float playerBottom = -4.13f + m;
 
+    checkCollisions(playerLeft, playerRight, playerTop, playerBottom);
+    
+    glPopMatrix();
+    glPushMatrix();
+    if (m >= 4) {
+        glTranslatef(0.6f, -move * 0.20 - 13, 0.0f);
+        truck();
+        glTranslatef(-0.6f, -2.7f, 0.0f);
+        car();
+        glTranslatef(1.0f, -7.0f, 0.0f);
+        car();
+    }
+        // Calculate van's collision box
+
+    glPopMatrix();
+}
 
 void display() {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // Clear the color and depth buffers
