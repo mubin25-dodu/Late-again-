@@ -12,9 +12,8 @@ GLfloat pspeed = 0.50; // playerx shift speed
 int currentScreen = 1;
 GLfloat playerX = 0.0f;
 GLfloat playerY = -1.5f;
-GLfloat move = -0.0f;
+GLfloat move = 0.0f;
 int level = 1;
-GLfloat x1,x2,y_1,y_2;
 GLfloat screenmovement = 1;
 float lmove,ll=0    ;
 GLfloat playerSpeed = pspeed;
@@ -25,8 +24,8 @@ void reset() {
     isCountdownFinished = false;
     playerSpeed = pspeed;
     move = 0.0f;
-     playerX = 0.0f;
-     playerY = -1.5f;
+    playerX = 0.0f;
+    playerY = -1.5f;
 }
 void renderBitmapString(float x, float y, float z, void* font, const char* string) {
     const char* c;
@@ -578,10 +577,10 @@ bool isCollision(float obj1Left, float obj1Right, float obj1Top, float obj1Botto
 
 void checkCollisions(float objLeft, float objRight, float objTop, float objBottom) {
     // Player bounding box
-    float playerLeft = playerX - 0.1f;
-    float playerRight = playerX + 0.1f;
-    float playerTop = playerY + 0.1f;
-    float playerBottom = playerY - 0.1f;
+    float playerLeft = playerX;
+    float playerRight = playerX;
+    float playerTop = playerY ;
+    float playerBottom = playerY ;
 
     if (playerX > 2.75) {
         playerX = 2.75;
@@ -593,6 +592,7 @@ void checkCollisions(float objLeft, float objRight, float objTop, float objBotto
     if (isCollision(playerLeft, playerRight, playerTop, playerBottom, objLeft, objRight, objTop, objBottom)) {
         currentScreen = 4;
     }
+
 }
 
 void drawBoundingBox(float left, float right, float top, float bottom, float r, float g, float b) {
@@ -702,10 +702,9 @@ void car2() {
 
     glRectd(0.7, 3.5, 1.8, 4.2);
     glRectd(1.5, 3.5, 2.3, 4.2);
-
-    // Draw the bounding box for the car2
-    drawBoundingBox(-0.0f, 3.0f, 5.0f, 2.0f, 0.0f, 1.0f, 0.0f); // Green color
-
+    
+    drawBoundingBox(0.0f, 3.0f, 0.0f + move, 5.0f + move, 0.0f, 1.0f, 0.0f); // Green color
+    checkCollisions(0.0f, 3.0f, 0.0f, 5.0f);
     glPopMatrix();
 }
 void van() {
@@ -713,10 +712,10 @@ void van() {
     glPushMatrix();
     glBegin(GL_QUADS);
     glColor3f(0.8f, 0.1f, 0.1f);
-    glVertex2f(1.9f, y_1=-0.8f);  // top-left vertex
-    glVertex2f(x1 =0.6f, -0.8f);  // top-right vertex
+    glVertex2f(1.9f, -0.8f);  // top-left vertex
+    glVertex2f(0.6f, -0.8f);  // top-right vertex
     glVertex2f(0.6f, -1.8f);  // bottom-right vertex
-    glVertex2f( x2=1.9f, y_2=-1.8f);  // bottom-left vertex
+    glVertex2f( 1.9f, -1.8f);  // bottom-left vertex
     glEnd();
     glPopMatrix();
 
@@ -772,8 +771,8 @@ void van() {
     glPopMatrix();
 
     // Draw the bounding box for the van
-    drawBoundingBox(x1, x2, y_1+move, y_2+move, 0.0f, 1.0f, 0.0f); // Green color
-    
+    drawBoundingBox(0.6f, 1.9f, -0.8f+move, -1.8f+move, 0.0f, 1.0f, 0.0f); // Green color
+    checkCollisions(0.6f, 1.9f, -0.8f+move, -1.8f+move);
 }
 
 void player() {
@@ -1122,15 +1121,14 @@ void level1() {
     // frame 1
     glPushMatrix();
     glTranslatef(0.0f, move, 0.0f);
-    Road();
     car2();
+
     van();
     glPopMatrix();
 
     // frame 2
     glPushMatrix();
     glTranslatef(0.0f, move + 8.0f, 0.0f);
-    Road();
     car2();
     glTranslatef(-0.3f, 5.0f, 0.0f);
     van();
@@ -1140,7 +1138,6 @@ void level1() {
     glPushMatrix();
     glTranslatef(0.0f, move + 16.0f, 0.0f);
     glScalef(-1.0f, -1.0f, 0.0f);
-    Road();
     Rickshaw();
     car();
     glPopMatrix();
@@ -1148,9 +1145,7 @@ void level1() {
     // frame 4
     glPushMatrix();
     glTranslatef(0.0f, move + 24.0f, 0.0f);
-    Road();
     glScalef(-1.0f, -1.0f, 0.0f);
-    Road();
     Rickshaw();
     car();
     glPopMatrix();
@@ -1162,7 +1157,6 @@ void level2() {
     glPushMatrix();
     glTranslatef(0.0f, move + 32.0f, 0.0f);
     glScalef(-1.0f, -1.0f, 0.0f);
-    Road();
     truck();
     glPopMatrix();
 
@@ -1170,7 +1164,6 @@ void level2() {
     glPushMatrix();
     glTranslatef(0.0f, move + 40.0f, 0.0f);
     glScalef(-1.0f, -1.0f, 0.0f);
-    Road();
     truck();
     Rickshaw();
     glPopMatrix();
@@ -1178,7 +1171,6 @@ void level2() {
     // frame 3
     glPushMatrix();
     glTranslatef(0.0f, move + 48, 0.0f);
-    Road();
     car2();
     van();
     glPopMatrix();
@@ -1187,15 +1179,12 @@ void level2() {
     glPushMatrix();
     glTranslatef(0.0f, move + 56.0f, 0.0f);
     glScalef(-1.0f, -1.0f, 0.0f);
-    Road();
     truck();
     glPopMatrix();
 
     // New frame 5
     glPushMatrix();
     glTranslatef(0.0f, move + 64.0f, 0.0f);
-    Road();
-  
     car2();
     Rickshaw();
     glPopMatrix();
@@ -1205,9 +1194,7 @@ void level3() {
     // frame 1
     glPushMatrix();
     glTranslatef(0.0f, move + 72, 0.0f);  // Apply move variable
-    Road();
     manhole();
-    van();
     glScalef(-1.0f, -1.0f, 0.0f);
     truck();
     glPopMatrix();
@@ -1217,7 +1204,6 @@ void level3() {
     glTranslatef(0.0f, move + 80.0f, 0.0f);
     car2(); // Apply move variable
     glScalef(-1.0f, -1.0f, 0.0f);
-    Road();
     manhole();
     glTranslatef(0.6f, -0.0f, 0.0f);
     truck();
@@ -1227,19 +1213,29 @@ void level3() {
     glPushMatrix();
     glTranslatef(0.0f, move + 88.0f, 0.0f);  // Apply move variable
     glScalef(-1.0f, -1.0f, 0.0f);
-    Road();
     manhole();
     truck();
     Rickshaw();
     glPopMatrix();
-
    
 }
 
+void roadmove() {
+    for (int b = 0; b < 100; b += 8) {
+        glPushMatrix();
+        glTranslatef(0.0f, move / 2 + b, 0.0f);
+        Road();
+        if (level == 3) {
+            manhole();
+        }
+        glPopMatrix();
+    }
+}
+    
 void leftmovement() {
-    float m;
+    float m = -move * 0.20f;
     glPushMatrix();
-    glTranslatef(0.0f, m = -move * 0.20, 0.0f);  // Apply move variable
+    glTranslatef(0.0f, m, 0.0f);  // Apply move variable
     truck();
     glTranslatef(0.6f, -2.7f, 0.0f);
     car();
@@ -1248,23 +1244,21 @@ void leftmovement() {
     glScalef(-1.0f, -1.0f, 0.0f);
     glTranslatef(-1.0f, -4.5f, 0.0f);
     van();
-    
-    checkCollisions(truckLeft, truckRight, truckTop, truckBottom);
-
     glPopMatrix();
-    glPushMatrix();
+
     if (m >= 4) {
-        glTranslatef(0.6f, -move * 0.20 - 13, 0.0f);
+        glPushMatrix();
+        glTranslatef(0.6f, -move * 0.20f - 13, 0.0f);
         truck();
         glTranslatef(-0.6f, -2.7f, 0.0f);
         car();
         glTranslatef(1.0f, -7.0f, 0.0f);
         car();
+        glPopMatrix();
     }
-    glPopMatrix();
 }
-
 void gamescreen() {
+    roadmove();
     if (move <= -32.0f && move >= -72.0f) {
         level = 2;
     } else if (move <= -72.0f) {
@@ -1316,9 +1310,9 @@ void keyboard(unsigned char key, int x, int y) {
 
     case 'r':
         if (currentScreen != 0) {
-            reset();
-            currentScreen = 1;
-
+           reset(); 
+           currentScreen = 1;
+            
         }
         break;
     }
@@ -1348,22 +1342,16 @@ void display() {
 
 void movement(int value) {
     lmove += screenmovement / 0.02f;
-    if (level==1) {
+    if (level == 1) {
         move -= screenmovement * 0.02f;  // Smaller increment for smoother transition
         glutPostRedisplay();  // Update display
         glutTimerFunc(16, movement, 0);  // Restart the timer with shorter interval
     }
-    if (level==2) {
+    if (level == 2 || level == 3) {
         move -= screenmovement * 0.04f;  // Smaller increment for smoother transition
         glutPostRedisplay();  // Update display
         glutTimerFunc(16, movement, 0);  // Restart the timer with shorter interval
     }
-    if (level==3) {
-        move -= screenmovement * 0.04f;  // Smaller increment for smoother transition
-        glutPostRedisplay();  // Update display
-        glutTimerFunc(16, movement, 0);  // Restart the timer with shorter interval
-    }
-
 }
 
 // Initialization function
@@ -1379,6 +1367,7 @@ void initGL() {
 // Main function: GLUT runs as a console application starting at main()
 int main(int argc, char** argv) {
     glutInit(&argc, argv);
+    glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH); // Enable double buffering
     glutInitWindowSize(700, 1000);          // Set the window's initial width & height
     glutInitWindowPosition(500, 0);        // Set the window's initial position
     glutCreateWindow("Late Again!!");  // Create window with the given title
