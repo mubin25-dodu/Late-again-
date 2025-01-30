@@ -8,14 +8,14 @@
 #define PI 3.14159265358979323846
 int a = 120;
 int timer = a;
-GLfloat pspeed = 0.50; // playerx shift speed
+GLfloat pspeed = 00.750; // playerx shift speed
 int currentScreen = 1;
 GLfloat playerX = 0.0f;
 GLfloat playerY = -1.5f;
-GLfloat move = 0.0f;
+GLfloat move = -0.0f;
 int level = 1;
 GLfloat screenmovement = 1;
-float lmove,ll=0    ;
+float lmove, ll = 0;
 GLfloat playerSpeed = pspeed;
 float truckLeft, truckRight, truckTop, truckBottom;
 bool isCountdownFinished = false;
@@ -574,27 +574,6 @@ bool isCollision(float obj1Left, float obj1Right, float obj1Top, float obj1Botto
     return !(obj1Left > obj2Right || obj1Right < obj2Left ||
         obj1Top < obj2Bottom || obj1Bottom > obj2Top);
 }
-
-void checkCollisions(float objLeft, float objRight, float objTop, float objBottom) {
-    // Player bounding box
-    float playerLeft = playerX;
-    float playerRight = playerX;
-    float playerTop = playerY ;
-    float playerBottom = playerY ;
-
-    if (playerX > 2.75) {
-        playerX = 2.75;
-    }
-    if (playerX < -2.75) {
-        playerX = -2.75;
-    }
-
-    if (isCollision(playerLeft, playerRight, playerTop, playerBottom, objLeft, objRight, objTop, objBottom)) {
-        currentScreen = 4;
-    }
-
-}
-
 void drawBoundingBox(float left, float right, float top, float bottom, float r, float g, float b) {
     glColor3f(r, g, b);
     glBegin(GL_LINE_LOOP);
@@ -603,6 +582,55 @@ void drawBoundingBox(float left, float right, float top, float bottom, float r, 
     glVertex2f(right, bottom);
     glVertex2f(left, bottom);
     glEnd();
+}
+void checkCollisions() {
+    // Player bounding box
+    float playerLeft = playerX - 0.1f;
+    float playerRight = playerX + 0.1f;
+    float playerTop = playerY + 0.1f;
+    float playerBottom = playerY - 0.1f;
+
+    // Van bounding box
+    float vanLeft = 0.6f;
+    float vanRight = 1.9f;
+    float vanTop = -0.8f + move;
+    float vanBottom = -1.8f + move;
+
+    if (isCollision(playerLeft, playerRight, playerTop, playerBottom, vanLeft, vanRight, vanTop, vanBottom)) {
+        currentScreen = 4;
+    }
+
+    // Van1 bounding box
+    float vanLeft1 = 0.3f;
+    float vanRight1 = 1.6f;
+    float vanTop1 = -0.8f + move + 12.5;
+    float vanBottom1 = -1.8f + move + 12.5;
+
+    if (isCollision(playerLeft, playerRight, playerTop, playerBottom, vanLeft1, vanRight1, vanTop1, vanBottom1)) {
+        currentScreen = 4;
+    }
+
+        // Van1 bounding box
+    float vanLeft2 = 0.3f;
+    float vanRight2 = 1.6f;
+    float vanTop2 = -0.8f + move + 48;
+    float vanBottom2 = -1.8f + move + 48;
+
+    if (isCollision(playerLeft, playerRight, playerTop, playerBottom, vanLeft2, vanRight2, vanTop2, vanBottom2)) {
+        currentScreen = 4;
+    }
+
+    // Draw bounding boxes for debugging
+    drawBoundingBox(vanLeft, vanRight, vanTop, vanBottom, 1.0f, 1.0f, 0.0f); // Yellow color
+    drawBoundingBox(vanLeft1, vanRight1, vanTop1, vanBottom1, 1.0f, 1.0f, 0.0f); // Yellow color
+
+    // Ensure player stays within bounds
+    if (playerX > 2.75) {
+        playerX = 2.75;
+    }
+    if (playerX < -2.75) {
+        playerX = -2.75;
+    }
 }
 
 void car() {
@@ -702,9 +730,10 @@ void car2() {
 
     glRectd(0.7, 3.5, 1.8, 4.2);
     glRectd(1.5, 3.5, 2.3, 4.2);
-    
-    drawBoundingBox(0.0f, 3.0f, 0.0f + move, 5.0f + move, 0.0f, 1.0f, 0.0f); // Green color
-    checkCollisions(0.0f, 3.0f, 0.0f, 5.0f);
+
+    // Draw the bounding box for the car2
+    drawBoundingBox(-0.0f, 3.0f, 5.0f, 2.0f, 0.0f, 1.0f, 0.0f); // Green color
+
     glPopMatrix();
 }
 void van() {
@@ -715,7 +744,7 @@ void van() {
     glVertex2f(1.9f, -0.8f);  // top-left vertex
     glVertex2f(0.6f, -0.8f);  // top-right vertex
     glVertex2f(0.6f, -1.8f);  // bottom-right vertex
-    glVertex2f( 1.9f, -1.8f);  // bottom-left vertex
+    glVertex2f(1.9f, -1.8f);  // bottom-left vertex
     glEnd();
     glPopMatrix();
 
@@ -771,8 +800,8 @@ void van() {
     glPopMatrix();
 
     // Draw the bounding box for the van
-    drawBoundingBox(0.6f, 1.9f, -0.8f+move, -1.8f+move, 0.0f, 1.0f, 0.0f); // Green color
-    checkCollisions(0.6f, 1.9f, -0.8f+move, -1.8f+move);
+    drawBoundingBox(0.6f, 1.9f, -0.8f, -1.8f, 0.0f, 1.0f, 0.0f); // Green color
+
 }
 
 void player() {
@@ -1122,7 +1151,6 @@ void level1() {
     glPushMatrix();
     glTranslatef(0.0f, move, 0.0f);
     car2();
-
     van();
     glPopMatrix();
 
@@ -1217,7 +1245,7 @@ void level3() {
     truck();
     Rickshaw();
     glPopMatrix();
-   
+
 }
 
 void roadmove() {
@@ -1231,7 +1259,7 @@ void roadmove() {
         glPopMatrix();
     }
 }
-    
+
 void leftmovement() {
     float m = -move * 0.20f;
     glPushMatrix();
@@ -1244,6 +1272,7 @@ void leftmovement() {
     glScalef(-1.0f, -1.0f, 0.0f);
     glTranslatef(-1.0f, -4.5f, 0.0f);
     van();
+    checkCollisions();
     glPopMatrix();
 
     if (m >= 4) {
@@ -1261,9 +1290,11 @@ void gamescreen() {
     roadmove();
     if (move <= -32.0f && move >= -72.0f) {
         level = 2;
-    } else if (move <= -72.0f) {
+    }
+    else if (move <= -72.0f) {
         level = 3;
-    } else {
+    }
+    else {
         level = 1;
     }
 
@@ -1288,7 +1319,7 @@ void keyboard(unsigned char key, int x, int y) {
 
     case 'a':  // Move left
         playerX -= playerSpeed;
-        ll=-2.3;
+        ll = -2.3;
         break;
     case 'd':  // Move right
         playerX += playerSpeed;
@@ -1310,9 +1341,9 @@ void keyboard(unsigned char key, int x, int y) {
 
     case 'r':
         if (currentScreen != 0) {
-           reset(); 
-           currentScreen = 1;
-            
+            reset();
+            currentScreen = 1;
+
         }
         break;
     }
