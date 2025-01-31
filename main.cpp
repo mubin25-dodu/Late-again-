@@ -12,9 +12,9 @@ GLfloat pspeed = 00.20; // playerx shift speed
 int currentScreen = 1;
 GLfloat playerX = 0.0f;
 GLfloat playerY = -1.5f;
-GLfloat move = -0.0f;
+GLfloat move = 0.0f;
 int level = 1;
-GLfloat screenmovement = 2;
+GLfloat screenmovement = 1;
 float lmove, ll = 0;
 GLfloat playerSpeed = pspeed;
 float truckLeft, truckRight, truckTop, truckBottom;
@@ -118,7 +118,6 @@ void timerFunc(int value) {
     }
 
 }
-
 void home() {
     glClearColor(0.9f, 0.9f, 0.9f, 1.0f); // Light gray background
     glClear(GL_COLOR_BUFFER_BIT);  // Clear the buffer
@@ -589,97 +588,98 @@ void checkCollisions() {
     float playerRight = playerX + 0.1f;
     float playerTop = playerY + 0.1f;
     float playerBottom = playerY - 0.1f;
-
     // Van bounding box
-    float vanLeft = 0.6f;
-    float vanRight = 2.4f;
-    float vanTop = -1.0f + move;
-    float vanBottom = -2.1f + move;
-
-    if (isCollision(playerLeft, playerRight, playerTop, playerBottom, vanLeft, vanRight, vanTop, vanBottom)) {
-        // currentScreen = 4;
-         glColor3f(1.0f, 0.0f, 0.0f);
-        char levelText[10];
-    sprintf(levelText, "collitiooawdjhgaqw wjyeg %d", level);
-    renderBitmapString(-3.50f, 0.82f, 0.0f, GLUT_BITMAP_HELVETICA_18, levelText);  }      
-
-    // Van1 bounding box
-    float vanLeft1 =  0.3f;
-    float vanRight1 = 2.1f;
-    float vanTop1 = 12.0f+ move;
-    float vanBottom1 = 10.9f + move;
-
-    if (isCollision(playerLeft, playerRight, playerTop, playerBottom, vanLeft1, vanRight1, vanTop1, vanBottom1)) {
-        // currentScreen = 4;
-         glColor3f(1.0f, 0.0f, 0.0f);
-        char levelText[10];
-    sprintf(levelText, "collitiooawdjhgaqw wjyeg %d", level);
-    renderBitmapString(-3.50f, 0.82f, 0.0f, GLUT_BITMAP_HELVETICA_18, levelText);
-    }
-    drawBoundingBox(vanLeft1, vanRight1, vanTop1, vanBottom1, 1.0f, 1.0f, 0.0f); // Yellow color
-
-    // Van1 bounding box
-    float vanLeft2 = .6f;
-    float vanRight2 = 2.2f;
-    float vanTop2 = -0.8f + move + 48;
-    float vanBottom2 = -1.8f + move + 48;
-
-    if (isCollision(playerLeft, playerRight, playerTop, playerBottom, vanLeft2, vanRight2, vanTop2, vanBottom2)) {
-        // currentScreen = 4;
-         glColor3f(1.0f, 0.0f, 0.0f);
-        char levelText[10];
-    sprintf(levelText, "collitiooawdjhgaqw wjyeg %d", level);
-    renderBitmapString(-3.50f, 0.82f, 0.0f, GLUT_BITMAP_HELVETICA_18, levelText);
-    }
-    // Draw bounding boxes for debugging
- drawBoundingBox(vanLeft, vanRight, vanTop, vanBottom, 1.0f, 1.0f, 0.0f); // Yellow color
-
-    // Car2 bounding box
-    float car2Left1 = 0.0f;
-    float car2Right1 = 1.35f;
-    float car2Top1 = -2.95f + move+8;
-    float car2Bottom1 = -5.05f + move+8;
- ;
-    if (isCollision(playerLeft, playerRight, playerTop, playerBottom, car2Left1, car2Right1, car2Top1, car2Bottom1)) {
-        char levelText[10];
+    if (isCollision(playerLeft, playerRight, playerTop, playerBottom, 0.6f, 2.4f, -1.0f + move, -2.1f + move)) {
+       char levelText[10];
         glColor3f(1.0f, 0.0f, 0.0f);
         sprintf(levelText, "collitiooawdjhgaqw wjyeg %d", level);
     renderBitmapString(-3.50f, 0.82f, 0.0f, GLUT_BITMAP_HELVETICA_18, levelText);
-//         // currentScreen = 4;
     }
-    // drawBoundingBox(car2Left1, car2Right1, car2Top1, car2Bottom1, 1.0f, 1.0f, 0.0f); // Yellow color
 
-     // Car2 bounding box
-    float car2Left2 = 0.0f;
-    float car2Right2 = 1.35f;
-    float car2Top2 = -2.95f + move+48;
-    float car2Bottom2 = -5.05f + move+48;
- ;
-    if (isCollision(playerLeft, playerRight, playerTop, playerBottom, car2Left2, car2Right2, car2Top2, car2Bottom2)) {
-        // currentScreen = 4;
-         glColor3f(1.0f, 0.0f, 0.0f);
-        char levelText[10];
-    sprintf(levelText, "collitiooawdjhgaqw wjyeg %d", level);
+    // Van1 bounding box
+    if (isCollision(playerLeft, playerRight, playerTop, playerBottom, 0.3f, 2.1f, 12.0f + move, 10.9f + move)) {
+       char levelText[10];
+        glColor3f(1.0f, 0.0f, 0.0f);
+        sprintf(levelText, "collitiooawdjhgaqw wjyeg %d", level);
+    renderBitmapString(-3.50f, 0.82f, 0.0f, GLUT_BITMAP_HELVETICA_18, levelText);
+    drawBoundingBox(0.3f, 2.1f, 12.0f + move, 10.9f + move, 1.0f, 1.0f, 0.0f); // Yellow color
+
+    // Van2 bounding box
+    if (isCollision(playerLeft, playerRight, playerTop, playerBottom, 0.6f, 2.2f, -0.8f + move + 48, -1.8f + move + 48)) {
+       char levelText[10];
+        glColor3f(1.0f, 0.0f, 0.0f);
+        sprintf(levelText, "collitiooawdjhgaqw wjyeg %d", level);
     renderBitmapString(-3.50f, 0.82f, 0.0f, GLUT_BITMAP_HELVETICA_18, levelText);
     }
-    // drawBoundingBox(car2Left1, car2Right1, car2Top1, car2Bottom1, 1.0f, 1.0f, 0.0f); // Yellow color
+    drawBoundingBox(0.6f, 2.2f, -0.8f + move + 48, -1.8f + move + 48, 1.0f, 1.0f, 0.0f); // Yellow color
 
     // Car2 bounding box
-    float car2Left3 = 0.0f;
-    float car2Right3 = 1.35f;
-    float car2Top3 = -2.95f + move+64;
-    float car2Bottom3 = -5.05f + move+64;
- ;
-    if (isCollision(playerLeft, playerRight, playerTop, playerBottom, car2Left3, car2Right3, car2Top3, car2Bottom3)) {
-        // currentScreen = 4;
-         glColor3f(1.0f, 0.0f, 0.0f);
-        char levelText[10];
-    sprintf(levelText, "collitiooawdjhgaqw wjyeg %d", level);
+    if (isCollision(playerLeft, playerRight, playerTop, playerBottom, 0.0f, 1.35f, -2.95f + move + 8, -5.05f + move + 8)) {
+       char levelText[10];
+        glColor3f(1.0f, 0.0f, 0.0f);
+        sprintf(levelText, "collitiooawdjhgaqw wjyeg %d", level);
     renderBitmapString(-3.50f, 0.82f, 0.0f, GLUT_BITMAP_HELVETICA_18, levelText);
     }
 
-    // Ensure player stays within bounds
-    if (playerX > 2.75) {
+    // Car2 bounding box
+    if (isCollision(playerLeft, playerRight, playerTop, playerBottom, 0.0f, 1.35f, -2.95f + move + 48, -5.05f + move + 48)) {
+        currentScreen = 4;
+    }
+
+    // Car2 bounding box
+    if (isCollision(playerLeft, playerRight, playerTop, playerBottom, 0.0f, 1.35f, -2.95f + move + 64, -5.05f + move + 64)) {
+        currentScreen = 4;
+    }
+
+    // Truck bounding box
+    if (isCollision(playerLeft, playerRight, playerTop, playerBottom, 0.34f, 2.5f, -0.6f + move + 32, -3.4f + move + 32)) {
+        currentScreen = 4;
+    }
+    drawBoundingBox(0.34f, 2.5f, -0.6f + move + 32, -3.4f + move + 32, 1.0f, 1.0f, 0.0f); // Yellow color
+
+    // Truck1 bounding box
+    if (isCollision(playerLeft, playerRight, playerTop, playerBottom, 0.34f, 2.5f, -0.6f + move + 40, -3.4f + move + 40)) {
+        currentScreen = 4;
+    }
+
+    // Truck2 bounding box
+    if (isCollision(playerLeft, playerRight, playerTop, playerBottom, 0.34f, 2.5f, -0.6f + move + 56, -3.4f + move + 56)) {
+        currentScreen = 4;
+    }
+
+    // Truck3 bounding box
+    if (isCollision(playerLeft, playerRight, playerTop, playerBottom, 0.34f, 2.5f, -0.6f + move + 72, -3.4f + move + 72)) {
+        currentScreen = 4;
+    }
+
+    // Truck4 bounding box
+    if (isCollision(playerLeft, playerRight, playerTop, playerBottom, 0.69f, 2.85f, -0.6f + move + 80, -3.4f + move + 80)) {
+        currentScreen = 4;
+    }
+
+    // Truck5 bounding box
+    if (isCollision(playerLeft, playerRight, playerTop, playerBottom, 0.34f, 2.5f, -0.6f + move + 88, -3.4f + move + 88)) {
+        currentScreen = 4;
+    }
+
+    // Rickshaw bounding box
+    if (isCollision(playerLeft, playerRight, playerTop, playerBottom, 0.85f, 2.7f, 1.35f + move + 24, 1.2f + move + 24)) {
+        currentScreen = 4;
+    }
+    drawBoundingBox(0.85f, 2.7f, 1.35f + move + 24, 1.2f + move + 24, 1.0f, 1.0f, 0.0f); // Yellow color
+
+    // Rickshaw1 bounding box
+    if (isCollision(playerLeft, playerRight, playerTop, playerBottom, 0.85f, 2.7f, 1.35f + move + 40, 1.2f + move + 40)) {
+        currentScreen = 4;
+    }
+
+    // Rickshaw2 bounding box
+    if (isCollision(playerLeft, playerRight, playerTop, playerBottom, 0.85f, 2.7f, 1.35f + move + 16, 1.2f + move + 16)) {
+        currentScreen = 4;
+    }
+    drawBoundingBox(0.85f, 2.7f, 1.35f + move + 16, 1.2f + move + 16, 1.0f, 1.0f, 0.0f); // Yellow color
+
+if (playerX > 2.75) {
         playerX = 2.75;
     }
     if (playerX < -2.75) {
@@ -1018,9 +1018,6 @@ void Rickshaw() {
     glEnd();
     glPopMatrix();
 
-    // Draw the bounding box for the rickshaw
-    drawBoundingBox(-2.3f, -1.05f, -1.3f, -1.85f, 0.0f, 1.0f, 0.0f); // Green color
-
     glPopMatrix();
 }
 
@@ -1121,8 +1118,6 @@ void truck() {
     glEnd();
     glPopMatrix();
 
-    // Draw the bounding box for the truck
-    drawBoundingBox(truckLeft, truckRight, truckTop, truckBottom, 0.0f, 1.0f, 0.0f); // Green color
 }
 void levelinfobox() {
     // timer
@@ -1270,7 +1265,6 @@ void level3() {
     // frame 1
     glPushMatrix();
     glTranslatef(0.0f, move + 72, 0.0f);  // Apply move variable
-    manhole();
     glScalef(-1.0f, -1.0f, 0.0f);
     truck();
     glPopMatrix();
@@ -1279,8 +1273,7 @@ void level3() {
     glPushMatrix();
     glTranslatef(0.0f, move + 80.0f, 0.0f);
     glScalef(-1.0f, -1.0f, 0.0f);
-    manhole();
-    glTranslatef(0.6f, -0.0f, 0.0f);
+    glTranslatef(-0.3f, -0.0f, 0.0f);
     truck();
     glPopMatrix();
 
@@ -1421,7 +1414,7 @@ void display() {
     else if (currentScreen == 4) {
         colpage();  // Display time up screen if collision is detected
     }
-checkCollisions(); // Check collision
+    checkCollisions(); // Check collision
     glutSwapBuffers(); // Double buffering
 }
 
