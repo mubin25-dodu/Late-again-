@@ -12,8 +12,9 @@ GLfloat pspeed = 00.20; // playerx shift speed
 int currentScreen = 1;
 GLfloat playerX = 0.0f;
 GLfloat playerY = -1.5f;
-GLfloat move = 0.0f;
+GLfloat move = -14.0f;
 int level = 1;
+float m;
 GLfloat screenmovement = 1;
 float lmove, ll = 0;
 GLfloat playerSpeed = pspeed;
@@ -584,10 +585,10 @@ void drawBoundingBox(float left, float right, float top, float bottom, float r, 
 }
 void checkCollisions() {
     // Player bounding box
-    float playerLeft = playerX - 0.1f;
-    float playerRight = playerX + 0.1f;
-    float playerTop = playerY + 0.1f;
-    float playerBottom = playerY - 0.1f;
+    float playerLeft = playerX;
+    float playerRight = playerX;
+    float playerTop = playerY;
+    float playerBottom = playerY;
 
     // Van bounding box
     if (isCollision(playerLeft, playerRight, playerTop, playerBottom, 0.6f, 2.4f, -1.0f + move, -2.1f + move)) {
@@ -728,13 +729,57 @@ void checkCollisions() {
         sprintf(levelText, "Collision %d", level);
         renderBitmapString(-3.50f, 0.82f, 0.0f, GLUT_BITMAP_HELVETICA_18, levelText);
     }
-    drawBoundingBox(0.85f, 2.7f, 1.35f + move + 16, 0.7f - 0.5f + move + 16, 1.0f, 1.0f, 0.0f); // Yellow color
+    
+//   car 1
+    if (isCollision(playerLeft, playerRight, playerTop, playerBottom, 1.25f, 2.7f, -.70f + move+16, -3.0f + move+16)) {
+        glColor3f(1.0f, 0.0f, 0.0f);
+        char levelText[10];
+        sprintf(levelText, "Collision %d", level);
+        renderBitmapString(-3.50f, 0.82f, 0.0f, GLUT_BITMAP_HELVETICA_18, levelText);
+    }
+    // car 2
+    if (isCollision(playerLeft, playerRight, playerTop, playerBottom, 1.25f, 2.7f, -.70f + move + 24, -3.0f + move + 24)) {
+        glColor3f(1.0f, 0.0f, 0.0f);
+        char levelText[10];
+        sprintf(levelText, "Collision %d", level);
+        renderBitmapString(-3.50f, 0.82f, 0.0f, GLUT_BITMAP_HELVETICA_18, levelText);
+    }
+    // left truck
+// Calculate m
+    float m = -move * 0.20f;
+    // Check collisions for the first call
+    if (isCollision(playerLeft, playerRight, playerTop, playerBottom, -2.25f, -0.34f, 2.7f + m, 0.0f + m)) {
+        glColor3f(1.0f, 0.0f, 0.0f);
+        char levelText[10];
+        sprintf(levelText, "Collision %d", level);
+        renderBitmapString(-3.50f, 0.82f, 0.0f, GLUT_BITMAP_HELVETICA_18, levelText);
+    }
+    drawBoundingBox(-2.05f, -0.34f, 2.7f + m, 0.0f + m, 1.0f, 1.0f, 0.0f); // Yellow color
 
-if (playerX > 2.75) {
+    // Check collisions for the second call
+    if (isCollision(playerLeft, playerRight, playerTop, playerBottom, -2.25f + 0.6f, -0.34f + 0.6f, 3.0f - move * 0.20f - 13, 0.1f - move * 0.20f - 13)) {
+        glColor3f(1.0f, 0.0f, 0.0f);
+        char levelText[10];
+        sprintf(levelText, "Collision %d", level);
+        renderBitmapString(-3.50f, 0.82f, 0.0f, GLUT_BITMAP_HELVETICA_18, levelText);
+    }
+    drawBoundingBox(-2.05f + 0.6f, -0.34f + 0.6f, 3.0f - move * 0.20f - 13, 0.1f - move * 0.20f - 13, 1.0f, 1.0f, 0.0f); // Yellow color
+
+    // Check collisions for the left 2nd truck
+    if (isCollision(playerLeft, playerRight, playerTop, playerBottom, -2.8f, -0.85f, -6.75f + m, -9.42f + m)) {
+        glColor3f(1.0f, 0.0f, 0.0f);
+        char levelText[10];
+        sprintf(levelText, "Collision %d", level);
+        renderBitmapString(-3.50f, 0.82f, 0.0f, GLUT_BITMAP_HELVETICA_18, levelText);
+    }
+    drawBoundingBox(-2.65f, -0.85f, -6.5f + m, -9.2f + m, 1.0f, 1.0f, 0.0f); // Yellow color
+
+    if (playerX > 2.75) {
         playerX = 2.75;
     }
     if (playerX < -2.75) {
         playerX = -2.75;
+       
     }
 }
 
@@ -783,9 +828,6 @@ void car() {
 
     glRectd(.7, 3.5, 1.8, 4.2);
     glRectd(1.5, 3.5, 2.3, 4.2);
-
-    // Draw the bounding box for the car
-    drawBoundingBox(3.0f, 0.0f, 5.5f, 0.0f, 0.0f, 1.0f, 0.0f); // Green color
 
     glPopMatrix();
 }
@@ -1294,7 +1336,6 @@ void level2() {
     glPushMatrix();
     glTranslatef(0.0f, move + 48, 0.0f);
     car2();
-    van();
     glPopMatrix();
 
     //  frame 4 
@@ -1308,7 +1349,6 @@ void level2() {
     glPushMatrix();
     glTranslatef(0.0f, move + 64.0f, 0.0f);
     car2();
-    Rickshaw();
     glPopMatrix();
 }
 
@@ -1407,7 +1447,7 @@ void gamescreen() {
 
 void keyboard(unsigned char key, int x, int y) {
     switch (key) {
-case 'q':  // Move left
+    case 'q':  // Move left
         move -= .2;
         ll = -2.3;
         break;
