@@ -584,16 +584,158 @@ void checkCollisions() {
     float playerTop = playerY;
     float playerBottom = playerY;
 
-//     // Van bounding box
+    // Van bounding box
+    if (isCollision(playerLeft, playerRight, playerTop, playerBottom, 0.6f, 2.4f, -1.0f + move, -2.1f + move)) {
+        currentScreen = 4;
+        stop = true;
+    }
 
-  
+    // Van1 bounding box
+    if (isCollision(playerLeft, playerRight, playerTop, playerBottom, 0.3f, 2.1f, 12.0f + move, 10.9f + move)) {
+        currentScreen = 4;
+        stop = true;
+    }
+
+    // Van2 bounding box
+    if (isCollision(playerLeft, playerRight, playerTop, playerBottom, 0.6f, 2.2f, -0.8f + move + 48, -1.8f + move + 48)) {
+        currentScreen = 4;
+        stop = true;
+
+    }
+    if (isCollision(playerLeft, playerRight, playerTop, playerBottom, 0.0f, 1.35f, -2.95f + move + 8, -5.05f + move + 8)) {
+        // Car2 collision
+        currentScreen = 4;
+        stop = true; // Set collision flag
+    }
+
+    // Car2 bounding box
+    if (isCollision(playerLeft, playerRight, playerTop, playerBottom, 0.0f, 1.35f, -2.95f + move + 48, -5.05f + move + 48)) {
+        // Car2 collision
+        currentScreen = 4;
+        stop = true; // Set collision flag
+    }
+
+    // Car2 bounding box
+    if (isCollision(playerLeft, playerRight, playerTop, playerBottom, 0.0f, 1.35f, -2.95f + move + 64, -5.05f + move + 64)) {
+        currentScreen = 4;
+        stop = true; // Set collision flag
+    }
+
+    // Truck bounding box
+    if (isCollision(playerLeft, playerRight, playerTop, playerBottom, 0.34f, 2.5f, -0.6f + move + 32, -3.4f + move + 32)) {
+        currentScreen = 4;
+        stop = true; // Set collision flag
+    }
+    // Truck1 bounding box
+    if (isCollision(playerLeft, playerRight, playerTop, playerBottom, 0.34f, 2.5f, -0.6f + move + 40, -3.4f + move + 40)) {
+     currentScreen = 4;
+        stop = true; // Set collision flag
+    }
+
+    // Truck2 bounding box
+    if (isCollision(playerLeft, playerRight, playerTop, playerBottom, 0.34f, 2.5f, -0.6f + move + 56, -3.4f + move + 56)) {
+        currentScreen = 4;
+        stop = true; // Set collision flag
+    }
+
+    // Truck3 bounding box
+    if (isCollision(playerLeft, playerRight, playerTop, playerBottom, 0.34f, 2.5f, -0.6f + move + 72, -3.4f + move + 72)) {
+    currentScreen = 4;
+        stop = true; // Set collision flag
+    }
+
+    // Truck4 bounding box
+    if (isCollision(playerLeft, playerRight, playerTop, playerBottom, 0.34f + 0.35f, 2.5f + 0.35f, -0.6f + move + 80, -3.4f + move + 80)) {
+      currentScreen = 4;
+        stop = true; // Set collision flag
+    }
+
+    // Truck5 bounding box
+    if (isCollision(playerLeft, playerRight, playerTop, playerBottom, 0.34f, 2.5f, -0.6f + move + 88, -3.4f + move + 88)) {
+    currentScreen = 4;
+        stop = true; // Set collision flag
+    }
+
+    // Rickshaw1 bounding box
+    if (isCollision(playerLeft, playerRight, playerTop, playerBottom, 0.85f, 2.7f, 1.35f + move + 24, 1.7f - 0.5f + move + 24)) {
+     currentScreen = 4;
+        stop = true; // Set collision flag
+    }
+    drawBoundingBox(0.85f, 2.7f, 1.35f + move + 24, 1.7f - 0.5f + move + 24, 1.0f, 1.0f, 0.0f); // Yellow color
+
+    // Rickshaw2 bounding box
+    if (isCollision(playerLeft, playerRight, playerTop, playerBottom, 0.85f, 2.7f, 1.35f + move + 40, 0.7f - 0.5f + move + 40)) {
+      currentScreen = 4;
+        stop = true; // Set collision flag
+    }
+
+    // Rickshaw3 bounding box
+    if (isCollision(playerLeft, playerRight, playerTop, playerBottom, 0.85f, 2.7f, 1.35f + move + 16, 0.7f - 0.5f + move + 16)) {
+      currentScreen = 4;
+        stop = true; // Set collision flag
+    }
+
+    //   car 1
+    if (isCollision(playerLeft, playerRight, playerTop, playerBottom, 1.25f, 2.7f, -.70f + move + 16, -3.0f + move + 16)) {
+      currentScreen = 4;
+        stop = true; // Set collision flag
+    }
+    // car 2
+    if (isCollision(playerLeft, playerRight, playerTop, playerBottom, 1.25f, 2.7f, -.70f + move + 24, -3.0f + move + 24)) {
+       currentScreen = 4;
+        stop = true; // Set collision flag
+    }
+    // left truck
+// Calculate m
+    float m = -move * 0.20f;
+    // Check collisions for the first call
+    if (isCollision(playerLeft, playerRight, playerTop, playerBottom, -2.25f, -0.34f, 2.7f + m, 0.0f + m)) {
+      currentScreen = 4;
+        stop = true; // Set collision flag
+    }
+
+    // Check collisions for the second call
+    if (isCollision(playerLeft, playerRight, playerTop, playerBottom, -2.25f + 0.6f, -0.34f + 0.6f, 3.0f - move * 0.20f - 13, 0.1f - move * 0.20f - 13)) {
+      currentScreen = 4;
+        stop = true; // Set collision flag
+    }
+    // Check collisions for the left 2nd truck
+    if (isCollision(playerLeft, playerRight, playerTop, playerBottom, -2.8f, -0.85f, -6.75f + m, -9.42f + m)) {
+      currentScreen = 4;
+        stop = true; // Set collision flag
+    }
+
+    // left car
+    if (isCollision(playerLeft, playerRight, playerTop, playerBottom, -2.35f, -0.34f, -.4f + m, -2.5f + m)) {
+      
+        currentScreen = 4;
+        stop = true; // Set collision flag
+    }
+    drawBoundingBox(-1.75f, -0.34f, -.21f + m, -2.15f + m, 1.0f, 1.0f, 1.0f); // Yellow color
+
+    if (isCollision(playerLeft, playerRight, playerTop, playerBottom, -2.35f - .6, -0.34f - .7, -.4f + m - 13, -2.5f + m - 13)) {
+      
+        currentScreen = 4;
+        stop = true; // Set collision flag
+    }
+    // left van
+
+    if (isCollision(playerLeft, playerRight, playerTop, playerBottom, -2.00f, 0.0f, -3.5f + m, -4.8f + m)) {
+        currentScreen = 4;
+        stop = true; // Set collision flag
+    }
+   // Finish line bounding box
+    float finishLineY = 40.0f + move / 2;
+    if (isCollision(playerLeft, playerRight, playerTop, playerBottom, -2.4f, 2.4f, finishLineY + 0.1f, finishLineY - 0.1f)) {
+        stop = true;
+        home();
+    }
 
     if (playerX > 2.75) {
         playerX = 2.75;
     }
     if (playerX < -2.75) {
         playerX = -2.75;
-       
     }
 }
 
@@ -754,12 +896,9 @@ void van() {
     glEnd();
     glPopMatrix();
 
-    // Draw the bounding box for the van
-    drawBoundingBox(0.6f, 1.9f, -0.8f, -1.8f, 0.0f, 1.0f, 0.0f); // Green color
-
 }
 
-void player() { 
+void player() {
 
     glPushMatrix();
     glScalef(0.8f, 0.8f, 1.0f);
@@ -1096,6 +1235,38 @@ void manhole() {
 
     glPopMatrix();
 }
+void FinishLine() {
+    int numStripes = 30; // Number of black and white stripes
+    float xEnd = 2.4f; // Y-coordinate of the finish line
+    float xStart = -2.4f;
+    float y = 40 + move / 2; // Y-coordinate of the finish line
+
+    float stripeWidth = (xEnd - xStart) / numStripes;
+
+    for (int i = 0; i < numStripes; i++) {
+        float x1 = xStart + i * stripeWidth;
+        float x2 = x1 + stripeWidth;
+
+        // Alternate black and white stripes
+        if (i % 2 == 0) {
+            glColor4f(0.0f, 0.0f, 0.0f, 0.7); // Black
+        } else {
+            glColor4f(1.0f, 1.0f, 1.0f, 0.7); // White
+        }
+        glBegin(GL_QUADS);
+        glVertex2f(x1, y - 0.1f); // Bottom-left
+        glVertex2f(x2, y - 0.1f); // Bottom-right
+        glVertex2f(x2, y + 0.1f); // Top-right
+        glVertex2f(x1, y + 0.1f); // Top-left
+        glEnd();
+    }
+
+    // Draw the bounding box for the finish line
+    drawBoundingBox(xStart, xEnd, y + 0.1f, y - 0.1f, 1.0f, 1.0f, 0.0f); // Yellow color
+
+  
+
+}
 void level1() {
     // frame 1
     glPushMatrix();
@@ -1200,8 +1371,20 @@ void roadmove() {
         Road();
         if (level == 3) {
             manhole();
+            if (isCollision(
+                playerX - 0.1f, playerX + 0.1f,  // Player left/right
+                playerY + 0.1f, playerY - 0.1f,  // Player top/bottom
+                -0.25f, 0.25f,                     // Manhole left/right
+                -0.2f + move / 2 + b,               // Manhole top (y + offset)
+                -0.5f + move / 2 + b               // Manhole bottom
+            )) {
+                char playerText[10];
+                sprintf(playerText, "Collision");
+                renderBitmapString(-1.0f, 3.82f, 0.0f, GLUT_BITMAP_HELVETICA_18, playerText);
+                stop = true;
         }
-        glPopMatrix();
+       
+    } glPopMatrix();
     }
 }
 
@@ -1250,30 +1433,28 @@ void gamescreen() {
     }
     else if (level == 2) {
         level2();
-        level3();
+        level3(); 
     }
-    else if (level == 3) {
-        level3();
-    }
-
-    player();
+    
     leftmovement();
+    player();
+    FinishLine();
 }
 
 void movement(int value) {
-    // if (!stop) { // Check if collision has not occurred
-    //     lmove += screenmovement / 0.02f;
-    //     if (level == 1) {
-    //         move -= screenmovement * 0.02f;  // Smaller increment for smoother transition
-    //         glutPostRedisplay();  // Update display
-    //         glutTimerFunc(16, movement, 0);  // Restart the timer with shorter interval
-    //     }
-    //     if (level == 2 || level == 3) {
-    //         move -= screenmovement * 0.04f;  // Smaller increment for smoother transition
-    //         glutPostRedisplay();  // Update display
-    //         glutTimerFunc(16, movement, 0);  // Restart the timer with shorter interval
-    //     }
-    // }
+    if (!stop) { 
+        lmove += screenmovement / 0.02f;
+        if (level == 1) {
+            move -= screenmovement * 0.02f;  // Smaller increment for smoother transition
+            glutPostRedisplay();  // Update display
+            glutTimerFunc(16, movement, 0);  // Restart the timer with shorter interval
+        }
+        if (level == 2 || level == 3) {
+            move -= screenmovement * 0.04f;  // Smaller increment for smoother transition
+            glutPostRedisplay();  // Update display
+            glutTimerFunc(16, movement, 0);  // Restart the timer with shorter interval
+        }
+    }
 }
 void reset() {
     timer = a;  // Reset the timer
@@ -1282,18 +1463,19 @@ void reset() {
     move = 0.0f;
     playerX = 0.0f;
     playerY = -1.5f;
-    movement(false);
+    stop=false; // Stop
+    movement(stop);
 }
 void keyboard(unsigned char key, int x, int y) {
     switch (key) {
-    case 'q':  // Move left
-        move -= .2;
-        ll = -2.3;
-        break;
-    case 'e':  // Move right
-        move += .2;
-        ll = 2.3;
-        break;
+        // case 'q':  // Move left
+        //     move -= .2;
+        //     ll = -2.3;
+        //     break;
+        // case 'e':  // Move right
+        //     move += .2;
+        //     ll = 2.3;
+        //     break;
     case 'a':  // Move left
         playerX -= playerSpeed;
         ll = -2.3;
@@ -1307,7 +1489,7 @@ void keyboard(unsigned char key, int x, int y) {
         if (currentScreen == 0) {
             reset();
             currentScreen = 1;
-            
+
         }
         break;
 
@@ -1315,7 +1497,7 @@ void keyboard(unsigned char key, int x, int y) {
         home();
         reset();
         currentScreen = 0;
-       
+
         break;
 
     case 'r':
@@ -1332,6 +1514,7 @@ void keyboard(unsigned char key, int x, int y) {
 
 void display() {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // Clear the color and depth buffers
+    
     if (currentScreen == 0) {
         home(); // Render home 
         timer = 100000;
