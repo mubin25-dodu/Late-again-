@@ -8,13 +8,13 @@
 #define PI 3.14159265358979323846
 int a = 120;
 int timer = a;
-GLfloat pspeed = 00.750; // playerx shift speed
+GLfloat pspeed = 00.20; // playerx shift speed
 int currentScreen = 1;
 GLfloat playerX = 0.0f;
 GLfloat playerY = -1.5f;
 GLfloat move = -0.0f;
 int level = 1;
-GLfloat screenmovement = 1;
+GLfloat screenmovement = 2;
 float lmove, ll = 0;
 GLfloat playerSpeed = pspeed;
 float truckLeft, truckRight, truckTop, truckBottom;
@@ -592,37 +592,91 @@ void checkCollisions() {
 
     // Van bounding box
     float vanLeft = 0.6f;
-    float vanRight = 1.9f;
-    float vanTop = -0.8f + move;
-    float vanBottom = -1.8f + move;
+    float vanRight = 2.4f;
+    float vanTop = -1.0f + move;
+    float vanBottom = -2.1f + move;
 
     if (isCollision(playerLeft, playerRight, playerTop, playerBottom, vanLeft, vanRight, vanTop, vanBottom)) {
-        currentScreen = 4;
-    }
+        // currentScreen = 4;
+         glColor3f(1.0f, 0.0f, 0.0f);
+        char levelText[10];
+    sprintf(levelText, "collitiooawdjhgaqw wjyeg %d", level);
+    renderBitmapString(-3.50f, 0.82f, 0.0f, GLUT_BITMAP_HELVETICA_18, levelText);  }      
 
     // Van1 bounding box
-    float vanLeft1 = 0.3f;
-    float vanRight1 = 1.6f;
-    float vanTop1 = -0.8f + move + 12.5;
-    float vanBottom1 = -1.8f + move + 12.5;
+    float vanLeft1 =  0.3f;
+    float vanRight1 = 2.1f;
+    float vanTop1 = 12.0f+ move;
+    float vanBottom1 = 10.9f + move;
 
     if (isCollision(playerLeft, playerRight, playerTop, playerBottom, vanLeft1, vanRight1, vanTop1, vanBottom1)) {
-        currentScreen = 4;
+        // currentScreen = 4;
+         glColor3f(1.0f, 0.0f, 0.0f);
+        char levelText[10];
+    sprintf(levelText, "collitiooawdjhgaqw wjyeg %d", level);
+    renderBitmapString(-3.50f, 0.82f, 0.0f, GLUT_BITMAP_HELVETICA_18, levelText);
     }
+    drawBoundingBox(vanLeft1, vanRight1, vanTop1, vanBottom1, 1.0f, 1.0f, 0.0f); // Yellow color
 
-        // Van1 bounding box
-    float vanLeft2 = 0.3f;
-    float vanRight2 = 1.6f;
+    // Van1 bounding box
+    float vanLeft2 = .6f;
+    float vanRight2 = 2.2f;
     float vanTop2 = -0.8f + move + 48;
     float vanBottom2 = -1.8f + move + 48;
 
     if (isCollision(playerLeft, playerRight, playerTop, playerBottom, vanLeft2, vanRight2, vanTop2, vanBottom2)) {
-        currentScreen = 4;
+        // currentScreen = 4;
+         glColor3f(1.0f, 0.0f, 0.0f);
+        char levelText[10];
+    sprintf(levelText, "collitiooawdjhgaqw wjyeg %d", level);
+    renderBitmapString(-3.50f, 0.82f, 0.0f, GLUT_BITMAP_HELVETICA_18, levelText);
     }
-
     // Draw bounding boxes for debugging
-    drawBoundingBox(vanLeft, vanRight, vanTop, vanBottom, 1.0f, 1.0f, 0.0f); // Yellow color
-    drawBoundingBox(vanLeft1, vanRight1, vanTop1, vanBottom1, 1.0f, 1.0f, 0.0f); // Yellow color
+ drawBoundingBox(vanLeft, vanRight, vanTop, vanBottom, 1.0f, 1.0f, 0.0f); // Yellow color
+
+    // Car2 bounding box
+    float car2Left1 = 0.0f;
+    float car2Right1 = 1.35f;
+    float car2Top1 = -2.95f + move+8;
+    float car2Bottom1 = -5.05f + move+8;
+ ;
+    if (isCollision(playerLeft, playerRight, playerTop, playerBottom, car2Left1, car2Right1, car2Top1, car2Bottom1)) {
+        char levelText[10];
+        glColor3f(1.0f, 0.0f, 0.0f);
+        sprintf(levelText, "collitiooawdjhgaqw wjyeg %d", level);
+    renderBitmapString(-3.50f, 0.82f, 0.0f, GLUT_BITMAP_HELVETICA_18, levelText);
+//         // currentScreen = 4;
+    }
+    // drawBoundingBox(car2Left1, car2Right1, car2Top1, car2Bottom1, 1.0f, 1.0f, 0.0f); // Yellow color
+
+     // Car2 bounding box
+    float car2Left2 = 0.0f;
+    float car2Right2 = 1.35f;
+    float car2Top2 = -2.95f + move+48;
+    float car2Bottom2 = -5.05f + move+48;
+ ;
+    if (isCollision(playerLeft, playerRight, playerTop, playerBottom, car2Left2, car2Right2, car2Top2, car2Bottom2)) {
+        // currentScreen = 4;
+         glColor3f(1.0f, 0.0f, 0.0f);
+        char levelText[10];
+    sprintf(levelText, "collitiooawdjhgaqw wjyeg %d", level);
+    renderBitmapString(-3.50f, 0.82f, 0.0f, GLUT_BITMAP_HELVETICA_18, levelText);
+    }
+    // drawBoundingBox(car2Left1, car2Right1, car2Top1, car2Bottom1, 1.0f, 1.0f, 0.0f); // Yellow color
+
+    // Car2 bounding box
+    float car2Left3 = 0.0f;
+    float car2Right3 = 1.35f;
+    float car2Top3 = -2.95f + move+64;
+    float car2Bottom3 = -5.05f + move+64;
+ ;
+    if (isCollision(playerLeft, playerRight, playerTop, playerBottom, car2Left3, car2Right3, car2Top3, car2Bottom3)) {
+        // currentScreen = 4;
+         glColor3f(1.0f, 0.0f, 0.0f);
+        char levelText[10];
+    sprintf(levelText, "collitiooawdjhgaqw wjyeg %d", level);
+    renderBitmapString(-3.50f, 0.82f, 0.0f, GLUT_BITMAP_HELVETICA_18, levelText);
+    }
 
     // Ensure player stays within bounds
     if (playerX > 2.75) {
@@ -687,55 +741,49 @@ void car() {
 
 void car2() {
     glPushMatrix();
-    glTranslatef(-0.0f, -5.5f, 0.0f);  // Translate to the position
-    glScalef(0.45f, 0.35f, 1.0f);  // Scale down the car
 
     // Car body (main part)
     glColor3f(0.0f, 0.0f, 1.0f);  // Blue color
-    glRectd(0, 2, 3, 5);  // Main body of the car
+    glRectd(0, -3.925, 1.35, -2.95);  // Adjusted main body of the car
 
     // Car windows (light blue color)
     glColor3f(0.68f, 0.85f, 0.90f);
-    glRectd(0.75, 2.75, 2.25, 4.25);
+    glRectd(0.3375, -3.7375, 1.0125, -3.2625);
 
     glBegin(GL_LINES);
     glColor3f(0.68f, 0.85f, 0.90f);
-    glVertex2d(0.75, 3.25);
-    glVertex2d(2.25, 3.25);
-    glVertex2d(2.5, 3.25);
+    glVertex2d(0.3375, -3.5875);
+    glVertex2d(1.0125, -3.5875);
     glEnd();
 
     // Roof (red color)
     glColor3f(1.0f, 0.0f, 0.0f);  // Red roof
     glBegin(GL_QUADS);
-    glVertex2d(0.25, 5.5);
-    glVertex2d(2.75, 5.5);
-    glVertex2d(3, 5);
-    glVertex2d(0, 5);
+    glVertex2d(0.1125, -2.825);
+    glVertex2d(1.2375, -2.825);
+    glVertex2d(1.35, -2.95);
+    glVertex2d(0, -2.95);
     glEnd();
 
     // Car bottom (green color)
     glColor3f(0.0f, 1.0f, 0.0f);  // Green bottom
     glBegin(GL_QUADS);
-    glVertex2d(0, 2);
-    glVertex2d(3, 2);
-    glVertex2d(2.6, 0);
-    glVertex2d(0.4, 0);
+    glVertex2d(0, -3.925);
+    glVertex2d(1.35, -3.925);
+    glVertex2d(1.17, -4.7);
+    glVertex2d(0.18, -4.7);
     glEnd();
 
     // Additional details (black color)
     glColor3f(0.0f, 0.0f, 0.0f);
-    glRectd(0.85, 2.8, 2.0, 3.1);
-    glRectd(1.5, 2.8, 2.2, 3.1);
-
-    glRectd(0.7, 3.5, 1.8, 4.2);
-    glRectd(1.5, 3.5, 2.3, 4.2);
-
-    // Draw the bounding box for the car2
-    drawBoundingBox(-0.0f, 3.0f, 5.0f, 2.0f, 0.0f, 1.0f, 0.0f); // Green color
+    glRectd(0.3825, -3.71, 0.9, -3.605);
+    glRectd(0.675, -3.71, 0.99, -3.605);
+    glRectd(0.315, -3.425, 0.81, -3.145);
+    glRectd(0.675, -3.425, 1.035, -3.145);
 
     glPopMatrix();
 }
+
 void van() {
     // Back
     glPushMatrix();
@@ -804,7 +852,7 @@ void van() {
 
 }
 
-void player() {
+void player() { 
 
     glPushMatrix();
     glScalef(0.8f, 0.8f, 1.0f);
@@ -1230,7 +1278,6 @@ void level3() {
     // frame 3
     glPushMatrix();
     glTranslatef(0.0f, move + 80.0f, 0.0f);
-    car2(); // Apply move variable
     glScalef(-1.0f, -1.0f, 0.0f);
     manhole();
     glTranslatef(0.6f, -0.0f, 0.0f);
@@ -1316,7 +1363,14 @@ void gamescreen() {
 
 void keyboard(unsigned char key, int x, int y) {
     switch (key) {
-
+case 'q':  // Move left
+        move -= .2;
+        ll = -2.3;
+        break;
+    case 'e':  // Move right
+        move += .2;
+        ll = 2.3;
+        break;
     case 'a':  // Move left
         playerX -= playerSpeed;
         ll = -2.3;
@@ -1367,22 +1421,22 @@ void display() {
     else if (currentScreen == 4) {
         colpage();  // Display time up screen if collision is detected
     }
-
+checkCollisions(); // Check collision
     glutSwapBuffers(); // Double buffering
 }
 
 void movement(int value) {
-    lmove += screenmovement / 0.02f;
-    if (level == 1) {
-        move -= screenmovement * 0.02f;  // Smaller increment for smoother transition
-        glutPostRedisplay();  // Update display
-        glutTimerFunc(16, movement, 0);  // Restart the timer with shorter interval
-    }
-    if (level == 2 || level == 3) {
-        move -= screenmovement * 0.04f;  // Smaller increment for smoother transition
-        glutPostRedisplay();  // Update display
-        glutTimerFunc(16, movement, 0);  // Restart the timer with shorter interval
-    }
+    // lmove += screenmovement / 0.02f;
+    // if (level == 1) {
+    //     move -= screenmovement * 0.02f;  // Smaller increment for smoother transition
+    //     glutPostRedisplay();  // Update display
+    //     glutTimerFunc(16, movement, 0);  // Restart the timer with shorter interval
+    // }
+    // if (level == 2 || level == 3) {
+    //     move -= screenmovement * 0.04f;  // Smaller increment for smoother transition
+    //     glutPostRedisplay();  // Update display
+    //     glutTimerFunc(16, movement, 0);  // Restart the timer with shorter interval
+    // }
 }
 
 // Initialization function
