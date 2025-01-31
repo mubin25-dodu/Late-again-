@@ -12,7 +12,7 @@ GLfloat pspeed = 00.20; // playerx shift speed
 int currentScreen = 1;
 GLfloat playerX = 0.0f;
 GLfloat playerY = -1.5f;
-GLfloat move = -14.0f;
+GLfloat move = -0.0f;
 int level = 1;
 float m;
 GLfloat screenmovement = 1;
@@ -20,14 +20,8 @@ float lmove, ll = 0;
 GLfloat playerSpeed = pspeed;
 float truckLeft, truckRight, truckTop, truckBottom;
 bool isCountdownFinished = false;
-void reset() {
-    timer = a;  // Reset the timer
-    isCountdownFinished = false;
-    playerSpeed = pspeed;
-    move = 0.0f;
-    playerX = 0.0f;
-    playerY = -1.5f;
-}
+bool stop = false;
+
 void renderBitmapString(float x, float y, float z, void* font, const char* string) {
     const char* c;
     glRasterPos3f(x, y, z);  // Position the text
@@ -597,6 +591,8 @@ void checkCollisions() {
         char levelText[10];
         sprintf(levelText, "Collision %d", level);
         renderBitmapString(-3.50f, 0.82f, 0.0f, GLUT_BITMAP_HELVETICA_18, levelText);
+        currentScreen = 4;
+        stop = true; // Set collision flag
     }
     drawBoundingBox(0.6f, 2.4f, -1.0f + move, -2.1f + move, 1.0f, 1.0f, 0.0f); // Yellow color
 
@@ -607,6 +603,8 @@ void checkCollisions() {
         char levelText[10];
         sprintf(levelText, "Collision %d", level);
         renderBitmapString(-3.50f, 0.82f, 0.0f, GLUT_BITMAP_HELVETICA_18, levelText);
+        currentScreen = 4;
+        stop = true; // Set collision flag
     }
     drawBoundingBox(0.3f, 2.1f, 12.0f + move, 10.9f + move, 1.0f, 1.0f, 0.0f); // Yellow color
 
@@ -617,6 +615,8 @@ void checkCollisions() {
         char levelText[10];
         sprintf(levelText, "Collision %d", level);
         renderBitmapString(-3.50f, 0.82f, 0.0f, GLUT_BITMAP_HELVETICA_18, levelText);
+        currentScreen = 4;
+        stop = true; // Set collision flag
     }
     drawBoundingBox(0.6f, 2.2f, -0.8f + move + 48, -1.8f + move + 48, 1.0f, 1.0f, 0.0f); // Yellow color
 
@@ -627,6 +627,8 @@ void checkCollisions() {
         char levelText[10];
         sprintf(levelText, "Collision %d", level);
         renderBitmapString(-3.50f, 0.82f, 0.0f, GLUT_BITMAP_HELVETICA_18, levelText);
+        currentScreen = 4;
+        stop = true; // Set collision flag
     }
 
     // Car2 bounding box
@@ -636,6 +638,8 @@ void checkCollisions() {
         char levelText[10];
         sprintf(levelText, "Collision %d", level);
         renderBitmapString(-3.50f, 0.82f, 0.0f, GLUT_BITMAP_HELVETICA_18, levelText);
+        currentScreen = 4;
+        stop = true; // Set collision flag
     }
 
     // Car2 bounding box
@@ -645,6 +649,8 @@ void checkCollisions() {
         char levelText[10];
         sprintf(levelText, "Collision %d", level);
         renderBitmapString(-3.50f, 0.82f, 0.0f, GLUT_BITMAP_HELVETICA_18, levelText);
+        currentScreen = 4;
+        stop = true; // Set collision flag
     }
 
     // Truck bounding box
@@ -654,6 +660,8 @@ void checkCollisions() {
         char levelText[10];
         sprintf(levelText, "Collision %d", level);
         renderBitmapString(-3.50f, 0.82f, 0.0f, GLUT_BITMAP_HELVETICA_18, levelText);
+        currentScreen = 4;
+        stop = true; // Set collision flag
     }
     drawBoundingBox(0.34f, 2.5f, -0.6f + move + 32, -3.4f + move + 32, 1.0f, 1.0f, 0.0f); // Yellow color
 
@@ -664,6 +672,8 @@ void checkCollisions() {
         char levelText[10];
         sprintf(levelText, "Collision %d", level);
         renderBitmapString(-3.50f, 0.82f, 0.0f, GLUT_BITMAP_HELVETICA_18, levelText);
+        currentScreen = 4;
+        stop = true; // Set collision flag
     }
 
     // Truck2 bounding box
@@ -672,7 +682,8 @@ void checkCollisions() {
         glColor3f(1.0f, 0.0f, 0.0f);
         char levelText[10];
         sprintf(levelText, "Collision %d", level);
-        renderBitmapString(-3.50f, 0.82f, 0.0f, GLUT_BITMAP_HELVETICA_18, levelText);
+        renderBitmapString(-3.50f, 0.82f, 0.0f, GLUT_BITMAP_HELVETICA_18, levelText);currentScreen = 4;
+        stop = true; // Set collision flag
     }
 
     // Truck3 bounding box
@@ -681,7 +692,8 @@ void checkCollisions() {
         glColor3f(1.0f, 0.0f, 0.0f);
         char levelText[10];
         sprintf(levelText, "Collision %d", level);
-        renderBitmapString(-3.50f, 0.82f, 0.0f, GLUT_BITMAP_HELVETICA_18, levelText);
+        renderBitmapString(-3.50f, 0.82f, 0.0f, GLUT_BITMAP_HELVETICA_18, levelText);currentScreen = 4;
+        stop = true; // Set collision flag
     }
 
     // Truck4 bounding box
@@ -690,7 +702,8 @@ void checkCollisions() {
         glColor3f(1.0f, 0.0f, 0.0f);
         char levelText[10];
         sprintf(levelText, "Collision %d", level);
-        renderBitmapString(-3.50f, 0.82f, 0.0f, GLUT_BITMAP_HELVETICA_18, levelText);
+        renderBitmapString(-3.50f, 0.82f, 0.0f, GLUT_BITMAP_HELVETICA_18, levelText);currentScreen = 4;
+        stop = true; // Set collision flag
     }
 
     // Truck5 bounding box
@@ -699,7 +712,8 @@ void checkCollisions() {
         glColor3f(1.0f, 0.0f, 0.0f);
         char levelText[10];
         sprintf(levelText, "Collision %d", level);
-        renderBitmapString(-3.50f, 0.82f, 0.0f, GLUT_BITMAP_HELVETICA_18, levelText);
+        renderBitmapString(-3.50f, 0.82f, 0.0f, GLUT_BITMAP_HELVETICA_18, levelText);currentScreen = 4;
+        stop = true; // Set collision flag
     }
 
     // Rickshaw1 bounding box
@@ -708,7 +722,8 @@ void checkCollisions() {
         glColor3f(1.0f, 0.0f, 0.0f);
         char levelText[10];
         sprintf(levelText, "Collision %d", level);
-        renderBitmapString(-3.50f, 0.82f, 0.0f, GLUT_BITMAP_HELVETICA_18, levelText);
+        renderBitmapString(-3.50f, 0.82f, 0.0f, GLUT_BITMAP_HELVETICA_18, levelText);currentScreen = 4;
+        stop = true; // Set collision flag
     }
     drawBoundingBox(0.85f, 2.7f, 1.35f + move + 24, 1.7f - 0.5f + move + 24, 1.0f, 1.0f, 0.0f); // Yellow color
 
@@ -718,7 +733,8 @@ void checkCollisions() {
         glColor3f(1.0f, 0.0f, 0.0f);
         char levelText[10];
         sprintf(levelText, "Collision %d", level);
-        renderBitmapString(-3.50f, 0.82f, 0.0f, GLUT_BITMAP_HELVETICA_18, levelText);
+        renderBitmapString(-3.50f, 0.82f, 0.0f, GLUT_BITMAP_HELVETICA_18, levelText);currentScreen = 4;
+        stop = true; // Set collision flag
     }
 
     // Rickshaw3 bounding box
@@ -727,7 +743,8 @@ void checkCollisions() {
         glColor3f(1.0f, 0.0f, 0.0f);
         char levelText[10];
         sprintf(levelText, "Collision %d", level);
-        renderBitmapString(-3.50f, 0.82f, 0.0f, GLUT_BITMAP_HELVETICA_18, levelText);
+        renderBitmapString(-3.50f, 0.82f, 0.0f, GLUT_BITMAP_HELVETICA_18, levelText);currentScreen = 4;
+        stop = true; // Set collision flag
     }
     
 //   car 1
@@ -735,14 +752,16 @@ void checkCollisions() {
         glColor3f(1.0f, 0.0f, 0.0f);
         char levelText[10];
         sprintf(levelText, "Collision %d", level);
-        renderBitmapString(-3.50f, 0.82f, 0.0f, GLUT_BITMAP_HELVETICA_18, levelText);
+        renderBitmapString(-3.50f, 0.82f, 0.0f, GLUT_BITMAP_HELVETICA_18, levelText);currentScreen = 4;
+        stop = true; // Set collision flag
     }
     // car 2
     if (isCollision(playerLeft, playerRight, playerTop, playerBottom, 1.25f, 2.7f, -.70f + move + 24, -3.0f + move + 24)) {
         glColor3f(1.0f, 0.0f, 0.0f);
         char levelText[10];
         sprintf(levelText, "Collision %d", level);
-        renderBitmapString(-3.50f, 0.82f, 0.0f, GLUT_BITMAP_HELVETICA_18, levelText);
+        renderBitmapString(-3.50f, 0.82f, 0.0f, GLUT_BITMAP_HELVETICA_18, levelText);currentScreen = 4;
+        stop = true; // Set collision flag
     }
     // left truck
 // Calculate m
@@ -752,7 +771,8 @@ void checkCollisions() {
         glColor3f(1.0f, 0.0f, 0.0f);
         char levelText[10];
         sprintf(levelText, "Collision %d", level);
-        renderBitmapString(-3.50f, 0.82f, 0.0f, GLUT_BITMAP_HELVETICA_18, levelText);
+        renderBitmapString(-3.50f, 0.82f, 0.0f, GLUT_BITMAP_HELVETICA_18, levelText);currentScreen = 4;
+        stop = true; // Set collision flag
     }
     drawBoundingBox(-2.05f, -0.34f, 2.7f + m, 0.0f + m, 1.0f, 1.0f, 0.0f); // Yellow color
 
@@ -761,7 +781,8 @@ void checkCollisions() {
         glColor3f(1.0f, 0.0f, 0.0f);
         char levelText[10];
         sprintf(levelText, "Collision %d", level);
-        renderBitmapString(-3.50f, 0.82f, 0.0f, GLUT_BITMAP_HELVETICA_18, levelText);
+        renderBitmapString(-3.50f, 0.82f, 0.0f, GLUT_BITMAP_HELVETICA_18, levelText);currentScreen = 4;
+        stop = true; // Set collision flag
     }
     drawBoundingBox(-2.05f + 0.6f, -0.34f + 0.6f, 3.0f - move * 0.20f - 13, 0.1f - move * 0.20f - 13, 1.0f, 1.0f, 0.0f); // Yellow color
 
@@ -770,9 +791,44 @@ void checkCollisions() {
         glColor3f(1.0f, 0.0f, 0.0f);
         char levelText[10];
         sprintf(levelText, "Collision %d", level);
-        renderBitmapString(-3.50f, 0.82f, 0.0f, GLUT_BITMAP_HELVETICA_18, levelText);
+        renderBitmapString(-3.50f, 0.82f, 0.0f, GLUT_BITMAP_HELVETICA_18, levelText);currentScreen = 4;
+        stop = true; // Set collision flag
     }
     drawBoundingBox(-2.65f, -0.85f, -6.5f + m, -9.2f + m, 1.0f, 1.0f, 0.0f); // Yellow color
+
+// left car
+ if (isCollision(playerLeft, playerRight, playerTop, playerBottom,-2.35f, -0.34f, -.4f + m, -2.5f + m)) {
+        // Car2 collision
+        glColor3f(1.0f, 0.0f, 0.0f);
+        char levelText[10];
+        sprintf(levelText, "Collision %d", level);
+        renderBitmapString(-3.50f, 0.82f, 0.0f, GLUT_BITMAP_HELVETICA_18, levelText);
+        // currentScreen = 4;
+        stop = true; // Set collision flag
+ }
+ drawBoundingBox(-1.75f, -0.34f, -.21f + m, -2.15f + m, 1.0f, 1.0f, 1.0f); // Yellow color
+
+  if (isCollision(playerLeft, playerRight, playerTop, playerBottom,-2.35f-.6, -0.34f-.7, -.4f + m -13, -2.5f + m-13)) {
+        // Car2 collision
+        glColor3f(1.0f, 0.0f, 0.0f);
+        char levelText[10];
+        sprintf(levelText, "Collision %d", level);
+        renderBitmapString(-3.50f, 0.82f, 0.0f, GLUT_BITMAP_HELVETICA_18, levelText);
+        // currentScreen = 4;
+        stop = true; // Set collision flag
+  }
+  // left van
+  
+  if (isCollision(playerLeft, playerRight, playerTop, playerBottom, -2.00f, 0.0f, -3.5f + m, -4.8f + m)) {
+        // Car2 collision
+        glColor3f(1.0f, 0.0f, 0.0f);
+        char levelText[10];
+        sprintf(levelText, "Collision %d", level);
+        renderBitmapString(-3.50f, 0.82f, 0.0f, GLUT_BITMAP_HELVETICA_18, levelText);
+        // currentScreen = 4;
+        stop = true; // Set collision flag
+ }
+ drawBoundingBox(-2.35f, -0.34f, -3.9f + m, -6.0f + m, 1.0f, 1.0f, 1.0f); // Yellow color
 
     if (playerX > 2.75) {
         playerX = 2.75;
@@ -1444,7 +1500,30 @@ void gamescreen() {
     player();
     leftmovement();
 }
-
+void movement(int value) {
+    // if (!stop) { // Check if collision has not occurred
+    //     lmove += screenmovement / 0.02f;
+    //     if (level == 1) {
+    //         move -= screenmovement * 0.02f;  // Smaller increment for smoother transition
+    //         glutPostRedisplay();  // Update display
+    //         glutTimerFunc(16, movement, 0);  // Restart the timer with shorter interval
+    //     }
+    //     if (level == 2 || level == 3) {
+    //         move -= screenmovement * 0.04f;  // Smaller increment for smoother transition
+    //         glutPostRedisplay();  // Update display
+    //         glutTimerFunc(16, movement, 0);  // Restart the timer with shorter interval
+    //     }
+    // }
+}
+void reset() {
+    timer = a;  // Reset the timer
+    isCountdownFinished = false;
+    playerSpeed = pspeed;
+    move = 0.0f;
+    playerX = 0.0f;
+    playerY = -1.5f;
+    movement(false);
+}
 void keyboard(unsigned char key, int x, int y) {
     switch (key) {
     case 'q':  // Move left
@@ -1466,15 +1545,17 @@ void keyboard(unsigned char key, int x, int y) {
 
     case 's':
         if (currentScreen == 0) {
-            currentScreen = 1;
             reset();
+            currentScreen = 1;
+            
         }
         break;
 
     case 'h':
         home();
-        currentScreen = 0;
         reset();
+        currentScreen = 0;
+       
         break;
 
     case 'r':
@@ -1507,20 +1588,6 @@ void display() {
     }
     checkCollisions(); // Check collision
     glutSwapBuffers(); // Double buffering
-}
-
-void movement(int value) {
-    // lmove += screenmovement / 0.02f;
-    // if (level == 1) {
-    //     move -= screenmovement * 0.02f;  // Smaller increment for smoother transition
-    //     glutPostRedisplay();  // Update display
-    //     glutTimerFunc(16, movement, 0);  // Restart the timer with shorter interval
-    // }
-    // if (level == 2 || level == 3) {
-    //     move -= screenmovement * 0.04f;  // Smaller increment for smoother transition
-    //     glutPostRedisplay();  // Update display
-    //     glutTimerFunc(16, movement, 0);  // Restart the timer with shorter interval
-    // }
 }
 
 // Initialization function
