@@ -30,12 +30,18 @@ std::string instructions[] = {
     "    - Jump: Spacebar",
     "    - Restart: R",
     "    - Home Menu: H",
+    "Press S to Start Game",
+     "  ",
+    "--------------------------------------------------",
     "Avoid cars, trucks, and rickshaws. Don't get hit!",
     "You will lose health if you crash, and distance will be increased.",
-    "If you lose 100% of your health, you will die... and guess what? You'll never be LATE AGAIN!!",
-    "Press S to Start Game",
+    "If you lose 100% of your health, you will die...",
+    "and guess what? You'll never be LATE AGAIN!!",
+   
+    "-------------------------------------------------",
+    "     ",
     "Successfully cross the finish line without running out of time.",
-        "Good luck! Don't be late again!!"
+    "Good luck! Don't be LATE AGAIN!!"
     };
    
 int currentChar = 0;
@@ -64,7 +70,7 @@ void colfeature() {
               playerX = 0.0f;
              playerY = -1.5f;
          }
-         else {
+         else { playerSpeed = pspeed;
              health -=25;
              move += 10.0f;
              playerX = 0.0f;
@@ -92,17 +98,17 @@ void home() {
 
 
     // Instructions Typing Animation
-    glColor3f(1.0f, 1.0f, 1.0f);
+    glColor4f(1.0f, 1.0f, 1.0f,0.8f); 
     for (int i = 0; i <= currentLine; i++) {
         int length = (i == currentLine) ? currentChar : instructions[i].length();
-        renderBitmapString(-3.5f, 2.5f - (i * 0.5f), GLUT_BITMAP_HELVETICA_18, instructions[i].c_str(), length);
+        renderBitmapString(-3.5f, 2.5f - (i * 0.3f), GLUT_BITMAP_HELVETICA_18, instructions[i].c_str(), length);
     }
     
     glFlush();
 }
 
 void typing(int) {
-    if (currentLine < 13 && stop==true) {
+    if (currentLine < 18 && stop==true) {
         if (currentChar < instructions[currentLine].length()) {
             currentChar++;
         }
@@ -168,7 +174,7 @@ void finish() {
     renderBitmapString(-3.5f, 3.5f, 0.0f, GLUT_BITMAP_HELVETICA_18, "CONGRATULATION   SO,  YOU ARE !!LATE AGAIN  THIS  TIME...");
     glColor3f(1.0f, 1.0f, 0.0f); // White color for text
     renderBitmapString(-3.5f, 3.2f, 0.0f, GLUT_BITMAP_HELVETICA_18, "------------------------------");
-    glColor4f(1.0f, 1.0f, 1.0f,0.5f); 
+    glColor4f(1.0f, 1.0f, 1.0f,0.8f); 
     renderBitmapString(-3.5f, 2.7f, 0.0f, GLUT_BITMAP_HELVETICA_18,"You did it! ");
     renderBitmapString(-3.5f, 2.2f, 0.0f, GLUT_BITMAP_HELVETICA_18, "Press  R to Restart Game");
     renderBitmapString(-3.5f, 1.7f, 0.0f, GLUT_BITMAP_HELVETICA_18, "Press H to Home");
@@ -1218,6 +1224,7 @@ void levelinfobox() {
     glEnd();
     glPopMatrix();
 
+
     // Render level texts
     glColor3f(1.0f, 1.0f, 1.0f);
     renderBitmapString(-1.01f, 3.82f, 0.0f, GLUT_BITMAP_HELVETICA_18, "             Press R to restart");
@@ -1225,16 +1232,33 @@ void levelinfobox() {
     char levelText[10];
     sprintf(levelText, "Level %d", level);
     renderBitmapString(-3.90f, 3.82f, 0.0f, GLUT_BITMAP_HELVETICA_18, levelText);
-    char healtht[10];
-    sprintf(healtht, "Health: %d", health);  // Convert timer value to string
-    renderText(-1.5f, 3.82f, GLUT_BITMAP_HELVETICA_18, healtht);  // Adjust position and font
+    if (health < 50) {
+       
+       char healtht[10]; glColor3f(1.0f, 0.0f, 0.0f);
+        sprintf(healtht, "Health: %d", health);  // Convert timer value to string
+        renderText(-1.5f, 3.82f, GLUT_BITMAP_HELVETICA_18, healtht);
+    }
+    else {
+         char healtht[10];glColor3f(1.0f, 1.0f, 1.0f);
+        sprintf(healtht, "Health: %d", health);  // Convert timer value to string
+        renderText(-1.5f, 3.82f, GLUT_BITMAP_HELVETICA_18, healtht);
+    } // Adjust position and font
 
     if (!isCountdownFinished) {
-        char timerText[10];
-        sprintf(timerText, "Time: %d", timer);  // Convert timer value to string
-        renderText(-2.8f, 3.82f, GLUT_BITMAP_HELVETICA_18, timerText);  // Adjust position and font
-    }
+        if (timer < 50) {
+          
+            char timerText[10];  glColor3f(1.0f, 0.0f, 0.0f);
+            sprintf(timerText, "Time: %d", timer);  // Convert timer value to string
+            renderText(-2.8f, 3.82f, GLUT_BITMAP_HELVETICA_18, timerText);  // Adjust position and font}
+        }
+        else {
+           
+            char timerText[10]; glColor3f(1.0f, 0.0f, 0.0f);
+            sprintf(timerText, "Time: %d", timer);  // Convert timer value to string
+            renderText(-2.8f, 3.82f, GLUT_BITMAP_HELVETICA_18, timerText);  // Adjust position and font}
+        }
 
+    }
 }
 
 
