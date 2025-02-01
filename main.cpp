@@ -4,24 +4,45 @@
 #include <cstdio>
 #include <cstdlib>  // For rand() and srand()
 #include <ctime>    // For time()
+#include <string>
 
 #define PI 3.14159265358979323846
 int a = 120;
 int timer = a;
-GLfloat pspeed = 00.20; // playerx shift speed
-int currentScreen = 1;
+GLfloat pspeed = 00.50; // playerx shift speed
+int currentScreen = 0;
 GLfloat playerX = 0.0f;
 GLfloat playerY = -1.5f;
 GLfloat move = 0.0f;
 int level = 1;
-float m;
 GLfloat screenmovement = 1;
-float lmove, ll = 0;
 GLfloat playerSpeed = pspeed;
 float truckLeft, truckRight, truckTop, truckBottom;
 bool isCountdownFinished = false;
-bool stop = false;
+bool stop = true, jump = false;
 
+std::string instructions[] = {
+    "Objective: Reach the finish line before time runs out!",
+    "Controls:",
+    "    - Move Left: Press A",
+    "    - Move Right: Press D",
+    "    - Jump: Spacebar",
+    "    - Restart: R",
+    "    - Home Menu: H",
+    "Avoid cars, trucks, and rickshaws. Don't get hit!",
+    "Press S to Start Game",
+    "Press Q to Quit",
+    "Successfully cross the finish line without running out of time.",
+    "Good luck! Don’t be late again!!"
+};
+int currentChar = 0;
+int currentLine = 0;
+void renderBitmapString(float x, float y, void* font, const char* string, int length) {
+    glRasterPos2f(x, y);
+    for (int i = 0; i < length; i++) {
+        glutBitmapCharacter(font, string[i]);
+    }
+}
 void renderBitmapString(float x, float y, float z, void* font, const char* string) {
     const char* c;
     glRasterPos3f(x, y, z);  // Position the text
@@ -29,6 +50,46 @@ void renderBitmapString(float x, float y, float z, void* font, const char* strin
         glutBitmapCharacter(font, *c);  // Render each character
     }
 }
+void home() {
+
+    // Background Color
+    glColor3f(0.2f, 0.3f, 0.4f);
+    glBegin(GL_QUADS);
+    glVertex2f(-4.0f, -4.0f);
+    glVertex2f(4.0f, -4.0f);
+    glVertex2f(4.0f, 4.0f);
+    glVertex2f(-4.0f, 4.0f);
+    glEnd();
+    
+    // Title Typing Animation
+    glColor3f(1.0f, 1.0f, 0.0f);
+    renderBitmapString(-3.01f, 3.0f, 0.0f, GLUT_BITMAP_HELVETICA_18, " LATE AGAIN!!");
+
+
+    // Instructions Typing Animation
+    glColor3f(1.0f, 1.0f, 1.0f);
+    for (int i = 0; i <= currentLine; i++) {
+        int length = (i == currentLine) ? currentChar : instructions[i].length();
+        renderBitmapString(-3.5f, 2.5f - (i * 0.5f), GLUT_BITMAP_HELVETICA_18, instructions[i].c_str(), length);
+    }
+    
+    glFlush();
+}
+
+void timer1(int) {
+    if (currentLine < 12) {
+        if (currentChar < instructions[currentLine].length()) {
+            currentChar++;
+        } else {
+            currentChar = 0;
+            currentLine++;
+        }
+        glutPostRedisplay();
+        glutTimerFunc(50, timer1, 0);
+    }
+}
+
+
 void timeup() {
     glClearColor(0.9f, 0.9f, 0.9f, 1.0f); // Light gray background
     glClear(GL_COLOR_BUFFER_BIT);  // Clear the buffer
@@ -66,40 +127,26 @@ void timeup() {
     glFlush();  // Render the objects now
 }
 void colpage() {
-    glClearColor(0.9f, 0.9f, 0.9f, 1.0f); // Light gray background
-    glClear(GL_COLOR_BUFFER_BIT);  // Clear the buffer
-
-    glColor3f(0.8f, 0.8f, 0.8f);  // Light gray for the placeholder
+    // Background Color
+    glColor4f(0.2f, 0.3f, 0.4f,0.2);
     glBegin(GL_QUADS);
-    glVertex2f(-3.0f, -3.5f);
-    glVertex2f(3.0, -3.5f);
-    glVertex2f(3.0f, 3.5f);
-    glVertex2f(-3.0f, 3.5f);
+    glVertex2f(-4.0f, -4.0f);
+    glVertex2f(4.0f, -4.0f);
+    glVertex2f(4.0f, 4.0f);
+    glVertex2f(-4.0f, 4.0f);
     glEnd();
 
-    glPushMatrix();
-    glTranslatef(0.0f, 0.0f, 0.0f);
-    glColor3f(0.1f, 0.4f, 0.8f); // Blue color for title bar
+    glColor3f(0.15f, 0.25f, 0.35f);
     glBegin(GL_QUADS);
-    glVertex2f(-2.5f, 2.2f); // Top-left corner
-    glVertex2f(2.5f, 2.2f);  // Top-right corner
-    glVertex2f(2.5f, 3.0f);  // Bottom-right corner
-    glVertex2f(-2.5f, 3.0f); // Bottom-left corner
+    glVertex2f(-3.80f, -3.8f);
+    glVertex2f(3.8f, -3.8f);
+    glVertex2f(3.8f, 3.8f);
+    glVertex2f(-3.8f, 3.8f);
     glEnd();
-    // Render title text
-    glColor3f(1.0f, 1.0f, 1.0f); // White color for text
-    renderBitmapString(-1.0f, 2.5f, 0.0f, GLUT_BITMAP_HELVETICA_18, "COLLISION DETECTED");
-    glPopMatrix();
 
-    glColor3f(1.0f, 0.0f, 0.0f); // Red color for text
-    renderBitmapString(-0.4f, 1.2f, 0.0f, GLUT_BITMAP_HELVETICA_18, "GAME OVER");
-
-    // Render level texts
-    glColor3f(0.0f, 0.0f, 0.0f);
-    renderBitmapString(-0.8f, 0.0f, 0.0f, GLUT_BITMAP_HELVETICA_18, "RETRY - PRESS R");
-    renderBitmapString(-0.8f, -0.5f, 0.0f, GLUT_BITMAP_HELVETICA_18, "HOME - PRESS H");
-
-    glFlush();  // Render the objects now
+    // Title Typing Animation
+    glColor3f(1.0f, 1.0f, 0.0f);
+    renderBitmapString(-3.01f, 3.0f, 0.0f, GLUT_BITMAP_HELVETICA_18, " LATE AGAIN!!");
 }
 void timerFunc(int value) {
     if (timer > 0) {
@@ -113,68 +160,7 @@ void timerFunc(int value) {
     }
 
 }
-void home() {
-    glClearColor(0.9f, 0.9f, 0.9f, 1.0f); // Light gray background
-    glClear(GL_COLOR_BUFFER_BIT);  // Clear the buffer
 
-    glColor3f(0.8f, 0.8f, 0.8f);  // Light gray for the placeholder
-    glBegin(GL_QUADS);
-    glVertex2f(-3.0f, -3.5f);
-    glVertex2f(3.0, -3.5f);
-    glVertex2f(3.0f, 3.5f);
-    glVertex2f(-3.0f, 3.5f);
-    glEnd();
-
-    glColor3f(0.0f, 0.8f, 0.8f); // Light gray for the placeholder
-    glBegin(GL_QUADS);
-    glVertex2f(2.0f, -1.0f);
-    glVertex2f(-2.0f, -1.0f);
-    glVertex2f(-2.0f, -2.0f);
-    glVertex2f(2.0, -2.0f);
-    glEnd();
-
-    glColor3f(0.1f, 0.4f, 0.8f); // Blue color for title bar
-    glBegin(GL_QUADS);
-    glVertex2f(-2.5f, 2.2f); // Top-left corner
-    glVertex2f(2.5f, 2.2f);  // Top-right corner
-    glVertex2f(2.5f, 3.0f);  // Bottom-right corner
-    glVertex2f(-2.5f, 3.0f); // Bottom-left corner
-    glEnd();
-
-    glColor3f(0.1f, 0.4f, 0.8f); // Blue color for title bar
-    glBegin(GL_QUADS);
-    glVertex2f(-2.0f, 0.35f); // Top-left corner
-    glVertex2f(-1.0f, 0.35f);  // Top-right corner
-    glVertex2f(-1.0f, -0.2f);  // Bottom-right corner
-    glVertex2f(-2.0f, -0.2f); // Bottom-left corner
-    glEnd();
-
-    glColor3f(0.1f, 0.4f, 0.8f); // Blue color for title bar
-    glBegin(GL_QUADS);
-    glVertex2f(-0.5f, 0.35f); // Top-left corner
-    glVertex2f(0.5f, 0.35f);  // Top-right corner
-    glVertex2f(0.5f, -0.2f);  // Bottom-right corner
-    glVertex2f(-0.5f, -0.2f); // Bottom-left corner
-    glEnd();
-
-    glColor3f(0.1f, 0.4f, 0.8f); // Blue color for title bar
-    glBegin(GL_QUADS);
-    glVertex2f(1.0f, 0.35f); // Top-left corner
-    glVertex2f(2.0f, 0.35f);  // Top-right corner
-    glVertex2f(2.0f, -0.2f);  // Bottom-right corner
-    glVertex2f(1.0f, -0.2f); // Bottom-left corner
-    glEnd();
-
-    // Render title text
-    glColor3f(1.0f, 1.0f, 1.0f); // White color for text
-    renderBitmapString(-0.7f, 2.5f, 0.0f, GLUT_BITMAP_HELVETICA_18, "LATE AGAIN!!");
-
-    // Render level texts
-    glColor3f(1.0f, 1.0f, 1.0f);
-    renderBitmapString(-1.78f, 0.0f, 0.0f, GLUT_BITMAP_HELVETICA_18, "PRESS S TO START THE GAME");
-
-    glFlush();  // Render the objects now
-}
 
 void Road() {
     //bottom tin shade
@@ -602,10 +588,11 @@ void checkCollisions() {
         stop = true;
 
     }
-    if (isCollision(playerLeft, playerRight, playerTop, playerBottom, 0.0f, 1.35f, -2.95f + move + 8, -5.05f + move + 8)) {
+    if (isCollision(playerLeft, playerRight, playerTop, playerBottom, 0.0f, 1.75f, -2.95f + move + 8, -5.05f + move + 8)) {
         // Car2 collision
         currentScreen = 4;
-        stop = true; // Set collision flag
+        stop = true;
+
     }
 
     // Car2 bounding box
@@ -657,14 +644,14 @@ void checkCollisions() {
     }
 
     // Rickshaw1 bounding box
-    if (isCollision(playerLeft, playerRight, playerTop, playerBottom, 0.85f, 2.7f, 1.35f + move + 24, 1.7f - 0.5f + move + 24)) {
+    if (isCollision(playerLeft, playerRight, playerTop, playerBottom, 0.85f, 3.5f, 1.35f + move + 24, 1.7f - 0.5f + move + 24)) {
      currentScreen = 4;
         stop = true; // Set collision flag
     }
     drawBoundingBox(0.85f, 2.7f, 1.35f + move + 24, 1.7f - 0.5f + move + 24, 1.0f, 1.0f, 0.0f); // Yellow color
 
     // Rickshaw2 bounding box
-    if (isCollision(playerLeft, playerRight, playerTop, playerBottom, 0.85f, 2.7f, 1.35f + move + 40, 0.7f - 0.5f + move + 40)) {
+    if (isCollision(playerLeft, playerRight, playerTop, playerBottom, 0.85f, 3.5f, 1.35f + move + 40, 0.7f - 0.5f + move + 40)) {
       currentScreen = 4;
         stop = true; // Set collision flag
     }
@@ -711,7 +698,6 @@ void checkCollisions() {
         currentScreen = 4;
         stop = true; // Set collision flag
     }
-    drawBoundingBox(-1.75f, -0.34f, -.21f + m, -2.15f + m, 1.0f, 1.0f, 1.0f); // Yellow color
 
     if (isCollision(playerLeft, playerRight, playerTop, playerBottom, -2.35f - .6, -0.34f - .7, -.4f + m - 13, -2.5f + m - 13)) {
       
@@ -725,7 +711,7 @@ void checkCollisions() {
         stop = true; // Set collision flag
     }
    // Finish line bounding box
-    float finishLineY = 40.0f + move / 2;
+    float finishLineY = 50.0f + move / 2;
     if (isCollision(playerLeft, playerRight, playerTop, playerBottom, -2.4f, 2.4f, finishLineY + 0.1f, finishLineY - 0.1f)) {
         stop = true;
         home();
@@ -1067,11 +1053,13 @@ void Rickshaw() {
     glPopMatrix();
 }
 
-void truck() {
-    // back
-    // front glass frames
+void truck()  {
+    // front glass frames 
+    glPushMatrix();
+   
     glPushMatrix();
     glBegin(GL_QUADS);
+   
     glColor4f(0.97f, 0.94f, 0.90f, 1.0f);  // color #F6F4F0 in OpenGL
     glVertex2f(-1.9f, 3.2f);  // top-left vertex
     glVertex2f(-0.5f, 3.2f);  // top-right vertex
@@ -1163,6 +1151,7 @@ void truck() {
     glVertex2f(-1.87f, 0.6f);  // bottom-left vertex
     glEnd();
     glPopMatrix();
+    glPopMatrix();
 
 }
 void levelinfobox() {
@@ -1239,7 +1228,7 @@ void FinishLine() {
     int numStripes = 30; // Number of black and white stripes
     float xEnd = 2.4f; // Y-coordinate of the finish line
     float xStart = -2.4f;
-    float y = 40 + move / 2; // Y-coordinate of the finish line
+    float y = 50 + move / 2; // Y-coordinate of the finish line
 
     float stripeWidth = (xEnd - xStart) / numStripes;
 
@@ -1355,9 +1344,8 @@ void level3() {
 
     // frame 2
     glPushMatrix();
-    glTranslatef(0.0f, move + 88.0f, 0.0f);  // Apply move variable
+    glTranslatef(0.0f, move + 88.0f, 0.0f);  
     glScalef(-1.0f, -1.0f, 0.0f);
-    manhole();
     truck();
     Rickshaw();
     glPopMatrix();
@@ -1371,20 +1359,20 @@ void roadmove() {
         Road();
         if (level == 3) {
             manhole();
-            if (isCollision(
-                playerX - 0.1f, playerX + 0.1f,  // Player left/right
-                playerY + 0.1f, playerY - 0.1f,  // Player top/bottom
-                -0.25f, 0.25f,                     // Manhole left/right
-                -0.2f + move / 2 + b,               // Manhole top (y + offset)
-                -0.5f + move / 2 + b               // Manhole bottom
-            )) {
-                char playerText[10];
-                sprintf(playerText, "Collision");
-                renderBitmapString(-1.0f, 3.82f, 0.0f, GLUT_BITMAP_HELVETICA_18, playerText);
-                stop = true;
+            if (!jump) {
+                if (isCollision(
+                    playerX - 0.1f, playerX + 0.1f,  // Player left/right
+                    playerY + 0.1f, playerY - 0.1f,  // Player top/bottom
+                    -0.25f, 0.25f,                     // Manhole left/right
+                    -0.2f + move / 2 + b,               // Manhole top (y + offset)
+                    -0.5f + move / 2 + b               // Manhole bottom
+                )) {
+                    stop = true;
+                    currentScreen = 4;
+                }
+            }
         }
-       
-    } glPopMatrix();
+        glPopMatrix();
     }
 }
 
@@ -1406,7 +1394,7 @@ void leftmovement() {
     if (m >= 4) {
         glPushMatrix();
         glTranslatef(0.6f, -move * 0.20f - 13, 0.0f);
-        truck();
+        truck();  // Apply xani for x-axis animation
         glTranslatef(-0.6f, -2.7f, 0.0f);
         car();
         glTranslatef(1.0f, -7.0f, 0.0f);
@@ -1435,7 +1423,6 @@ void gamescreen() {
         level2();
         level3(); 
     }
-    
     leftmovement();
     player();
     FinishLine();
@@ -1443,7 +1430,6 @@ void gamescreen() {
 
 void movement(int value) {
     if (!stop) { 
-        lmove += screenmovement / 0.02f;
         if (level == 1) {
             move -= screenmovement * 0.02f;  // Smaller increment for smoother transition
             glutPostRedisplay();  // Update display
@@ -1476,35 +1462,42 @@ void keyboard(unsigned char key, int x, int y) {
         //     move += .2;
         //     ll = 2.3;
         //     break;
+    case ' ':  // Jump forward
+        if (level == 3 && !jump) {
+            jump = true;
+            playerY -= 0.2f;  
+            glutTimerFunc(1000, [](int) { jump = false; playerY += 0.2f; glutPostRedisplay(); }, 0);  // Reset jump 
+        }
+        break;
     case 'a':  // Move left
-        playerX -= playerSpeed;
-        ll = -2.3;
+        if (currentScreen != 0) {
+            playerX -= playerSpeed;
+        }
         break;
     case 'd':  // Move right
-        playerX += playerSpeed;
-        ll = 2.3;
+        if (currentScreen != 0) {
+            playerX += playerSpeed;
+        }
         break;
 
     case 's':
         if (currentScreen == 0) {
             reset();
             currentScreen = 1;
-
         }
         break;
 
     case 'h':
         home();
+        stop = false;
         reset();
         currentScreen = 0;
-
         break;
 
     case 'r':
         if (currentScreen != 0) {
             reset();
             currentScreen = 1;
-
         }
         break;
     }
@@ -1541,6 +1534,7 @@ void initGL() {
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glutTimerFunc(1000, timerFunc, 0);
     glutTimerFunc(16, movement, 0);  // Increase frequency of movement function calls
+    glutTimerFunc(100, timer1, 0);   // Start the typing animation timer
 }
 
 // Main function: GLUT runs as a console application starting at main()
