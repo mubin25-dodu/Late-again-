@@ -10,7 +10,7 @@
 int a = 120;
 int timer = a;
 GLfloat pspeed = 00.50; // playerx shift speed
-int currentScreen = 0;
+int currentScreen = 5;
 GLfloat playerX = 0.0f;
 GLfloat playerY = -1.5f;
 GLfloat move = 0.0f;
@@ -31,25 +31,13 @@ std::string instructions[] = {
     "    - Restart: R",
     "    - Home Menu: H",
     "Avoid cars, trucks, and rickshaws. Don't get hit!",
+    "You will lose health if you crash, and distance will be increased.",
+    "If you lose 100% of your health, you will die... and guess what? You'll never be LATE AGAIN!!",
     "Press S to Start Game",
-    "Press Q to Quit",
     "Successfully cross the finish line without running out of time.",
-        "Good luck! Don’t be late again!!"
+        "Good luck! Don't be late again!!"
     };
-    std::string collition[] = {
-    "Objective: Reach the finish line before time runs out!",
-    "Controls:",
-    "    - Move Left: Press A",
-    "    - Move Right: Press D",
-    "    - Jump: Spacebar",
-    "    - Restart: R",
-    "    - Home Menu: H",
-    "Avoid cars, trucks, and rickshaws. Don't get hit!",
-    "Press S to Start Game",
-    "Press Q to Quit",
-    "Successfully cross the finish line without running out of time.",
-    "Good luck! Don’t be late again!!"
-};
+   
 int currentChar = 0;
 int currentLine = 0;
 void renderBitmapString(float x, float y, void* font, const char* string, int length) {
@@ -80,8 +68,9 @@ void colfeature() {
              playerX = 0.0f;
          playerY = -1.5f;}
     }
-    else {
+    if(health < 0) {
         currentScreen = 4;
+        stop = true;
     }
 }
 void home() {
@@ -110,59 +99,24 @@ void home() {
     glFlush();
 }
 
-void timer1(int) {
-    if (currentLine < 12) {
+void typing(int) {
+    if (currentLine < 13 && stop==true) {
         if (currentChar < instructions[currentLine].length()) {
             currentChar++;
-        } else {
+        }
+        else {
             currentChar = 0;
             currentLine++;
         }
         glutPostRedisplay();
-        glutTimerFunc(50, timer1, 0);
+        glutTimerFunc(50, typing, 0);
     }
 }
 
 
 void timeup() {
-    glClearColor(0.9f, 0.9f, 0.9f, 1.0f); // Light gray background
-    glClear(GL_COLOR_BUFFER_BIT);  // Clear the buffer
-
-    glColor3f(0.8f, 0.8f, 0.8f);  // Light gray for the placeholder
-    glBegin(GL_QUADS);
-    glVertex2f(-3.0f, -3.5f);
-    glVertex2f(3.0, -3.5f);
-    glVertex2f(3.0f, 3.5f);
-    glVertex2f(-3.0f, 3.5f);
-    glEnd();
-
-    glPushMatrix();
-    glTranslatef(0.0f, 0.0f, 0.0f);
-    glColor3f(0.1f, 0.4f, 0.8f); // Blue color for title bar
-    glBegin(GL_QUADS);
-    glVertex2f(-2.5f, 2.2f); // Top-left corner
-    glVertex2f(2.5f, 2.2f);  // Top-right corner
-    glVertex2f(2.5f, 3.0f);  // Bottom-right corner
-    glVertex2f(-2.5f, 3.0f); // Bottom-left corner
-    glEnd();
-    // Render title text
-    glColor3f(1.0f, 1.0f, 1.0f); // White color for text
-    renderBitmapString(-1.0f, 2.5f, 0.0f, GLUT_BITMAP_HELVETICA_18, "YOU ARE LATE AGAIN!!");
-    glPopMatrix();
-
-    glColor3f(1.0f, 0.0f, 0.0f); // Red color for text
-    renderBitmapString(-0.4f, 1.2f, 0.0f, GLUT_BITMAP_HELVETICA_18, "TIME UP");
-
-    // Render level texts
-    glColor3f(0.0f, 0.0f, 0.0f);
-    renderBitmapString(-0.8f, 0.0f, 0.0f, GLUT_BITMAP_HELVETICA_18, "RETRY - PRESS R");
-    renderBitmapString(-0.8f, -0.5f, 0.0f, GLUT_BITMAP_HELVETICA_18, "HOME - PRESS H");
-
-    glFlush();  // Render the objects now
-}
-void colpage() {
-    // Background Color
-    glColor4f(0.2f, 0.3f, 0.4f,0.2);
+      // Background Color
+    glColor4f(1.0f, 0.1f, 0.1f, 0.8f);
     glBegin(GL_QUADS);
     glVertex2f(-4.0f, -4.0f);
     glVertex2f(4.0f, -4.0f);
@@ -172,17 +126,103 @@ void colpage() {
 
     glColor3f(0.15f, 0.25f, 0.35f);
     glBegin(GL_QUADS);
-    glVertex2f(-3.80f, -3.8f);
-    glVertex2f(3.8f, -3.8f);
-    glVertex2f(3.8f, 3.8f);
-    glVertex2f(-3.8f, 3.8f);
+    glVertex2f(-3.950f, -3.95f);
+    glVertex2f(3.95f, -3.95f);
+    glVertex2f(3.95f, 3.95f);
+    glVertex2f(-3.95f, 3.95f);
+    glEnd();
+    
+    glColor3f(1.0f, 1.0f, 0.0f); // White color for text
+    renderBitmapString(-3.5f, 3.5f, 0.0f, GLUT_BITMAP_HELVETICA_18, "YOU ARE LATE AGAIN!!...");
+    glColor3f(1.0f, 1.0f, 0.0f); // White color for text
+    renderBitmapString(-3.5f, 3.2f, 0.0f, GLUT_BITMAP_HELVETICA_18, "------------------------------");
+    glColor3f(1.0f, 0.0f, 0.0f); 
+    renderBitmapString(-3.5f, 2.7f, 0.0f, GLUT_BITMAP_HELVETICA_18,"Looks like you took the scenic route... to FAILURE");
+    renderBitmapString(-3.5f, 2.2f, 0.0f, GLUT_BITMAP_HELVETICA_18,  "Press  R to Restart Game");
+    renderBitmapString(-3.5f, 1.7f, 0.0f, GLUT_BITMAP_HELVETICA_18, "Press H to Home");
+     renderBitmapString(-3.5f, 1.0f, 0.0f, GLUT_BITMAP_HELVETICA_18, "Life saving tips...");
+     renderBitmapString(-3.5f, 0.7f, 0.0f, GLUT_BITMAP_HELVETICA_18, "   Next time, try teleportation. It's still in beta testing, though");
+    glPopMatrix();
+}
+void finish() {
+      // Background Color
+    glColor4f(1.0f, 0.1f, 0.1f, 0.8f);
+    glBegin(GL_QUADS);
+    glVertex2f(-4.0f, -4.0f);
+    glVertex2f(4.0f, -4.0f);
+    glVertex2f(4.0f, 4.0f);
+    glVertex2f(-4.0f, 4.0f);
     glEnd();
 
-    // Title Typing Animation
-    glColor3f(1.0f, 1.0f, 0.0f);
-    renderBitmapString(-3.01f, 3.0f, 0.0f, GLUT_BITMAP_HELVETICA_18, " LATE AGAIN!!");
+    glColor3f(0.15f, 0.25f, 0.35f);
+    glBegin(GL_QUADS);
+    glVertex2f(-3.950f, -3.95f);
+    glVertex2f(3.95f, -3.95f);
+    glVertex2f(3.95f, 3.95f);
+    glVertex2f(-3.95f, 3.95f);
+    glEnd();
+    
+    glColor3f(1.0f, 1.0f, 0.0f); // White color for text
+    renderBitmapString(-3.5f, 3.5f, 0.0f, GLUT_BITMAP_HELVETICA_18, "CONGRATULATION   SO,  YOU ARE !!LATE AGAIN  THIS  TIME...");
+    glColor3f(1.0f, 1.0f, 0.0f); // White color for text
+    renderBitmapString(-3.5f, 3.2f, 0.0f, GLUT_BITMAP_HELVETICA_18, "------------------------------");
+    glColor4f(1.0f, 1.0f, 1.0f,0.5f); 
+    renderBitmapString(-3.5f, 2.7f, 0.0f, GLUT_BITMAP_HELVETICA_18,"You did it! ");
+    renderBitmapString(-3.5f, 2.2f, 0.0f, GLUT_BITMAP_HELVETICA_18, "Press  R to Restart Game");
+    renderBitmapString(-3.5f, 1.7f, 0.0f, GLUT_BITMAP_HELVETICA_18, "Press H to Home");
+     renderBitmapString(-3.5f, 1.0f, 0.0f, GLUT_BITMAP_HELVETICA_18, "Life saving tips...");
+     renderBitmapString(-3.5f, 0.7f, 0.0f, GLUT_BITMAP_HELVETICA_18, "   Now don't get too confident… tomorrow is another battle!");
+    glPopMatrix();
 }
-void timerFunc(int value) {
+void colpage() {
+//      std::string collition[] = {
+//     "THIS TIME... THIS TIME YOU ARE !LATE AGAIN.. YOU ARE LATE..",
+//     "-",
+//     "Press S or R to Start Game",
+//     "     oh wait, you're dead. Unless you're a ghost, then go ahead!",
+//     "Press H to Home",
+//     "Close the window and forget about being late—time is just a suggestion anyway!"
+    
+// };
+    // Background Color
+    glColor4f(1.0f, 0.1f, 0.1f, 0.8f);
+    glBegin(GL_QUADS);
+    glVertex2f(-4.0f, -4.0f);
+    glVertex2f(4.0f, -4.0f);
+    glVertex2f(4.0f, 4.0f);
+    glVertex2f(-4.0f, 4.0f);
+    glEnd();
+
+    glColor3f(0.15f, 0.25f, 0.35f);
+    glBegin(GL_QUADS);
+    glVertex2f(-3.950f, -3.95f);
+    glVertex2f(3.95f, -3.95f);
+    glVertex2f(3.95f, 3.95f);
+    glVertex2f(-3.95f, 3.95f);
+    glEnd();
+    
+    glColor3f(1.0f, 1.0f, 0.0f); // White color for text
+    renderBitmapString(-3.5f, 3.5f, 0.0f, GLUT_BITMAP_HELVETICA_18, "THIS TIME YOU ARE !LATE AGAIN... YOU ARE LATE...");
+    glColor3f(1.0f, 1.0f, 0.0f); // White color for text
+    renderBitmapString(-3.5f, 3.2f, 0.0f, GLUT_BITMAP_HELVETICA_18, "-------------------------------------------------");
+    glColor3f(1.0f, 0.0f, 0.0f); 
+    renderBitmapString(-3.5f, 2.7f, 0.0f, GLUT_BITMAP_HELVETICA_18, "Press  R to Restart Game");
+    renderBitmapString(-3.5f, 2.2f, 0.0f, GLUT_BITMAP_HELVETICA_18, "     oh wait, you're dead. Unless you're a ghost, then go ahead!");
+    renderBitmapString(-3.5f, 1.7f, 0.0f, GLUT_BITMAP_HELVETICA_18, "Press H to Home");
+     renderBitmapString(-3.5f, 1.0f, 0.0f, GLUT_BITMAP_HELVETICA_18, "Life saving tips...");
+     renderBitmapString(-3.5f, 0.7f, 0.0f, GLUT_BITMAP_HELVETICA_18, "    Close the window and forget about being late...");
+    renderBitmapString(-3.5f, 0.4f, 0.0f, GLUT_BITMAP_HELVETICA_18, "     time is just a suggestion anyway!!");
+    glPopMatrix();
+
+//    glColor3f(1.0f, 1.0f, 1.0f);
+//     for (int i = 0; i <= currentLine; i++) {
+//         int length = (i == currentLine) ? currentChar : collition[i].length();
+//         renderBitmapString(-3.5f, 2.5f - (i * 0.5f), GLUT_BITMAP_HELVETICA_18, collition[i].c_str(), length);
+//     }
+    
+    glFlush();
+}
+    void timerFunc(int value) {
     if (timer > 0) {
         timer--;
           if (health < 100) {
@@ -724,7 +764,7 @@ void checkCollisions() {
    // Finish line bounding box
     float finishLineY = 50.0f + move / 2;
     if (isCollision(playerLeft, playerRight, playerTop, playerBottom, -2.4f, 2.4f, finishLineY + 0.1f, finishLineY - 0.1f)) {
-        colfeature();
+        currentScreen = 5;
     }
 
     if (playerX > 2.75) {
@@ -1407,7 +1447,7 @@ void leftmovement() {
     if (m >= 4) {
         glPushMatrix();
         glTranslatef(0.6f, -move * 0.20f - 13, 0.0f);
-        truck();  // Apply xani for x-axis animation
+        truck();  
         glTranslatef(-0.6f, -2.7f, 0.0f);
         car();
         glTranslatef(1.0f, -7.0f, 0.0f);
@@ -1462,8 +1502,9 @@ void reset() {
     move = 0.0f;
     playerX = 0.0f;
     playerY = -1.5f;
-    stop=false; // Stop
+    stop = false; // Stop
     movement(stop);
+
 }
 void keyboard(unsigned char key, int x, int y) {
     switch (key) {
@@ -1494,7 +1535,7 @@ void keyboard(unsigned char key, int x, int y) {
         break;
 
     case 's':
-        if (currentScreen == 0) {
+        if (currentScreen == 0 && currentLine >11 ) {
             reset();
             currentScreen = 1;
         }
@@ -1502,7 +1543,7 @@ void keyboard(unsigned char key, int x, int y) {
 
     case 'h':
         home();
-        stop = false;
+        stop = true;
         reset();
         currentScreen = 0;
         break;
@@ -1535,6 +1576,9 @@ void display() {
     else if (currentScreen == 4) {
         colpage();  // Display time up screen if collision is detected
     }
+        else if (currentScreen == 5) {
+        finish();  // Display time up screen if collision is detected
+    }
     checkCollisions(); // Check collision
     glutSwapBuffers(); // Double buffering
 }
@@ -1547,7 +1591,7 @@ void initGL() {
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glutTimerFunc(1000, timerFunc, 0);
     glutTimerFunc(16, movement, 0);  // Increase frequency of movement function calls
-    glutTimerFunc(100, timer1, 0);   // Start the typing animation timer
+    glutTimerFunc(100, typing, 0);   // Start the typing animation timer
 }
 
 // Main function: GLUT runs as a console application starting at main()
