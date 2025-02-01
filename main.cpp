@@ -6,11 +6,11 @@
 #include <ctime>    // For time()
 #include <string>
 
-#define PI 3.14159265358979323846
+#define PI 3.1416
 int a = 120;
 int timer = a;
 GLfloat pspeed = 00.50; // playerx shift speed
-int currentScreen = 5;
+int currentScreen = 0;
 GLfloat playerX = 0.0f;
 GLfloat playerY = -1.5f;
 GLfloat move = 0.0f;
@@ -55,15 +55,17 @@ void renderBitmapString(float x, float y, float z, void* font, const char* strin
 }
 void colfeature() {
     if (health > 0) {
-        health -= 5;
+        health -=25;
          playerSpeed = pspeed;
          if (move > -10) {
-             move = 0;
+             while (move < 0) {
+                 move += 0.01f;
+             }
               playerX = 0.0f;
              playerY = -1.5f;
          }
          else {
-             health -= 5;
+             health -=25;
              move += 10.0f;
              playerX = 0.0f;
          playerY = -1.5f;}
@@ -1218,19 +1220,19 @@ void levelinfobox() {
 
     // Render level texts
     glColor3f(1.0f, 1.0f, 1.0f);
-    renderBitmapString(-1.01f, 3.82f, 0.0f, GLUT_BITMAP_HELVETICA_18, " Press R to restart");
-    renderBitmapString(1.31f, 3.82f, 0.0f, GLUT_BITMAP_HELVETICA_18, " Press H to quit to menu");
+    renderBitmapString(-1.01f, 3.82f, 0.0f, GLUT_BITMAP_HELVETICA_18, "             Press R to restart");
+    renderBitmapString(1.31f, 3.82f, 0.0f, GLUT_BITMAP_HELVETICA_18, "      Press H to quit to menu");
     char levelText[10];
     sprintf(levelText, "Level %d", level);
-    renderBitmapString(-3.50f, 3.82f, 0.0f, GLUT_BITMAP_HELVETICA_18, levelText);
+    renderBitmapString(-3.90f, 3.82f, 0.0f, GLUT_BITMAP_HELVETICA_18, levelText);
     char healtht[10];
     sprintf(healtht, "Health: %d", health);  // Convert timer value to string
-    renderText(-2.5f, 2.82f, GLUT_BITMAP_HELVETICA_18, healtht);  // Adjust position and font
+    renderText(-1.5f, 3.82f, GLUT_BITMAP_HELVETICA_18, healtht);  // Adjust position and font
 
     if (!isCountdownFinished) {
         char timerText[10];
         sprintf(timerText, "Time: %d", timer);  // Convert timer value to string
-        renderText(-2.5f, 3.82f, GLUT_BITMAP_HELVETICA_18, timerText);  // Adjust position and font
+        renderText(-2.8f, 3.82f, GLUT_BITMAP_HELVETICA_18, timerText);  // Adjust position and font
     }
 
 }
@@ -1474,11 +1476,16 @@ void gamescreen() {
     }
     else if (level == 2) {
         level2();
-        level3(); 
+        level3();
     }
+    else if (level == 3) {
+        level3();
+    }
+
     leftmovement();
     player();
     FinishLine();
+    checkCollisions(); // Ensure collisions are checked after rendering all frames
 }
 
 void movement(int value) {
@@ -1502,6 +1509,7 @@ void reset() {
     move = 0.0f;
     playerX = 0.0f;
     playerY = -1.5f;
+    health = 100;
     stop = false; // Stop
     movement(stop);
 
