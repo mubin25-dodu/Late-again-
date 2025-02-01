@@ -7,7 +7,7 @@
 #include <string>
 
 #define PI 3.1416
-int a = 120;
+int a = 80;
 int timer = a;
 GLfloat pspeed = 00.50; // playerx shift speed
 int currentScreen = 0;
@@ -38,7 +38,7 @@ std::string instructions[] = {
     "If you lose 100% of your health, you will die...",
     "and guess what? You'll never be LATE AGAIN!!",
    
-    "-------------------------------------------------",
+    "--------------------------------------------------",
     "     ",
     "Successfully cross the finish line without running out of time.",
     "Good luck! Don't be LATE AGAIN!!"
@@ -1012,9 +1012,6 @@ void player() {
     glVertex2f(x + (radius + .2) / 2, y - 0.06);   // Top of the right triangle
     glEnd();
 
-    // Draw the bounding box for the player
-    drawBoundingBox(playerX - 0.1f, playerX + 0.1f, playerY + 0.1f, playerY - 0.1f, 1.0f, 0.0f, 0.0f); // Red color
-
     glPopMatrix();
     glFlush(); // Render now 
 
@@ -1567,7 +1564,7 @@ void keyboard(unsigned char key, int x, int y) {
         break;
 
     case 's':
-        if (currentScreen == 0 && currentLine >11 ) {
+        if (currentScreen == 0 && currentLine >17 ) {
             reset();
             currentScreen = 1;
         }
