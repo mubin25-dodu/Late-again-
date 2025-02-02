@@ -8,9 +8,9 @@
 #include<MMSystem.h>  // For PlaySound
 
 #define PI 3.1416
-int a = 80;
+int a = 60;
 int timer = a;
-GLfloat pspeed = 00.50; // playerx shift speed
+GLfloat pspeed = 00.40; // playerx shift speed
 int currentScreen = 0;
 GLfloat playerX = 0.0f;
 GLfloat playerY = -1.5f;
@@ -29,14 +29,14 @@ std::string instructions[] = {
     "Controls:",
     "    - Move Left: Press A",
     "    - Move Right: Press D",
-    "    - Jump: Spacebar",
+    "    - Jump: Spacebar(only for manholes)",
     "    - Restart: R",
     "    - Home Menu: H",
     "Press S to Start Game",
      "  ",
     "--------------------------------------------------",
     "Avoid cars, trucks, and rickshaws. Don't get hit!",
-    "You will lose health if you crash, and distance will be increased.",
+    "You will lose health if you crash, and progress decreases.",
     "If you lose 100% of your health, you will die...",
     "and guess what? You'll never be LATE AGAIN!!",
    
@@ -94,7 +94,7 @@ void colfeature() {
             playerY = -1.5f;
         }
     }
-    if (health < 0) {
+    if (health < 1) {
         currentScreen = 4;
         stop = true;
     }
@@ -257,9 +257,9 @@ void colpage() {
     void timerFunc(int value) {
     if (timer > 0) {
         timer--;
-          if (health < 100) {
-        health+=1;
-    }
+        //   if (health < 100) {
+        // health+=1;
+    // }
         glutPostRedisplay();  // Update display
         glutTimerFunc(1000, timerFunc, 0);  // Restart the timer
     }
