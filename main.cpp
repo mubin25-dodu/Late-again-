@@ -29,7 +29,7 @@ std::string instructions[] = {
     "Controls:",
     "    - Move Left: Press A",
     "    - Move Right: Press D",
-    "    - Jump: Spacebar(only for manholers)",
+    "    - Jump: Spacebar",
     "    - Restart: R",
     "    - Home Menu: H",
     "Press S to Start Game",
@@ -61,32 +61,49 @@ void renderBitmapString(float x, float y, float z, void* font, const char* strin
         glutBitmapCharacter(font, *c);  // Render each character
     }
 }
-void colfeature() {
-   
-   
-    if (health > 0) {
-        health -=25;
-         playerSpeed = pspeed;
-         if (move > -10) {
-             while (move < 0) {
-                 move += 0.01f;
-             }
-              playerX = 0.0f;
-             playerY = -1.5f;
-         }
-         else if(move < -10) { playerSpeed = pspeed;
-             health -=25;
-             move += 10.0f;
-             playerX = 0.0f;
-         playerY = -1.5f;}
+bool showNotification = false;
+
+void renderNotification() {
+    if (showNotification) {
+        glColor3f(1.0f, 1.0f, 1.0f);  // Red color for notification
+        renderBitmapString(-1.80f, 0.0f, 0.0f, GLUT_BITMAP_HELVETICA_18,"Collision Detected! Health Decreased.");
     }
 
+}
+
+void clearNotification(int) {
+    showNotification = false;
+    glutPostRedisplay();
+}
+
+void colfeature() {
+    if (health > 0) {
+        health -= 25;
+        playerSpeed = pspeed;
+        if (move > -10) {
+            while (move < 0) {
+                move += 0.01f;
+            }
+            playerX = 0.0f;
+            playerY = -1.5f;
+        } else {
+            playerSpeed = pspeed;
+            health -= 25;
+            move += 10.0f;
+            playerX = 0.0f;
+            playerY = -1.5f;
+        }
+    }
     if (health < 0) {
         currentScreen = 4;
         stop = true;
     }
- 
+  
+    showNotification = true;
+    glutTimerFunc(2000, clearNotification, 0);  // Clear notification after 2 seconds
+    glutPostRedisplay();
 }
+
 void home() {
 
     // Background Color
@@ -154,8 +171,8 @@ void timeup() {
     renderBitmapString(-3.5f, 2.7f, 0.0f, GLUT_BITMAP_HELVETICA_18,"Looks like you took the scenic route... to FAILURE");
     renderBitmapString(-3.5f, 2.2f, 0.0f, GLUT_BITMAP_HELVETICA_18,  "Press  R to Restart Game");
     renderBitmapString(-3.5f, 1.7f, 0.0f, GLUT_BITMAP_HELVETICA_18, "Press H to Home");
-    renderBitmapString(-3.5f, 1.0f, 0.0f, GLUT_BITMAP_HELVETICA_18, "Life saving tips...");
-    renderBitmapString(-3.5f, 0.7f, 0.0f, GLUT_BITMAP_HELVETICA_18, "   Next time, try teleportation. It's still in beta testing, though");
+     renderBitmapString(-3.5f, 1.0f, 0.0f, GLUT_BITMAP_HELVETICA_18, "Life saving tips...");
+     renderBitmapString(-3.5f, 0.7f, 0.0f, GLUT_BITMAP_HELVETICA_18, "   Next time, try teleportation. It's still in beta testing, though");
     glPopMatrix();
 }
 void finish() {
@@ -664,129 +681,117 @@ void checkCollisions() {
 
     // Van bounding box
     if (isCollision(playerLeft, playerRight, playerTop, playerBottom, 0.6f, 2.4f, -1.0f + move, -2.1f + move)) {
-        Sleep(500);glColor4f(1.0f, 0.0f, 0.0f, 0.8f);
-        renderBitmapString(-2.5f, 2.7f, 0.0f, GLUT_BITMAP_HELVETICA_18, "Collision Detected");
         colfeature();
     }
 
     // Van1 bounding box
     if (isCollision(playerLeft, playerRight, playerTop, playerBottom, 0.3f, 2.1f, 12.0f + move, 10.9f + move)) {
-          Sleep(500);glColor4f(1.0f, 0.0f, 0.0f, 0.8f);
-         renderBitmapString(-2.5f, 2.7f, 0.0f, GLUT_BITMAP_HELVETICA_18, "Collision Detected");
          colfeature();
     }
 
     // Van2 bounding box
     if (isCollision(playerLeft, playerRight, playerTop, playerBottom, 0.6f, 2.2f, -0.8f + move + 48, -1.8f + move + 48)) {
-          Sleep(500); glColor4f(1.0f, 0.0f, 0.0f, 0.8f);
-          renderBitmapString(-2.5f, 2.7f, 0.0f, GLUT_BITMAP_HELVETICA_18, "Collision Detected");
           colfeature();
 
     }
     if (isCollision(playerLeft, playerRight, playerTop, playerBottom, 0.0f, 1.75f, -2.95f + move + 8, -5.05f + move + 8)) {
         // Car2 collision
-         Sleep(500); glColor4f(1.0f, 0.0f, 0.0f, 0.8f);
-       renderBitmapString(-2.5f, 2.7f, 0.0f, GLUT_BITMAP_HELVETICA_18, "Collision Detected");
-   
-        colfeature();
+      colfeature();
     }
 
     // Car2 bounding box
     if (isCollision(playerLeft, playerRight, playerTop, playerBottom, 0.0f, 1.35f, -2.95f + move + 48, -5.05f + move + 48)) {
         // Car2 collision
-            Sleep(500);glColor4f(1.0f, 0.0f, 0.0f, 0.8f);
-           renderBitmapString(-2.5f, 2.7f, 0.0f, GLUT_BITMAP_HELVETICA_18, "Collision Detected");
-           colfeature();
+          colfeature();
     }
 
     // Car2 bounding box
     if (isCollision(playerLeft, playerRight, playerTop, playerBottom, 0.0f, 1.35f, -2.95f + move + 64, -5.05f + move + 64)) {
-        Sleep(500);  glColor4f(1.0f, 0.0f, 0.0f, 0.8f);
-       renderBitmapString(-2.5f, 2.7f, 0.0f, GLUT_BITMAP_HELVETICA_18, "Collision Detected");  colfeature();
+          colfeature();
     }
 
     // Truck bounding box
     if (isCollision(playerLeft, playerRight, playerTop, playerBottom, 0.34f, 2.5f, -0.6f + move + 32, -3.4f + move + 32)) {
-         Sleep(500); colfeature();
+         colfeature();
     }
     // Truck1 bounding box
     if (isCollision(playerLeft, playerRight, playerTop, playerBottom, 0.34f, 2.5f, -0.6f + move + 40, -3.4f + move + 40)) {
-      Sleep(500); colfeature();
+      colfeature();
     }
 
     // Truck2 bounding box
     if (isCollision(playerLeft, playerRight, playerTop, playerBottom, 0.34f, 2.5f, -0.6f + move + 56, -3.4f + move + 56)) {
-          Sleep(500);colfeature();
+         colfeature();
     }
 
     // Truck3 bounding box
     if (isCollision(playerLeft, playerRight, playerTop, playerBottom, 0.34f, 2.5f, -0.6f + move + 72, -3.4f + move + 72)) {
-      Sleep(500); colfeature();
+      colfeature();
     }
 
     // Truck4 bounding box
     if (isCollision(playerLeft, playerRight, playerTop, playerBottom, 0.34f + 0.35f, 2.5f + 0.35f, -0.6f + move + 80, -3.4f + move + 80)) {
-        Sleep(500);colfeature();
+       colfeature();
     }
 
     // Truck5 bounding box
     if (isCollision(playerLeft, playerRight, playerTop, playerBottom, 0.34f, 2.5f, -0.6f + move + 88, -3.4f + move + 88)) {
-     Sleep(500); colfeature();
+     colfeature();
     }
 
     // Rickshaw1 bounding box
     if (isCollision(playerLeft, playerRight, playerTop, playerBottom, 0.85f, 3.5f, 1.35f + move + 24, 1.7f - 0.5f + move + 24)) {
-       Sleep(500);colfeature();
+      colfeature();
     }
    
 
     // Rickshaw2 bounding box
     if (isCollision(playerLeft, playerRight, playerTop, playerBottom, 0.85f, 3.5f, 1.35f + move + 40, 0.7f - 0.5f + move + 40)) {
-        Sleep(500); colfeature();
+        colfeature();
     }
 
     // Rickshaw3 bounding box
     if (isCollision(playerLeft, playerRight, playerTop, playerBottom, 0.85f, 2.7f, 1.35f + move + 16, 0.7f - 0.5f + move + 16)) {
-        Sleep(500);colfeature();
+       colfeature();
     }
 
     //   car 1
     if (isCollision(playerLeft, playerRight, playerTop, playerBottom, 1.25f, 2.7f, -.70f + move + 16, -3.0f + move + 16)) {
-        Sleep(500);colfeature();
+       colfeature();
     }
     // car 2
     if (isCollision(playerLeft, playerRight, playerTop, playerBottom, 1.25f, 2.7f, -.70f + move + 24, -3.0f + move + 24)) {
-         Sleep(500);colfeature();
+        colfeature();
     }
     // left truck
 // Calculate m
     float m = -move * 0.20f;
     // Check collisions for the first call
     if (isCollision(playerLeft, playerRight, playerTop, playerBottom, -2.25f, -0.34f, 2.7f + m, 0.0f + m)) {
-       Sleep(500); colfeature();
+       colfeature();
     }
 
     // Check collisions for the second call
     if (isCollision(playerLeft, playerRight, playerTop, playerBottom, -2.25f + 0.6f, -0.34f + 0.6f, 3.0f - move * 0.20f - 13, 0.1f - move * 0.20f - 13)) {
-        Sleep(500); colfeature();
+        colfeature();
     }
     // Check collisions for the left 2nd truck
     if (isCollision(playerLeft, playerRight, playerTop, playerBottom, -2.8f, -0.85f, -6.75f + m, -9.42f + m)) {
-         Sleep(500);colfeature();
+        colfeature();
     }
 
     // left car
     if (isCollision(playerLeft, playerRight, playerTop, playerBottom, -2.35f, -0.34f, -.4f + m, -2.5f + m)) {
-        Sleep(500); colfeature();
+        colfeature();
     }
 
     if (isCollision(playerLeft, playerRight, playerTop, playerBottom, -2.35f - .6, -0.34f - .7, -.4f + m - 13, -2.5f + m - 13)) {
-         Sleep(500);colfeature();
+        colfeature();
     }
     // left van
 
     if (isCollision(playerLeft, playerRight, playerTop, playerBottom, -2.00f, 0.0f, -3.5f + m, -4.8f + m)) {
-          Sleep(500); colfeature();
+          colfeature();
     }
    // Finish line bounding box
     float finishLineY = 50.0f + move / 2;
@@ -1614,7 +1619,8 @@ void display() {
     if (currentScreen == 0) {
         home(); // Render home 
         timer = 100000;
-        isCountdownFinished=true; 
+        isCountdownFinished = true;
+        showNotification = false;   
     }
     else if (currentScreen == 1) {
         gamescreen();
@@ -1622,16 +1628,20 @@ void display() {
     }
     else if (currentScreen == 3) {
         timeup();
-        isCountdownFinished=true;  // Display time up screen if countdown is finished
+        isCountdownFinished = true;    
+        showNotification = false;   
     }
     else if (currentScreen == 4) {
         colpage();
-        isCountdownFinished=true; // Display time up screen if collision is detected
+        isCountdownFinished = true;   
+        showNotification = false;   
     }
         else if (currentScreen == 5) {
         finish();
-        isCountdownFinished=true; // Display time up screen if collision is detected
+        isCountdownFinished = true;   
+        showNotification = false;   
     }
+    renderNotification();  // Render notification if needed
     checkCollisions(); // Check collision
     glutSwapBuffers(); // Double buffering
 }
