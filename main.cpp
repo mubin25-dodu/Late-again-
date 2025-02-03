@@ -83,7 +83,7 @@ void clearNotification(int) {
 void handleMouse(int button, int state, int x, int y) {
     if (currentScreen == 1) {
 
-        if (currentScreen == 1 && button == GLUT_LEFT_BUTTON && screenmovement < 3.0) {
+        if (button == GLUT_LEFT_BUTTON && screenmovement < 3.0) {
             screenmovement += .1;
             notifications.push("speed up"); // Push notification
             glutTimerFunc(1000, clearNotification, 0);  // Clear notification after 2 seconds
@@ -111,7 +111,7 @@ void colfeature() {
         playerSpeed = pspeed;
         if (move > -10) {
             while (move < 0) {
-                move += 0.01f;
+            move += 0.01f;
             }
             playerX = 0.0f;
             playerY = -1.5f;
