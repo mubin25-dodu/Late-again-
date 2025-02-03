@@ -6,9 +6,11 @@
 #include <ctime>    // For time()
 #include <string>
 #include<MMSystem.h>  // For PlaySound
+#include <queue> // Include queue for storing notifications
+
 
 #define PI 3.1416
-int a = 60;
+int a = 70;
 int timer = a;
 GLfloat pspeed = 00.50; // playerx shift speed
 int currentScreen = 0;
@@ -23,6 +25,9 @@ int health = 100;
 float truckLeft, truckRight, truckTop, truckBottom;
 bool isCountdownFinished = false;
 bool stop = true, jump = false;
+bool showNotification = false;
+
+std::queue<std::string> notifications; // Queue to store notifications
 
 std::string instructions[] = {
     "Objective: Reach the finish line before time runs out!",
@@ -32,28 +37,24 @@ std::string instructions[] = {
     "    - Jump: Spacebar",
     "    - Restart: R",
     "    - Home Menu: H",
+    "    - Speed up: Mouse right",
+     "    - Speed down: Mouse left",
     "Press S to Start Game",
-     "  ",
     "--------------------------------------------------",
     "Avoid cars, trucks, and rickshaws. Don't get hit!",
     "You will lose health if you crash, and distance will be increased.",
     "If you lose 100% of your health, you will die...",
     "and guess what? You'll never be LATE AGAIN!!",
-   
+
     "--------------------------------------------------",
     "     ",
     "Successfully cross the finish line without running out of time.",
     "Good luck! Don't be LATE AGAIN!!"
     };
-   
+
 int currentChar = 0;
 int currentLine = 0;
-void renderBitmapString(float x, float y, void* font, const char* string, int length) {
-    glRasterPos2f(x, y);
-    for (int i = 0; i < length; i++) {
-        glutBitmapCharacter(font, string[i]);
-    }
-}
+
 void renderBitmapString(float x, float y, float z, void* font, const char* string) {
     const char* c;
     glRasterPos3f(x, y, z);  // Position the text
@@ -61,19 +62,47 @@ void renderBitmapString(float x, float y, float z, void* font, const char* strin
         glutBitmapCharacter(font, *c);  // Render each character
     }
 }
-bool showNotification = false;
-
 void renderNotification() {
-    if (showNotification) {
-        glColor3f(1.0f, 1.0f, 1.0f);  // Red color for notification
-        renderBitmapString(-1.80f, 0.0f, 0.0f, GLUT_BITMAP_HELVETICA_18,"Collision Detected! Health Decreased.");
+    if (currentScreen==1) {
+
+        if (!notifications.empty()) {
+            glColor3f(1.0f, 1.0f, 1.0f);  // White color for notification
+            renderBitmapString(-1.80f, 0.0f, 0.0f, GLUT_BITMAP_HELVETICA_18, notifications.front().c_str());
+        }
     }
 
 }
 
 void clearNotification(int) {
-    showNotification = false;
+    if (!notifications.empty()) {
+        notifications.pop(); // Remove the current notification
+    }
     glutPostRedisplay();
+}
+
+void handleMouse(int button, int state, int x, int y) {
+    if (currentScreen == 1) {
+
+        if (currentScreen == 1 && button == GLUT_LEFT_BUTTON && screenmovement < 3.0) {
+            screenmovement += .1;
+            notifications.push("speed up"); // Push notification
+            glutTimerFunc(1000, clearNotification, 0);  // Clear notification after 2 seconds
+            glutPostRedisplay();
+        }
+        if (currentScreen == 1 && button == GLUT_RIGHT_BUTTON && screenmovement > 1.0) {
+            screenmovement -= 0.1;
+            notifications.push("speed down."); // Push notification
+            glutTimerFunc(1000, clearNotification, 0);  // Clear notification after 2 seconds
+            glutPostRedisplay();
+        }
+        glutPostRedisplay();
+    }
+}
+void renderBitmapString(float x, float y, void* font, const char* string, int length) {
+    glRasterPos2f(x, y);
+    for (int i = 0; i < length; i++) {
+        glutBitmapCharacter(font, string[i]);
+    }
 }
 
 void colfeature() {
@@ -99,8 +128,8 @@ void colfeature() {
         currentScreen = 4;
         stop = true;
     }
-  
-    showNotification = true;
+
+    notifications.push("Collision Detected! Health Decreased."); // Push notification
     glutTimerFunc(2000, clearNotification, 0);  // Clear notification after 2 seconds
     glutPostRedisplay();
 }
@@ -115,24 +144,23 @@ void home() {
     glVertex2f(4.0f, 4.0f);
     glVertex2f(-4.0f, 4.0f);
     glEnd();
-    
-    // Title Typing Animation
+
     glColor3f(1.0f, 1.0f, 0.0f);
     renderBitmapString(-3.01f, 3.0f, 0.0f, GLUT_BITMAP_HELVETICA_18, " LATE AGAIN!!");
 
 
     // Instructions Typing Animation
-    glColor4f(1.0f, 1.0f, 1.0f,0.8f); 
+    glColor4f(1.0f, 1.0f, 1.0f,0.8f);
     for (int i = 0; i <= currentLine; i++) {
         int length = (i == currentLine) ? currentChar : instructions[i].length();
         renderBitmapString(-3.5f, 2.5f - (i * 0.3f), GLUT_BITMAP_HELVETICA_18, instructions[i].c_str(), length);
     }
-    
+
     glFlush();
 }
 
 void typing(int) {
-    if (currentLine < 18 && stop==true) {
+    if (currentLine < 19 && stop==true) {
         if (currentChar < instructions[currentLine].length()) {
             currentChar++;
         }
@@ -163,12 +191,12 @@ void timeup() {
     glVertex2f(3.95f, 3.95f);
     glVertex2f(-3.95f, 3.95f);
     glEnd();
-    
+
     glColor3f(1.0f, 1.0f, 0.0f); // White color for text
     renderBitmapString(-3.5f, 3.5f, 0.0f, GLUT_BITMAP_HELVETICA_18, "YOU ARE LATE AGAIN!!...");
     glColor3f(1.0f, 1.0f, 0.0f); // White color for text
     renderBitmapString(-3.5f, 3.2f, 0.0f, GLUT_BITMAP_HELVETICA_18, "------------------------------");
-    glColor3f(1.0f, 0.0f, 0.0f); 
+    glColor3f(1.0f, 0.0f, 0.0f);
     renderBitmapString(-3.5f, 2.7f, 0.0f, GLUT_BITMAP_HELVETICA_18,"Looks like you took the scenic route... to FAILURE");
     renderBitmapString(-3.5f, 2.2f, 0.0f, GLUT_BITMAP_HELVETICA_18,  "Press  R to Restart Game");
     renderBitmapString(-3.5f, 1.7f, 0.0f, GLUT_BITMAP_HELVETICA_18, "Press H to Home");
@@ -193,19 +221,19 @@ void finish() {
     glVertex2f(3.95f, 3.95f);
     glVertex2f(-3.95f, 3.95f);
     glEnd();
-    
+
     glColor3f(1.0f, 1.0f, 0.0f); // White color for text
     renderBitmapString(-3.5f, 3.5f, 0.0f, GLUT_BITMAP_HELVETICA_18, "CONGRATULATION   SO,  YOU ARE !!LATE AGAIN  THIS  TIME...");
     glColor3f(1.0f, 1.0f, 0.0f); // White color for text
     renderBitmapString(-3.5f, 3.2f, 0.0f, GLUT_BITMAP_HELVETICA_18, "------------------------------");
-    glColor4f(1.0f, 1.0f, 1.0f,0.8f); 
+    glColor4f(1.0f, 1.0f, 1.0f,0.8f);
     renderBitmapString(-3.5f, 2.7f, 0.0f, GLUT_BITMAP_HELVETICA_18,"You did it! ");
     renderBitmapString(-3.5f, 2.2f, 0.0f, GLUT_BITMAP_HELVETICA_18, "Press  R to Restart Game");
     renderBitmapString(-3.5f, 1.7f, 0.0f, GLUT_BITMAP_HELVETICA_18, "Press H to Home");
      renderBitmapString(-3.5f, 1.0f, 0.0f, GLUT_BITMAP_HELVETICA_18, "Life saving tips...");
      renderBitmapString(-3.5f, 0.7f, 0.0f, GLUT_BITMAP_HELVETICA_18, "   Now don't get too confident… tomorrow is another battle!");
      glPopMatrix();
-     
+
 }
 void colpage() {
 //      std::string collition[] = {
@@ -215,7 +243,7 @@ void colpage() {
 //     "     oh wait, you're dead. Unless you're a ghost, then go ahead!",
 //     "Press H to Home",
 //     "Close the window and forget about being late—time is just a suggestion anyway!"
-    
+
 // };
     // Background Color
     glColor4f(1.0f, 0.1f, 0.1f, 0.8f);
@@ -233,12 +261,12 @@ void colpage() {
     glVertex2f(3.95f, 3.95f);
     glVertex2f(-3.95f, 3.95f);
     glEnd();
-    
+
     glColor3f(1.0f, 1.0f, 0.0f); // White color for text
     renderBitmapString(-3.5f, 3.5f, 0.0f, GLUT_BITMAP_HELVETICA_18, "THIS TIME YOU ARE !LATE AGAIN... YOU ARE LATE...");
     glColor3f(1.0f, 1.0f, 0.0f); // White color for text
     renderBitmapString(-3.5f, 3.2f, 0.0f, GLUT_BITMAP_HELVETICA_18, "-------------------------------------------------");
-    glColor3f(1.0f, 0.0f, 0.0f); 
+    glColor3f(1.0f, 0.0f, 0.0f);
     renderBitmapString(-3.5f, 2.7f, 0.0f, GLUT_BITMAP_HELVETICA_18, "Press  R to Restart Game");
     renderBitmapString(-3.5f, 2.2f, 0.0f, GLUT_BITMAP_HELVETICA_18, "     oh wait, you're dead. Unless you're a ghost, then go ahead!");
     renderBitmapString(-3.5f, 1.7f, 0.0f, GLUT_BITMAP_HELVETICA_18, "Press H to Home");
@@ -252,7 +280,7 @@ void colpage() {
 //         int length = (i == currentLine) ? currentChar : collition[i].length();
 //         renderBitmapString(-3.5f, 2.5f - (i * 0.5f), GLUT_BITMAP_HELVETICA_18, collition[i].c_str(), length);
 //     }
-    
+
     glFlush();
 }
     void timerFunc(int value) {
@@ -264,7 +292,7 @@ void colpage() {
         glutPostRedisplay();  // Update display
         glutTimerFunc(1000, timerFunc, 0);  // Restart the timer
     }
-  
+
     else {
         currentScreen = 3;
         glutPostRedisplay();  // Ensure "Time Up" message is displayed
@@ -684,123 +712,153 @@ void checkCollisions() {
     if (isCollision(playerLeft, playerRight, playerTop, playerBottom, 0.6f, 2.4f, -1.0f + move, -2.1f + move)) {
         colfeature();
     }
+    // drawBoundingBox(0.6f, 2.4f, -1.0f + move, -2.1f + move, 1.0f, 0.0f, 0.0f);
 
     // Van1 bounding box
     if (isCollision(playerLeft, playerRight, playerTop, playerBottom, 0.3f, 2.1f, 12.0f + move, 10.9f + move)) {
          colfeature();
     }
+    // drawBoundingBox(0.3f, 2.1f, 12.0f + move, 10.9f + move, 1.0f, 0.0f, 0.0f);
 
     // Van2 bounding box
     if (isCollision(playerLeft, playerRight, playerTop, playerBottom, 0.6f, 2.2f, -0.8f + move + 48, -1.8f + move + 48)) {
           colfeature();
+    }
+    // drawBoundingBox(0.6f, 2.2f, -0.8f + move + 48, -1.8f + move + 48, 1.0f, 0.0f, 0.0f);
 
-    }
+    // Car2 bounding box
     if (isCollision(playerLeft, playerRight, playerTop, playerBottom, 0.0f, 1.75f, -2.95f + move + 8, -5.05f + move + 8)) {
-        // Car2 collision
-      colfeature();
+        colfeature();
     }
+    // drawBoundingBox(0.0f, 1.75f, -2.95f + move + 8, -5.05f + move + 8, 1.0f, 0.0f, 0.0f);
 
     // Car2 bounding box
     if (isCollision(playerLeft, playerRight, playerTop, playerBottom, 0.0f, 1.35f, -2.95f + move + 48, -5.05f + move + 48)) {
-        // Car2 collision
-          colfeature();
+        colfeature();
     }
+    // drawBoundingBox(0.0f, 1.35f, -2.95f + move + 48, -5.05f + move + 48, 1.0f, 0.0f, 0.0f);
 
     // Car2 bounding box
     if (isCollision(playerLeft, playerRight, playerTop, playerBottom, 0.0f, 1.35f, -2.95f + move + 64, -5.05f + move + 64)) {
-          colfeature();
+        colfeature();
     }
+    // drawBoundingBox(0.0f, 1.35f, -2.95f + move + 64, -5.05f + move + 64, 1.0f, 0.0f, 0.0f);
 
     // Truck bounding box
     if (isCollision(playerLeft, playerRight, playerTop, playerBottom, 0.34f, 2.5f, -0.6f + move + 32, -3.4f + move + 32)) {
-         colfeature();
+        colfeature();
     }
+    // drawBoundingBox(0.34f, 2.5f, -0.6f + move + 32, -3.4f + move + 32, 1.0f, 0.0f, 0.0f);
+
     // Truck1 bounding box
     if (isCollision(playerLeft, playerRight, playerTop, playerBottom, 0.34f, 2.5f, -0.6f + move + 40, -3.4f + move + 40)) {
-      colfeature();
+        colfeature();
     }
+    // drawBoundingBox(0.34f, 2.5f, -0.6f + move + 40, -3.4f + move + 40, 1.0f, 0.0f, 0.0f);
 
     // Truck2 bounding box
     if (isCollision(playerLeft, playerRight, playerTop, playerBottom, 0.34f, 2.5f, -0.6f + move + 56, -3.4f + move + 56)) {
-         colfeature();
+        colfeature();
     }
+    // drawBoundingBox(0.34f, 2.5f, -0.6f + move + 56, -3.4f + move + 56, 1.0f, 0.0f, 0.0f);
 
     // Truck3 bounding box
     if (isCollision(playerLeft, playerRight, playerTop, playerBottom, 0.34f, 2.5f, -0.6f + move + 72, -3.4f + move + 72)) {
-      colfeature();
+        colfeature();
     }
+    // drawBoundingBox(0.34f, 2.5f, -0.6f + move + 72, -3.4f + move + 72, 1.0f, 0.0f, 0.0f);
 
     // Truck4 bounding box
     if (isCollision(playerLeft, playerRight, playerTop, playerBottom, 0.34f + 0.35f, 2.5f + 0.35f, -0.6f + move + 80, -3.4f + move + 80)) {
-       colfeature();
+        colfeature();
     }
+    // drawBoundingBox(0.34f + 0.35f, 2.5f + 0.35f, -0.6f + move + 80, -3.4f + move + 80, 1.0f, 0.0f, 0.0f);
 
     // Truck5 bounding box
     if (isCollision(playerLeft, playerRight, playerTop, playerBottom, 0.34f, 2.5f, -0.6f + move + 88, -3.4f + move + 88)) {
-     colfeature();
+        colfeature();
     }
+    // drawBoundingBox(0.34f, 2.5f, -0.6f + move + 88, -3.4f + move + 88, 1.0f, 0.0f, 0.0f);
 
     // Rickshaw1 bounding box
     if (isCollision(playerLeft, playerRight, playerTop, playerBottom, 0.85f, 2.7f, 1.35f + move + 24, 1.7f - 0.5f + move + 24)) {
-      colfeature();
+        colfeature();
     }
+    // drawBoundingBox(0.85f, 2.7f, 1.35f + move + 24, 1.7f - 0.5f + move + 24, 1.0f, 0.0f, 0.0f);
 
     // Rickshaw2 bounding box
     if (isCollision(playerLeft, playerRight, playerTop, playerBottom, 0.85f, 2.5f, 1.35f + move + 40, 0.7f - 0.5f + move + 40)) {
         colfeature();
     }
-   
+    // drawBoundingBox(0.85f, 2.5f, 1.35f + move + 40, 0.7f - 0.5f + move + 40, 1.0f, 0.0f, 0.0f);
+
     // Rickshaw3 bounding box
     if (isCollision(playerLeft, playerRight, playerTop, playerBottom, 0.85f, 2.7f, 1.35f + move + 16, 0.7f - 0.5f + move + 16)) {
-       colfeature();
+        colfeature();
     }
+    // drawBoundingBox(0.85f, 2.7f, 1.35f + move + 16, 0.7f - 0.5f + move + 16, 1.0f, 0.0f, 0.0f);
 
-    //   car 1
+    // Car1 bounding box
     if (isCollision(playerLeft, playerRight, playerTop, playerBottom, 1.25f, 2.7f, -.70f + move + 16, -3.0f + move + 16)) {
-       colfeature();
+        colfeature();
     }
-    // car 2
+    // drawBoundingBox(1.25f, 2.7f, -.70f + move + 16, -3.0f + move + 16, 1.0f, 0.0f, 0.0f);
+
+    // Car2 bounding box
     if (isCollision(playerLeft, playerRight, playerTop, playerBottom, 1.25f, 2.7f, -.70f + move + 24, -3.0f + move + 24)) {
         colfeature();
     }
-    // left truck
-// Calculate m
+    // drawBoundingBox(1.25f, 2.7f, -.70f + move + 24, -3.0f + move + 24, 1.0f, 0.0f, 0.0f);
+
+    // Calculate m
     float m = -move * 0.20f;
+
     // Check collisions for the first call
     if (isCollision(playerLeft, playerRight, playerTop, playerBottom, -2.25f, -0.34f, 2.7f + m, 0.0f + m)) {
-       colfeature();
+        colfeature();
     }
+    // drawBoundingBox(-2.25f, -0.34f, 2.7f + m, 0.0f + m, 1.0f, 0.0f, 0.0f);
 
     // Check collisions for the second call
     if (isCollision(playerLeft, playerRight, playerTop, playerBottom, -2.25f + 0.6f, -0.34f + 0.6f, 3.0f - move * 0.20f - 13, 0.1f - move * 0.20f - 13)) {
         colfeature();
     }
+    // drawBoundingBox(-2.25f + 0.6f, -0.34f + 0.6f, 3.0f - move * 0.20f - 13, 0.1f - move * 0.20f - 13, 1.0f, 0.0f, 0.0f);
+
     // Check collisions for the left 2nd truck
     if (isCollision(playerLeft, playerRight, playerTop, playerBottom, -2.8f, -0.85f, -6.75f + m, -9.42f + m)) {
         colfeature();
     }
+    // drawBoundingBox(-2.8f, -0.85f, -6.75f + m, -9.42f + m, 1.0f, 0.0f, 0.0f);
 
-    // left car
+    // Check collisions for the left car
     if (isCollision(playerLeft, playerRight, playerTop, playerBottom, -2.35f, -0.34f, -.4f + m, -2.5f + m)) {
         colfeature();
     }
+    // drawBoundingBox(-2.35f, -0.34f, -.4f + m, -2.5f + m, 1.0f, 0.0f, 0.0f);
 
     if (isCollision(playerLeft, playerRight, playerTop, playerBottom, -2.35f - .6, -0.34f - .7, -.4f + m - 13, -2.5f + m - 13)) {
         colfeature();
     }
-    if (isCollision(playerLeft, playerRight, playerTop, playerBottom, +.4-2.35f - .6, -0.34f+4 - .7, -.4f + m - 13-7, -2.5f + m - 13-7)) {
+    // drawBoundingBox(-2.35f - .6, -0.34f - .7, -.4f + m - 13, -2.5f + m - 13, 1.0f, 0.0f, 0.0f);
+
+    if (isCollision(playerLeft, playerRight, playerTop, playerBottom, +.4-1.35f - .6, -0.34f+.4 - .7, -.4f + m - 13-7, -2.5f + m - 13-7)) {
         colfeature();
     }
-    // left van
+    // drawBoundingBox(+.4-2.35f - .6, -0.34f+4 - .7, -.4f + m - 13-7, -2.5f + m - 13-7, 1.0f, 0.0f, 0.0f);
 
+    // Check collisions for the left van
     if (isCollision(playerLeft, playerRight, playerTop, playerBottom, -2.00f, 0.0f, -3.5f + m, -4.8f + m)) {
-          colfeature();
+        colfeature();
     }
-   // Finish line bounding box
+    // drawBoundingBox(-2.00f, 0.0f, -3.5f + m, -4.8f + m, 1.0f, 0.0f, 0.0f);
+
+    // Finish line bounding box
     float finishLineY = 50.0f + move / 2;
     if (isCollision(playerLeft, playerRight, playerTop, playerBottom, -2.4f, 2.4f, finishLineY + 0.1f, finishLineY - 0.1f)) {
         currentScreen = 5;
     }
+    // drawBoundingBox(-2.4f, 2.4f, finishLineY + 0.1f, finishLineY - 0.1f, 1.0f, 0.0f, 0.0f);
 
     if (playerX > 2.75) {
         playerX = 2.75;
@@ -808,6 +866,7 @@ void checkCollisions() {
     if (playerX < -2.75) {
         playerX = -2.75;
     }
+  
 }
 
 void car() {
@@ -936,7 +995,7 @@ void van() {
     glEnd();
     glPopMatrix();
 
-    // front 
+    // front
     glPushMatrix();
     glLineWidth(3);
     glBegin(GL_LINES);
@@ -946,7 +1005,7 @@ void van() {
     glEnd();
     glPopMatrix();
 
-    // handle 
+    // handle
     glPushMatrix();
     glLineWidth(2);
     glBegin(GL_LINES);
@@ -1040,7 +1099,7 @@ void player() {
     glEnd();
 
     glPopMatrix();
-    glFlush(); // Render now 
+    glFlush(); // Render now
 
 }
 void Rickshaw() {
@@ -1056,7 +1115,7 @@ void Rickshaw() {
     glVertex2f(-2.3f, -1.6f); // top left
     glVertex2f(-2.3f, -1.85f); // bottom left
     glVertex2f(-1.05f, -1.85f); // bottom right
-    glVertex2f(-1.05f, -1.6f); // top right   
+    glVertex2f(-1.05f, -1.6f); // top right
     glEnd();
     glPopMatrix();
 
@@ -1067,7 +1126,7 @@ void Rickshaw() {
     glVertex2f(-2.25f, -1.5f); // top left
     glVertex2f(-2.25f, -1.6f); // bottom left
     glVertex2f(-1.1f, -1.6f); // bottom right
-    glVertex2f(-1.1f, -1.5f); // top right   
+    glVertex2f(-1.1f, -1.5f); // top right
     glEnd();
     glPopMatrix();
 
@@ -1101,7 +1160,7 @@ void Rickshaw() {
     glEnd();
     glPopMatrix();
 
-    // Mid connector 
+    // Mid connector
     glPushMatrix();
     glLineWidth(5);
     glBegin(GL_LINES);
@@ -1111,7 +1170,7 @@ void Rickshaw() {
     glEnd();
     glPopMatrix();
 
-    // Mid connector 
+    // Mid connector
     glPushMatrix();
     glLineWidth(3);
     glBegin(GL_LINES);
@@ -1121,7 +1180,7 @@ void Rickshaw() {
     glEnd();
     glPopMatrix();
 
-    //seat 
+    //seat
     glPushMatrix();
     glBegin(GL_QUADS);
     glColor4f(0.93f, 0.76f, 0.56f, 1.0f);
@@ -1136,12 +1195,12 @@ void Rickshaw() {
 }
 
 void truck()  {
-    // front glass frames 
+    // front glass frames
     glPushMatrix();
-   
+
     glPushMatrix();
     glBegin(GL_QUADS);
-   
+
     glColor4f(0.97f, 0.94f, 0.90f, 1.0f);  // color #F6F4F0 in OpenGL
     glVertex2f(-1.9f, 3.2f);  // top-left vertex
     glVertex2f(-0.5f, 3.2f);  // top-right vertex
@@ -1175,7 +1234,7 @@ void truck()  {
     glEnd();
     glPopMatrix();
 
-    // 2nd box top 
+    // 2nd box top
     glPushMatrix();
     glBegin(GL_QUADS);
     glColor4f(0.93f, 0.76f, 0.56f, 1.0f);
@@ -1198,7 +1257,7 @@ void truck()  {
     glEnd();
     glPopMatrix();
 
-    // back box 
+    // back box
     glPushMatrix();
     glBegin(GL_QUADS);
     glColor4f(0.97f, 0.94f, 0.90f, 1.0f);  // color #F6F4F0 in OpenGL
@@ -1257,7 +1316,7 @@ void levelinfobox() {
     sprintf(levelText, "Level %d", level);
     renderBitmapString(-3.90f, 3.82f, 0.0f, GLUT_BITMAP_HELVETICA_18, levelText);
     if (health < 50) {
-       
+
        char healtht[10]; glColor3f(1.0f, 0.0f, 0.0f);
         sprintf(healtht, "Health: %d", health);  // Convert timer value to string
         renderText(-1.5f, 3.82f, GLUT_BITMAP_HELVETICA_18, healtht);
@@ -1266,20 +1325,20 @@ void levelinfobox() {
          char healtht[10];glColor3f(1.0f, 1.0f, 1.0f);
         sprintf(healtht, "Health: %d", health);  // Convert timer value to string
         renderText(-1.5f, 3.82f, GLUT_BITMAP_HELVETICA_18, healtht);
-    } 
+    }
 
     if (!isCountdownFinished) {
         if (timer < 50) {
-          
+
             char timerText[10];  glColor3f(1.0f, 0.0f, 0.0f);
-            sprintf(timerText, "Time: %d", timer);  
-            renderText(-2.8f, 3.82f, GLUT_BITMAP_HELVETICA_18, timerText); 
+            sprintf(timerText, "Time: %d", timer);
+            renderText(-2.8f, 3.82f, GLUT_BITMAP_HELVETICA_18, timerText);
         }
         else {
-           
+
             char timerText[10]; glColor3f(1.0f, 0.0f, 0.0f);
-            sprintf(timerText, "Time: %d", timer);  
-            renderText(-2.8f, 3.82f, GLUT_BITMAP_HELVETICA_18, timerText);  
+            sprintf(timerText, "Time: %d", timer);
+            renderText(-2.8f, 3.82f, GLUT_BITMAP_HELVETICA_18, timerText);
         }
 
     }
@@ -1356,7 +1415,7 @@ void FinishLine() {
     // Draw the bounding box for the finish line
     drawBoundingBox(xStart, xEnd, y + 0.1f, y - 0.1f, 1.0f, 1.0f, 1.0f); // Yellow color
 
-  
+
 
 }
 void level1() {
@@ -1415,7 +1474,7 @@ void level2() {
     car2();
     glPopMatrix();
 
-    //  frame 4 
+    //  frame 4
     glPushMatrix();
     glTranslatef(0.0f, move + 56.0f, 0.0f);
     glScalef(-1.0f, -1.0f, 0.0f);
@@ -1447,7 +1506,7 @@ void level3() {
 
     // frame 2
     glPushMatrix();
-    glTranslatef(0.0f, move + 88.0f, 0.0f);  
+    glTranslatef(0.0f, move + 88.0f, 0.0f);
     glScalef(-1.0f, -1.0f, 0.0f);
     truck();
     Rickshaw();
@@ -1464,11 +1523,11 @@ void roadmove() {
             manhole();
             if (!jump) {
                 if (isCollision(
-                    playerX - 0.1f, playerX + 0.1f,  
-                    playerY + 0.1f, playerY - 0.1f,  
-                    -0.25f, 0.25f,                     
-                    -0.2f + move / 2 + b,              
-                    -0.5f + move / 2 + b            
+                    playerX - 0.1f, playerX + 0.1f,
+                    playerY + 0.1f, playerY - 0.1f,
+                    -0.25f, 0.25f,
+                    -0.2f + move / 2 + b,
+                    -0.5f + move / 2 + b
                 )) {
                     stop = true;
                     currentScreen = 4;
@@ -1497,7 +1556,7 @@ void leftmovement() {
     if (m >= 4) {
         glPushMatrix();
         glTranslatef(0.6f, -move * 0.20f - 13, 0.0f);
-        truck();  
+        truck();
         glTranslatef(-0.6f, -2.7f, 0.0f);
         car();
         glTranslatef(1.0f, -7.0f, 0.0f);
@@ -1532,12 +1591,12 @@ void gamescreen() {
     leftmovement();
     FinishLine();
     player();
-    
+
     checkCollisions(); // Ensure collisions are checked after rendering all frames
 }
 
 void movement(int value) {
-    if (!stop) { 
+    if (!stop) {
         if (level == 1) {
             move -= screenmovement * 0.02f;  // Smaller increment for smoother transition
             glutPostRedisplay();  // Update display
@@ -1551,19 +1610,24 @@ void movement(int value) {
         }
     }
 }
+
+//void playBackgroundMusic() {
+ //   PlaySound(TEXT("file_example_WAV_1MG.wav"), NULL, SND_FILENAME | SND_ASYNC | SND_LOOP);
+//}
+
 void reset() {
     timer = a;  // Reset the timer
     isCountdownFinished = false;
     playerSpeed = pspeed;
     move = 0.0f;
-    screenmovement = sm;
+    screenmovement = sm;  // Ensure screenmovement is reset
     playerX = 0.0f;
     playerY = -1.5f;
     health = 100;
     stop = false; // Stop
-    movement(stop);
-
+    movement(stop);  // Restart movement
 }
+
 void keyboard(unsigned char key, int x, int y) {
     switch (key) {
         // case 'q':  // Move left
@@ -1577,8 +1641,8 @@ void keyboard(unsigned char key, int x, int y) {
     case ' ':  // Jump forward
         if (level == 3 && !jump) {
             jump = true;
-            playerY -= 0.2f;  
-            glutTimerFunc(1000, [](int) { jump = false; playerY += 0.2f; glutPostRedisplay(); }, 0);  // Reset jump 
+            playerY -= 0.2f;
+            glutTimerFunc(1000, [](int) { jump = false; playerY += 0.2f; glutPostRedisplay(); }, 0);  // Reset jump
         }
         break;
     case 'a':  // Move left
@@ -1609,6 +1673,7 @@ void keyboard(unsigned char key, int x, int y) {
     case 'r':
         if (currentScreen != 0) {
             reset();
+            screenmovement = sm;  // Ensure screenmovement is reset
             currentScreen = 1;
         }
         break;
@@ -1619,31 +1684,31 @@ void keyboard(unsigned char key, int x, int y) {
 
 void display() {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // Clear the color and depth buffers
-    
+
     if (currentScreen == 0) {
-        home(); // Render home 
-        timer = 100000;
+        home(); // Render home
+        stop = true;
         isCountdownFinished = true;
-        showNotification = false;   
+        showNotification = false;
     }
     else if (currentScreen == 1) {
         gamescreen();
         levelinfobox();
     }
     else if (currentScreen == 3) {
-        timeup();
-        isCountdownFinished = true;    
-        showNotification = false;   
+        timeup(); stop = true;
+        isCountdownFinished = true;
+        showNotification = false;
     }
     else if (currentScreen == 4) {
-        colpage();
-        isCountdownFinished = true;   
-        showNotification = false;   
+        colpage(); stop = true;
+        isCountdownFinished = true;
+        showNotification = false;
     }
         else if (currentScreen == 5) {
-        finish();
-        isCountdownFinished = true;   
-        showNotification = false;   
+        finish(); stop = true;
+        isCountdownFinished = true;
+        showNotification = false;
     }
     renderNotification();  // Render notification if needed
     checkCollisions(); // Check collision
@@ -1657,8 +1722,10 @@ void initGL() {
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glutTimerFunc(1000, timerFunc, 0);
-    glutTimerFunc(16, movement, 0);  // Increase frequency of movement function calls
-    glutTimerFunc(100, typing, 0);   // Start the typing animation timer
+    glutTimerFunc(16, movement, 0); 
+    glutTimerFunc(100, typing, 0);
+     glutMouseFunc(handleMouse);
+//    playBackgroundMusic(); // Start background music
 }
 
 // Main function: GLUT runs as a console application starting at main()
