@@ -1,7 +1,9 @@
 # [Late Again!!](https://github.com/mubin25-dodu/Late-again-)
 
+![Late Again](https://raw.githubusercontent.com/mubin25-dodu/Late-again-/refs/heads/main/img/Late-again-.png)
+
 ## Introduction
-**"Late Again!"** is a fun and engaging 2D game where players guide a university student through a jam-packed road filled with vehicles. The goal is to help the student reach his class on time. If he doesn’t make it before the timer runs out, he won’t get attendance. The game has three levels that get progressively harder as time gets shorter and the obstacles become more challenging. Players must find gaps between vehicles, think fast, and move skillfully to win.
+**"Late Again!"** is a fun and engaging 2D game where players guide a university student through a jam-packed road filled with vehicles. The goal is to help the student reach his class on time. If [...]
 
 ## Features
 - **Player Movement:** Move left, right, and jump to avoid obstacles.
@@ -12,7 +14,7 @@
 - **Screens:** Home screen, game screen, and end screens for both winning and losing scenarios.
 
 ## Motivation
-The primary goal of this project was to apply and demonstrate our knowledge of computer graphics using OpenGL. By creating a game, we were able to explore various aspects of graphics programming, including rendering, transformations, animations, and collision detection. Additionally, this project provided an opportunity to develop problem-solving skills and creativity in designing game mechanics and user interactions.
+The primary goal of this project was to apply and demonstrate our knowledge of computer graphics using OpenGL. By creating a game, we were able to explore various aspects of graphics programming, [...]
 
 ## Significance
 This project is significant because it:
@@ -54,13 +56,13 @@ By working on this project, students and developers can build a strong foundatio
 
 ## How to Run
 1. Clone the repository:
-   ```bash
-   git clone https://github.com/mubin25-dodu/Late-again-.git
-   ```
+    ```bash
+    git clone https://github.com/mubin25-dodu/Late-again-.git
+    ```
 2. Navigate to the project directory:
-   ```bash
-   cd Late-again-
-   ```
+    ```bash
+    cd Late-again-
+    ```
 3. Build the project using your preferred C++ compiler with OpenGL and GLUT libraries.
 4. Run the executable to start the game.
 
